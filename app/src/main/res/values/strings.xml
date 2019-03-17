@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SUJI-Android</string>
     <!--Menu-->
+    <string name="create_menu">메뉴 만들기</string>
     <string name="menu">메뉴</string>
     <string name="barley_rice">보리밥</string>
 </resources>
