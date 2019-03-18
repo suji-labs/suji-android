@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         initViewModel()
         initView()
+        initOther()
     }
 
     private fun initViewModel() {
@@ -36,6 +37,10 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.callback = createMenu
+    }
+
+    private fun initOther() {
+        DisplayHelper.Singleton.setContext(applicationContext)
     }
 
     private var createMenu: CreateMenuClick = object : CreateMenuClick {

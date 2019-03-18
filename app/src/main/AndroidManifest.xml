@@ -21,7 +21,7 @@
 
         <activity
                 android:name=".CreateFoodDialog"
-                android:theme="@android:style/Theme.Dialog"/>
+                android:theme="@android:style/Theme.Holo.Light.Dialog"/>
     </application>
 
 </manifest>

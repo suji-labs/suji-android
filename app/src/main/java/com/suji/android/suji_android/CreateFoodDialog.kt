@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil
 import com.suji.android.suji_android.databinding.CreateFoodBinding
 
 
+
+
 class CreateFoodDialog : Activity() {
     private lateinit var binding: CreateFoodBinding
 
@@ -18,10 +20,10 @@ class CreateFoodDialog : Activity() {
         layoutParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
         layoutParams.dimAmount = 0.7f
         window.attributes = layoutParams
-//        window.attributes.width = getDisplayMetrics().widthPixels * 0.9
-//        window.attributes.height = getDisplayMetrics().heightPixels * 0.4
-
         initView()
+        val point = DisplayHelper.Singleton.getDisplaySize()
+        window.attributes.width = (point.x * 0.9).toInt()
+        window.attributes.height = (point.y * 0.7).toInt()
     }
 
     private fun initView() {
