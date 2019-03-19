@@ -3,6 +3,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+                name="addSubMenu"
+                type="com.suji.android.suji_android.callback.CreateSubMenuClick"/>
+    </data>
+
     <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
@@ -37,6 +43,8 @@
             </LinearLayout>
 
             <LinearLayout
+                    android:layout_marginBottom="15dp"
+                    android:id="@+id/create_menu_group_price"
                     android:layout_below="@id/create_menu_group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -54,6 +62,14 @@
                         android:layout_height="wrap_content"
                         app:bootstrapSize="md"
                         app:bootstrapBrand="info"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/create_sub_menu"
+                    android:layout_below="@id/create_menu_group_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
             </LinearLayout>
 
         </RelativeLayout>
@@ -84,7 +100,20 @@
                     android:text="@string/cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"/>
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    app:bootstrapBrand="primary"
+                    app:bootstrapSize="lg"
+                    app:buttonMode="regular"
+                    app:showOutline="false"
+                    app:roundedCorners="true"
+                    android:text="@string/sub_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:onClick="@{() -> addSubMenu.addSubMenuClick()}"/>
         </LinearLayout>
     </LinearLayout>
 

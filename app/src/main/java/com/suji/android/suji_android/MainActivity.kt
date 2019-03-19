@@ -7,11 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.suji.android.suji_android.callback.CreateMenuClick
 import com.suji.android.suji_android.databinding.ActivityMainBinding
+import com.suji.android.suji_android.food.CreateFoodDialog
+import com.suji.android.suji_android.food.FoodViewModel
+import com.suji.android.suji_android.helper.DisplayHelper
+import com.suji.android.suji_android.model.Food
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var menuViewModel: MenuViewModel
+    private lateinit var foodViewModel: FoodViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +27,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        menuViewModel = ViewModelProviders.of(this).get(MenuViewModel::class.java)
-        menuViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
+        foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
             override fun onChanged(@Nullable memos: List<Food>?) {
 //                if (memos != null) {
 //                    adapter.setMemoList(memos)
@@ -43,10 +48,11 @@ class MainActivity : AppCompatActivity() {
         DisplayHelper.Singleton.setContext(applicationContext)
     }
 
-    private var createMenu: CreateMenuClick = object : CreateMenuClick {
+    private var createMenu: CreateMenuClick = object :
+        CreateMenuClick {
         override fun onClick() {
 //            val food = Food("보리밥", 6000)
-//            menuViewModel.addFood(food)
+//            foodViewModel.addFood(food)
             startActivity(Intent(applicationContext, CreateFoodDialog::class.java))
         }
     }
