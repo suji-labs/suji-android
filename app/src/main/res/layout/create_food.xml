@@ -5,7 +5,7 @@
 
     <data>
         <variable
-                name="addSubMenu"
+                name="addMenu"
                 type="com.suji.android.suji_android.callback.CreateSubMenuClick"/>
     </data>
 
@@ -24,7 +24,8 @@
             <LinearLayout
                     android:layout_marginBottom="15dp"
                     android:id="@+id/create_menu_group_name"
-                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 <com.beardedhen.androidbootstrap.BootstrapLabel
                         android:id="@+id/create_menu_name"
@@ -36,6 +37,7 @@
                         android:text="@string/name"/>
 
                 <com.beardedhen.androidbootstrap.BootstrapEditText
+                        android:id="@+id/create_menu_edit_name"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         app:bootstrapSize="md"
@@ -45,8 +47,9 @@
             <LinearLayout
                     android:layout_marginBottom="15dp"
                     android:id="@+id/create_menu_group_price"
+                    android:gravity="center"
                     android:layout_below="@id/create_menu_group_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 <com.beardedhen.androidbootstrap.BootstrapLabel
                         android:id="@+id/create_menu_price"
@@ -58,6 +61,7 @@
                         android:text="@string/price"/>
 
                 <com.beardedhen.androidbootstrap.BootstrapEditText
+                        android:id="@+id/create_menu_edit_price"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         app:bootstrapSize="md"
@@ -68,7 +72,8 @@
                     android:orientation="vertical"
                     android:id="@+id/create_sub_menu"
                     android:layout_below="@id/create_menu_group_price"
-                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
             </LinearLayout>
 
@@ -87,6 +92,7 @@
                     app:showOutline="false"
                     app:roundedCorners="true"
                     android:text="@string/create"
+                    android:onClick="@{() -> addMenu.createFood()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"/>
@@ -98,6 +104,7 @@
                     app:showOutline="false"
                     app:roundedCorners="true"
                     android:text="@string/cancel"
+                    android:onClick="@{() -> addMenu.cancelMenu()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -113,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:onClick="@{() -> addSubMenu.addSubMenuClick()}"/>
+                    android:onClick="@{() -> addMenu.addSubMenuClick()}"/>
         </LinearLayout>
     </LinearLayout>
 

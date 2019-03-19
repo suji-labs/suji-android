@@ -8,7 +8,7 @@
     <string name="barley_rice">보리밥</string>
     <string name="name">이름</string>
     <string name="price">가격</string>
-    <string name="sub_menu">부가메뉴</string>
+    <string name="sub_menu">부가 메뉴</string>
     <string name="sub_name">부가 메뉴 이름</string>
     <string name="sub_price">부가 메뉴 가격</string>
 </resources>
