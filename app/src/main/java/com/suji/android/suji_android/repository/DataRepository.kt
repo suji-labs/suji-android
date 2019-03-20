@@ -3,14 +3,13 @@ package com.suji.android.suji_android.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import com.suji.android.suji_android.executor.AppExecutors
 import com.suji.android.suji_android.database.AppDatabase
+import com.suji.android.suji_android.executor.AppExecutors
 import com.suji.android.suji_android.model.Food
 
 class DataRepository private constructor(private val database: AppDatabase) {
     private val observableMemo: MediatorLiveData<List<Food>> = MediatorLiveData()
-    private val executors: AppExecutors =
-        AppExecutors()
+    private val executors: AppExecutors = AppExecutors()
 
     val menu: LiveData<List<Food>>
         get() = observableMemo
@@ -35,8 +34,7 @@ class DataRepository private constructor(private val database: AppDatabase) {
         private lateinit var INSTANCE: DataRepository
 
         fun getInstance(database: AppDatabase): DataRepository {
-            INSTANCE =
-                DataRepository(database)
+            INSTANCE = DataRepository(database)
             return INSTANCE
         }
     }

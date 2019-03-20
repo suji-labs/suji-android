@@ -1,14 +1,17 @@
 package com.suji.android.suji_android.food
 
-import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
@@ -16,15 +19,20 @@ import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.callback.CreateSubMenuClick
 import com.suji.android.suji_android.databinding.CreateFoodBinding
 import com.suji.android.suji_android.helper.DisplayHelper
+import com.suji.android.suji_android.model.Food
 
 
-class CreateFoodDialog : Activity() {
+class CreateFoodDialog : AppCompatActivity() {
     private lateinit var binding: CreateFoodBinding
-    private var subMenuID: Int = 0x8000
+    private var foodViewModel: FoodViewModel = FoodViewModel(application)
+    private var subMenuLayoutID: Int = 0x8000
+    private var subMenuNameID: Int = 0x7000
+    private var subMenuPriceID: Int = 0x6000
     private var subMenuCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initViewModel()
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         val layoutParams = WindowManager.LayoutParams()
         layoutParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
@@ -34,6 +42,10 @@ class CreateFoodDialog : Activity() {
         val point = DisplayHelper.Singleton.getDisplaySize()
         window.attributes.width = (point.x * 0.9).toInt()
         window.attributes.height = (point.y * 0.7).toInt()
+    }
+
+    private fun initViewModel() {
+        foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
     }
 
     private fun initView() {
@@ -51,12 +63,24 @@ class CreateFoodDialog : Activity() {
             }
 
             Toast.makeText(applicationContext, "$foodName $foodPrice", Toast.LENGTH_SHORT).show()
+            if (subMenuCount > 0) {
+                val subMenuList: ArrayList<Food> = ArrayList()
+
+                for (i in 0..subMenuCount) {
+                    val subMenuName = findViewById<EditText>(subMenuNameID + i)
+                    val subMenuPrice = findViewById<EditText>(subMenuPriceID + i)
+                    Log.i("makeSubMenu", "$subMenuName $subMenuPrice")
+                    subMenuList.add(Food(subMenuName.toString(), subMenuPrice.toString().toInt()))
+                }
+            } else {
+                foodViewModel.addFood(Food(foodName, foodPrice.toInt()))
+            }
         }
 
         override fun addSubMenuClick() {
             val outerLayout: LinearLayout = findViewById(com.suji.android.suji_android.R.id.create_sub_menu)
             val innerLayout = LinearLayout(applicationContext)
-            innerLayout.id = subMenuID + subMenuCount
+            innerLayout.id = subMenuLayoutID + subMenuCount
             innerLayout.orientation = LinearLayout.HORIZONTAL
             innerLayout.gravity = Gravity.CENTER
 
@@ -64,7 +88,7 @@ class CreateFoodDialog : Activity() {
             nameLabel.text = "부가 메뉴 이름"
 
             val nameEditText = BootstrapEditText(applicationContext)
-//            nameEditText.id = subMenuID
+            nameEditText.id = subMenuNameID + subMenuCount
             nameEditText.width = 150
             nameEditText.bottom = 15
 
@@ -72,18 +96,19 @@ class CreateFoodDialog : Activity() {
             priceLabel.text = "부가 메뉴 가격"
 
             val priceEditText = BootstrapEditText(applicationContext)
-//            priceEditText.id = subMenuID
+            priceEditText.id = subMenuPriceID + subMenuCount
             priceEditText.width = 150
             priceEditText.bottom = 15
 
             val subMenuDelete = BootstrapButton(applicationContext)
+            subMenuDelete.id = subMenuCount
             subMenuDelete.text = "X"
             subMenuDelete.bootstrapBrand = DefaultBootstrapBrand.DANGER
             subMenuDelete.setOnClickListener(View.OnClickListener {
                 if (subMenuCount < 0) {
                     return@OnClickListener
                 }
-                val layout = findViewById<LinearLayout>(subMenuID + subMenuCount)
+                val layout = findViewById<LinearLayout>(subMenuLayoutID + it.id)
                 outerLayout.removeView(layout)
                 subMenuCount--
             })
