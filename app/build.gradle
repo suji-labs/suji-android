@@ -48,4 +48,6 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.1.0-alpha03'
     // joda time
     implementation 'joda-time:joda-time:2.10.1'
+    // gson
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

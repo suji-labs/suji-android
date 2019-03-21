@@ -5,6 +5,10 @@ import com.suji.android.suji_android.database.AppDatabase
 import com.suji.android.suji_android.repository.DataRepository
 
 class BasicApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        BasicApp.app = applicationContext as BasicApp
+    }
 
     private fun getDatabase(): AppDatabase {
         return AppDatabase.Singleton.getInstance(this)!!
@@ -12,5 +16,9 @@ class BasicApp : Application() {
 
     fun getRepository(): DataRepository {
         return DataRepository.Singleton.getInstance(getDatabase())
+    }
+
+    companion object {
+        lateinit var app: BasicApp
     }
 }

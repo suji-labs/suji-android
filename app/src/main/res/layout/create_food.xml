@@ -64,6 +64,7 @@
                         android:id="@+id/create_menu_edit_price"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
+                        android:inputType="number"
                         app:bootstrapSize="md"
                         app:bootstrapBrand="info"/>
             </LinearLayout>

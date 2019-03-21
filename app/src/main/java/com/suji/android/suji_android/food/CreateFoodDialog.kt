@@ -1,6 +1,8 @@
 package com.suji.android.suji_android.food
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -16,6 +18,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
+import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.callback.CreateSubMenuClick
 import com.suji.android.suji_android.databinding.CreateFoodBinding
 import com.suji.android.suji_android.helper.DisplayHelper
@@ -24,7 +27,7 @@ import com.suji.android.suji_android.model.Food
 
 class CreateFoodDialog : AppCompatActivity() {
     private lateinit var binding: CreateFoodBinding
-    private var foodViewModel: FoodViewModel = FoodViewModel(application)
+    private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
     private var subMenuLayoutID: Int = 0x8000
     private var subMenuNameID: Int = 0x7000
     private var subMenuPriceID: Int = 0x6000
@@ -62,19 +65,19 @@ class CreateFoodDialog : AppCompatActivity() {
                 return
             }
 
-            Toast.makeText(applicationContext, "$foodName $foodPrice", Toast.LENGTH_SHORT).show()
             if (subMenuCount > 0) {
                 val subMenuList: ArrayList<Food> = ArrayList()
 
-                for (i in 0..subMenuCount) {
-                    val subMenuName = findViewById<EditText>(subMenuNameID + i)
-                    val subMenuPrice = findViewById<EditText>(subMenuPriceID + i)
-                    Log.i("makeSubMenu", "$subMenuName $subMenuPrice")
-                    subMenuList.add(Food(subMenuName.toString(), subMenuPrice.toString().toInt()))
+                for (i in 0 until subMenuCount) {
+                    val subMenuName = findViewById<BootstrapEditText>(subMenuNameID + i).text.toString()
+                    val subMenuPrice = findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString()
+                    subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
+                    foodViewModel.addFood(Food(foodName, foodPrice.toInt(), subMenuList))
                 }
             } else {
                 foodViewModel.addFood(Food(foodName, foodPrice.toInt()))
             }
+            finish()
         }
 
         override fun addSubMenuClick() {
@@ -89,6 +92,7 @@ class CreateFoodDialog : AppCompatActivity() {
 
             val nameEditText = BootstrapEditText(applicationContext)
             nameEditText.id = subMenuNameID + subMenuCount
+            nameEditText.setTextColor(Color.BLACK)
             nameEditText.width = 150
             nameEditText.bottom = 15
 
@@ -97,6 +101,8 @@ class CreateFoodDialog : AppCompatActivity() {
 
             val priceEditText = BootstrapEditText(applicationContext)
             priceEditText.id = subMenuPriceID + subMenuCount
+            priceEditText.setTextColor(Color.BLACK)
+            priceEditText.inputType = InputType.TYPE_CLASS_NUMBER
             priceEditText.width = 150
             priceEditText.bottom = 15
 
