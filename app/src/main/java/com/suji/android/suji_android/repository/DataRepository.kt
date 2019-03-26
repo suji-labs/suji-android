@@ -5,7 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import com.suji.android.suji_android.database.AppDatabase
 import com.suji.android.suji_android.executor.AppExecutors
-import com.suji.android.suji_android.model.Food
+import com.suji.android.suji_android.database.model.Food
 
 class DataRepository private constructor(private val database: AppDatabase) {
     private val observableMemo: MediatorLiveData<List<Food>> = MediatorLiveData()

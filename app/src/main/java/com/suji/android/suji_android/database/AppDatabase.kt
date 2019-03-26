@@ -9,8 +9,8 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.suji.android.suji_android.Converters
-import com.suji.android.suji_android.model.Food
-import com.suji.android.suji_android.dao.MenuDAO
+import com.suji.android.suji_android.database.model.Food
+import com.suji.android.suji_android.database.dao.MenuDAO
 
 @Database(entities = [Food::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)

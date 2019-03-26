@@ -21,22 +21,11 @@
                     android:layout_height="wrap_content"/>
         </com.beardedhen.androidbootstrap.BootstrapWell>
 
-        <com.beardedhen.androidbootstrap.BootstrapWell
-                android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_food_list"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                <com.beardedhen.androidbootstrap.BootstrapLabel
-                        android:text="@string/menu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
 
-                <Button android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/barley_rice"/>
-            </LinearLayout>
-        </com.beardedhen.androidbootstrap.BootstrapWell>
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 </layout>

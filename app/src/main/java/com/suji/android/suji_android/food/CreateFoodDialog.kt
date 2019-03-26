@@ -3,14 +3,11 @@ package com.suji.android.suji_android.food
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
@@ -22,7 +19,7 @@ import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.callback.CreateSubMenuClick
 import com.suji.android.suji_android.databinding.CreateFoodBinding
 import com.suji.android.suji_android.helper.DisplayHelper
-import com.suji.android.suji_android.model.Food
+import com.suji.android.suji_android.database.model.Food
 
 
 class CreateFoodDialog : AppCompatActivity() {

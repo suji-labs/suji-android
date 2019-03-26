@@ -1,4 +1,4 @@
-package com.suji.android.suji_android.model
+package com.suji.android.suji_android.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

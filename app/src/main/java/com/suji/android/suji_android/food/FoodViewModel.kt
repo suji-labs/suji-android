@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import com.suji.android.suji_android.basic.BasicApp
-import com.suji.android.suji_android.model.Food
+import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.repository.DataRepository
 
 class FoodViewModel(application: Application) : AndroidViewModel(application) {
