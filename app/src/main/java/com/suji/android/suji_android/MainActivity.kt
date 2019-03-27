@@ -18,6 +18,7 @@ import com.suji.android.suji_android.databinding.ActivityMainBinding
 import com.suji.android.suji_android.food.CreateFoodDialog
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.database.model.Food
+import com.suji.android.suji_android.helper.DialogHelper
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -66,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onModifyClick(food: Food) {
+            DialogHelper(this@MainActivity, food).show()
             foodViewModel.modifyFood(food)
         }
     }
