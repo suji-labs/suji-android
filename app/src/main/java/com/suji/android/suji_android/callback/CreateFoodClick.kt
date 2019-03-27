@@ -1,5 +1,5 @@
 package com.suji.android.suji_android.callback
 
-interface CreateMenuClick {
+interface CreateFoodClick {
     fun onClick()
 }

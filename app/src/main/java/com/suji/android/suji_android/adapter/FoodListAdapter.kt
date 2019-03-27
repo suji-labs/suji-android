@@ -6,11 +6,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
+import com.suji.android.suji_android.callback.DeleteFoodClick
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodItemBinding
 import java.util.*
 
-class FoodListAdapter : RecyclerView.Adapter<FoodListAdapter.Companion.FoodViewHolder>() {
+class FoodListAdapter(var clickListener: DeleteFoodClick) :
+    RecyclerView.Adapter<FoodListAdapter.Companion.FoodViewHolder>() {
     private var items: List<Food>? = null
 
     init {
@@ -23,7 +25,7 @@ class FoodListAdapter : RecyclerView.Adapter<FoodListAdapter.Companion.FoodViewH
                 LayoutInflater.from(parent.context), R.layout.food_item,
                 parent, false
             )
-//        binding.callback = clickListener
+        binding.callback = clickListener
         return FoodViewHolder(binding)
     }
 

@@ -4,7 +4,7 @@
     <data>
         <variable
                 name="callback"
-                type="com.suji.android.suji_android.callback.CreateMenuClick"/>
+                type="com.suji.android.suji_android.callback.CreateFoodClick"/>
     </data>
 
     <LinearLayout
