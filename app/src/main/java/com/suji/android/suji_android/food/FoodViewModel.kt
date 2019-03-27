@@ -29,10 +29,14 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addFood(food: Food) {
-        repository.addMemo(food)
+        repository.addFood(food)
     }
 
     fun deleteFood(food: Food) {
-        repository.deleteMemo(food)
+        repository.deleteFood(food)
+    }
+
+    fun modifyFood(food: Food) {
+        repository.modifyFood(food)
     }
 }

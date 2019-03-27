@@ -10,12 +10,12 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.suji.android.suji_android.Converters
 import com.suji.android.suji_android.database.model.Food
-import com.suji.android.suji_android.database.dao.MenuDAO
+import com.suji.android.suji_android.database.dao.FoodDAO
 
 @Database(entities = [Food::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun menuDAO(): MenuDAO
+    abstract fun foodDAO(): FoodDAO
 
     object Singleton {
         private const val DATABASE_NAME = "suji-android"
@@ -59,9 +59,9 @@ abstract class AppDatabase : RoomDatabase() {
         private fun insertData(database: AppDatabase) {
             Thread(Runnable {
                 database.runInTransaction {
-                    database.menuDAO().insert(Food("보리밥", 6000))
-                    database.menuDAO().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
-                    database.menuDAO().insert(Food("닭볶음탕", 20000))
+                    database.foodDAO().insert(Food("보리밥", 6000))
+                    database.foodDAO().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
+                    database.foodDAO().insert(Food("닭볶음탕", 20000))
                 }
             }).start()
         }

@@ -38,7 +38,7 @@
                     android:text="@string/modify"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> callback.onModifyClick()}"
+                    android:onClick="@{() -> callback.onModifyClick(food)}"
                     app:bootstrapBrand="primary"/>
             <com.beardedhen.androidbootstrap.BootstrapButton
                     android:layout_gravity="end"

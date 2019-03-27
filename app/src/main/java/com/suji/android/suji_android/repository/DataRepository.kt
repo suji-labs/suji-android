@@ -15,19 +15,23 @@ class DataRepository private constructor(private val database: AppDatabase) {
         get() = observableMemo
 
     init {
-        observableMemo.addSource(this.database.menuDAO().loadAllFood(), object : Observer<List<Food>> {
+        observableMemo.addSource(this.database.foodDAO().loadAllFood(), object : Observer<List<Food>> {
             override fun onChanged(t: List<Food>?) {
                 observableMemo.postValue(t)
             }
         })
     }
 
-    fun addMemo(menu: Food) {
-        executors.diskIO().execute(Runnable { database.menuDAO().insert(menu) })
+    fun addFood(food: Food) {
+        executors.diskIO().execute(Runnable { database.foodDAO().insert(food) })
     }
 
-    fun deleteMemo(menu: Food) {
-        executors.diskIO().execute(Runnable { database.menuDAO().deleteFood(menu) })
+    fun deleteFood(food: Food) {
+        executors.diskIO().execute(Runnable { database.foodDAO().deleteFood(food) })
+    }
+
+    fun modifyFood(food: Food) {
+        executors.diskIO().execute(Runnable { database.foodDAO().modifyFood(food) })
     }
 
     object Singleton {

@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
             foodViewModel.deleteFood(food)
         }
 
-        override fun onModifyClick() {
-            Toast.makeText(applicationContext, "Food", Toast.LENGTH_SHORT).show()
+        override fun onModifyClick(food: Food) {
+            foodViewModel.modifyFood(food)
         }
     }
 }
