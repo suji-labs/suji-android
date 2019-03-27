@@ -1,7 +1,7 @@
 package com.suji.android.suji_android.callback
 
-interface CreateSubMenuClick {
+interface DialogClickListener {
     fun createFood()
     fun addSubMenuClick()
-    fun cancelMenu()
+    fun cancelFood()
 }

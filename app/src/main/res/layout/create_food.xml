@@ -5,8 +5,8 @@
 
     <data>
         <variable
-                name="addMenu"
-                type="com.suji.android.suji_android.callback.CreateSubMenuClick"/>
+                name="listener"
+                type="com.suji.android.suji_android.callback.DialogClickListener"/>
     </data>
 
     <LinearLayout
@@ -93,7 +93,7 @@
                     app:showOutline="false"
                     app:roundedCorners="true"
                     android:text="@string/create"
-                    android:onClick="@{() -> addMenu.createFood()}"
+                    android:onClick="@{() -> listener.createFood()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"/>
@@ -105,7 +105,7 @@
                     app:showOutline="false"
                     app:roundedCorners="true"
                     android:text="@string/cancel"
-                    android:onClick="@{() -> addMenu.cancelMenu()}"
+                    android:onClick="@{() -> listener.cancelFood()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -121,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:onClick="@{() -> addMenu.addSubMenuClick()}"/>
+                    android:onClick="@{() -> listener.addSubMenuClick()}"/>
         </LinearLayout>
     </LinearLayout>
 

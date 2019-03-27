@@ -16,7 +16,7 @@ import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.basic.BasicApp
-import com.suji.android.suji_android.callback.CreateSubMenuClick
+import com.suji.android.suji_android.callback.DialogClickListener
 import com.suji.android.suji_android.databinding.CreateFoodBinding
 import com.suji.android.suji_android.helper.DisplayHelper
 import com.suji.android.suji_android.database.model.Food
@@ -50,10 +50,10 @@ class CreateFoodDialog : AppCompatActivity() {
 
     private fun initView() {
         binding = DataBindingUtil.setContentView(this, com.suji.android.suji_android.R.layout.create_food)
-        binding.addMenu = addMenu
+        binding.listener = listener
     }
 
-    private var addMenu: CreateSubMenuClick = object : CreateSubMenuClick {
+    private var listener: DialogClickListener = object : DialogClickListener {
         override fun createFood() {
             val foodName: String = binding.createMenuEditName.text.toString()
             val foodPrice: String = binding.createMenuEditPrice.text.toString()
@@ -126,7 +126,7 @@ class CreateFoodDialog : AppCompatActivity() {
             subMenuCount++
         }
 
-        override fun cancelMenu() {
+        override fun cancelFood() {
             finish()
         }
     }

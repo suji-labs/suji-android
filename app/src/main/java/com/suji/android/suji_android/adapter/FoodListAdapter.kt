@@ -6,12 +6,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.callback.DeleteFoodClick
+import com.suji.android.suji_android.callback.FoodClickListener
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodItemBinding
 import java.util.*
 
-class FoodListAdapter(var clickListener: DeleteFoodClick) :
+class FoodListAdapter(var clickListener: FoodClickListener) :
     RecyclerView.Adapter<FoodListAdapter.Companion.FoodViewHolder>() {
     private var items: List<Food>? = null
 
