@@ -5,15 +5,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.basic.BasicApp
-import com.suji.android.suji_android.callback.DialogClickListener
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.food.FoodViewModel
 
 class DialogHelper : Dialog {
-    private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
     private lateinit var item: Food
-    private lateinit var listener: DialogClickListener
+    private lateinit var foodViewModel: FoodViewModel
 
     constructor(context: Context) : super(context)
 
@@ -21,9 +18,9 @@ class DialogHelper : Dialog {
         this.item = food
     }
 
-    constructor(context: Context, food: Food, listener: DialogClickListener) : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
+    constructor(context: Context, food: Food, foodViewModel: FoodViewModel) : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
         this.item = food
-        this.listener = listener
+        this.foodViewModel = foodViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

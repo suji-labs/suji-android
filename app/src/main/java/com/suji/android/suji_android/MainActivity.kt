@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onModifyClick(food: Food) {
-            DialogHelper(this@MainActivity, food).show()
+            DialogHelper(this@MainActivity, food, foodViewModel).show()
             foodViewModel.modifyFood(food)
         }
     }
