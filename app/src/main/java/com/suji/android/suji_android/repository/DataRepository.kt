@@ -11,7 +11,7 @@ class DataRepository private constructor(private val database: AppDatabase) {
     private val observableMemo: MediatorLiveData<List<Food>> = MediatorLiveData()
     private val executors: AppExecutors = AppExecutors()
 
-    val menu: LiveData<List<Food>>
+    val food: LiveData<List<Food>>
         get() = observableMemo
 
     init {
@@ -30,8 +30,8 @@ class DataRepository private constructor(private val database: AppDatabase) {
         executors.diskIO().execute(Runnable { database.foodDAO().deleteFood(food) })
     }
 
-    fun modifyFood(food: Food) {
-        executors.diskIO().execute(Runnable { database.foodDAO().modifyFood(food) })
+    fun updateFood(food: Food) {
+        executors.diskIO().execute(Runnable { database.foodDAO().updateFood(food) })
     }
 
     object Singleton {

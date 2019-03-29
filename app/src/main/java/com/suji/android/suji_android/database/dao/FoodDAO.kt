@@ -16,5 +16,5 @@ interface FoodDAO {
     fun deleteFood(food: Food)
 
     @Update
-    fun modifyFood(food: Food)
+    fun updateFood(food: Food)
 }

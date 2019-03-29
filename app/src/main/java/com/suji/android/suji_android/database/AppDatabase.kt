@@ -51,7 +51,7 @@ abstract class AppDatabase : RoomDatabase() {
                         Log.i("AppDataBase", "after insert data")
                     }
                 })
-                .addMigrations(MIGRATION_1_2)
+//                .addMigrations(MIGRATION_1_2)
                 .fallbackToDestructiveMigration()
                 .build()
         }
@@ -68,7 +68,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("CREATE TABLE IF NOT EXISTS menu (name TEXT, price LONG)")
+                database.execSQL("CREATE TABLE IF NOT EXISTS food (name TEXT, price LONG)")
             }
         }
     }
