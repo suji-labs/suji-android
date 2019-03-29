@@ -52,4 +52,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     // debug roon database
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+    // viewpager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha02'
+    // tab layout
+    implementation 'com.google.android.material:material:1.1.0-alpha05'
 }
