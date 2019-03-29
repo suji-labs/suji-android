@@ -1,8 +1,6 @@
 package com.suji.android.suji_android
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -15,9 +13,9 @@ import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.callback.CreateFoodClick
 import com.suji.android.suji_android.callback.FoodClickListener
 import com.suji.android.suji_android.databinding.ActivityMainBinding
-import com.suji.android.suji_android.food.CreateFoodDialog
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.database.model.Food
+import com.suji.android.suji_android.helper.DialogHelper
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -56,17 +54,17 @@ class MainActivity : AppCompatActivity() {
 
     private var createFood: CreateFoodClick = object : CreateFoodClick {
         override fun onClick() {
-            startActivity(Intent(applicationContext, CreateFoodDialog::class.java))
+            DialogHelper(this@MainActivity, foodViewModel).show()
         }
     }
 
     private var foodClickListener: FoodClickListener = object : FoodClickListener {
         override fun onDeleteClick(food: Food) {
-            foodViewModel.deleteFood(food)
+            foodViewModel.delete(food)
         }
 
         override fun onModifyClick(food: Food) {
-            foodViewModel.modifyFood(food)
+            DialogHelper(this@MainActivity, food, foodViewModel).show()
         }
     }
 }

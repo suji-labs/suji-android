@@ -16,8 +16,8 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
     init {
         items.value = null
         repository = (application as BasicApp).getRepository()
-        val menu = repository.menu
-        items.addSource(menu, object : Observer<List<Food>> {
+        val food = repository.food
+        items.addSource(food, object : Observer<List<Food>> {
             override fun onChanged(foods: List<Food>?) {
                 items.value = foods
             }
@@ -28,15 +28,15 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
         return items
     }
 
-    fun addFood(food: Food) {
-        repository.addFood(food)
+    fun insert(food: Food) {
+        repository.insert(food)
     }
 
-    fun deleteFood(food: Food) {
-        repository.deleteFood(food)
+    fun delete(food: Food) {
+        repository.delete(food)
     }
 
-    fun modifyFood(food: Food) {
-        repository.modifyFood(food)
+    fun update(food: Food) {
+        repository.update(food)
     }
 }

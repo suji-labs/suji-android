@@ -4,34 +4,34 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import com.suji.android.suji_android.database.AppDatabase
-import com.suji.android.suji_android.executor.AppExecutors
 import com.suji.android.suji_android.database.model.Food
+import com.suji.android.suji_android.executor.AppExecutors
 
 class DataRepository private constructor(private val database: AppDatabase) {
-    private val observableMemo: MediatorLiveData<List<Food>> = MediatorLiveData()
+    private val observableFood: MediatorLiveData<List<Food>> = MediatorLiveData()
     private val executors: AppExecutors = AppExecutors()
 
-    val menu: LiveData<List<Food>>
-        get() = observableMemo
+    val food: LiveData<List<Food>>
+        get() = observableFood
 
     init {
-        observableMemo.addSource(this.database.foodDAO().loadAllFood(), object : Observer<List<Food>> {
-            override fun onChanged(t: List<Food>?) {
-                observableMemo.postValue(t)
+        observableFood.addSource(this.database.foodDAO().loadAllFood(), object : Observer<List<Food>> {
+            override fun onChanged(t: List<Food>) {
+                observableFood.postValue(t)
             }
         })
     }
 
-    fun addFood(food: Food) {
+    fun insert(food: Food) {
         executors.diskIO().execute(Runnable { database.foodDAO().insert(food) })
     }
 
-    fun deleteFood(food: Food) {
-        executors.diskIO().execute(Runnable { database.foodDAO().deleteFood(food) })
+    fun delete(food: Food) {
+        executors.diskIO().execute(Runnable { database.foodDAO().delete(food) })
     }
 
-    fun modifyFood(food: Food) {
-        executors.diskIO().execute(Runnable { database.foodDAO().modifyFood(food) })
+    fun update(food: Food) {
+        executors.diskIO().execute(Runnable { database.foodDAO().update(food) })
     }
 
     object Singleton {

@@ -11,13 +11,9 @@ import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodItemBinding
 import java.util.*
 
-class FoodListAdapter(var clickListener: FoodClickListener) :
+class FoodListAdapter(private var clickListener: FoodClickListener) :
     RecyclerView.Adapter<FoodListAdapter.Companion.FoodViewHolder>() {
     private var items: List<Food>? = null
-
-    init {
-        setHasStableIds(true)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
         val binding = DataBindingUtil
