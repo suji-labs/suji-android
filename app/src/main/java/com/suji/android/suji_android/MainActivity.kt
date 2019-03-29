@@ -1,6 +1,5 @@
 package com.suji.android.suji_android
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     private var foodClickListener: FoodClickListener = object : FoodClickListener {
         override fun onDeleteClick(food: Food) {
-            foodViewModel.deleteFood(food)
+            foodViewModel.delete(food)
         }
 
         override fun onModifyClick(food: Food) {

@@ -65,6 +65,7 @@ class DialogHelper : Dialog {
 
     private var listener: DialogClickListener = object : DialogClickListener {
         override fun createFood() {
+            val subMenuList: ArrayList<Food> = ArrayList()
             val foodName: String = binding.createMenuEditName.text.toString()
             val foodPrice: String = binding.createMenuEditPrice.text.toString()
 
@@ -74,25 +75,24 @@ class DialogHelper : Dialog {
             }
 
             if (subMenuCount > 0) {
-                val subMenuList: ArrayList<Food> = ArrayList()
-
                 for (i in 0 until subMenuCount) {
                     val subMenuName = findViewById<BootstrapEditText>(subMenuNameID + i).text.toString()
                     val subMenuPrice = findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString()
                     subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
-                    if (food == null) {
-                        foodViewModel.addFood(Food(foodName, foodPrice.toInt(), subMenuList))
-                    } else {
-                        Log.i("update", "$foodName $foodPrice")
-                        foodViewModel.updateFood(Food(foodName, foodPrice.toInt(), subMenuList))
-                    }
+                }
+            }
+
+            if (subMenuList.size == 0) {
+                if (food == null) {
+                    foodViewModel.insert(Food(foodName, foodPrice.toInt()))
+                } else {
+                    foodViewModel.update(Food(foodName, foodPrice.toInt(), id = food!!.id))
                 }
             } else {
                 if (food == null) {
-                    foodViewModel.addFood(Food(foodName, foodPrice.toInt()))
+                    foodViewModel.insert(Food(foodName, foodPrice.toInt(), subMenuList))
                 } else {
-                    Log.i("update", "$foodName $foodPrice")
-                    foodViewModel.updateFood(Food(foodName, foodPrice.toInt()))
+                    foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, food!!.id))
                 }
             }
 
@@ -100,7 +100,7 @@ class DialogHelper : Dialog {
         }
 
         override fun addSubMenuClick() {
-            val outerLayout: LinearLayout = findViewById(com.suji.android.suji_android.R.id.create_sub_menu)
+            val outerLayout: LinearLayout = findViewById(R.id.create_sub_menu)
             val innerLayout = LinearLayout(context)
             innerLayout.id = subMenuLayoutID + subMenuCount
             innerLayout.orientation = LinearLayout.HORIZONTAL

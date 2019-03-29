@@ -12,7 +12,7 @@ import com.suji.android.suji_android.Converters
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.dao.FoodDAO
 
-@Database(entities = [Food::class], version = 1, exportSchema = false)
+@Database(entities = [Food::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun foodDAO(): FoodDAO
@@ -40,9 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
          * 이유는 모르겠음
          */
         private fun buildDatabase(appContext: Context): AppDatabase {
-            return Room.databaseBuilder(appContext, AppDatabase::class.java,
-                DATABASE_NAME
-            )
+            return Room.databaseBuilder(appContext, AppDatabase::class.java, DATABASE_NAME)
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
@@ -51,6 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
                         Log.i("AppDataBase", "after insert data")
                     }
                 })
+                .setJournalMode(JournalMode.TRUNCATE)
 //                .addMigrations(MIGRATION_1_2)
                 .fallbackToDestructiveMigration()
                 .build()

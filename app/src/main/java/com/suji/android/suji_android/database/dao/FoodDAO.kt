@@ -13,8 +13,8 @@ interface FoodDAO {
     fun insert(food: Food)
 
     @Delete
-    fun deleteFood(food: Food)
+    fun delete(food: Food)
 
     @Update
-    fun updateFood(food: Food)
+    fun update(food: Food) : Int
 }

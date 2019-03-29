@@ -28,15 +28,15 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
         return items
     }
 
-    fun addFood(food: Food) {
-        repository.addFood(food)
+    fun insert(food: Food) {
+        repository.insert(food)
     }
 
-    fun deleteFood(food: Food) {
-        repository.deleteFood(food)
+    fun delete(food: Food) {
+        repository.delete(food)
     }
 
-    fun updateFood(food: Food) {
-        repository.updateFood(food)
+    fun update(food: Food) {
+        repository.update(food)
     }
 }

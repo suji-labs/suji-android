@@ -15,10 +15,6 @@ class FoodListAdapter(private var clickListener: FoodClickListener) :
     RecyclerView.Adapter<FoodListAdapter.Companion.FoodViewHolder>() {
     private var items: List<Food>? = null
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
         val binding = DataBindingUtil
             .inflate<FoodItemBinding>(
