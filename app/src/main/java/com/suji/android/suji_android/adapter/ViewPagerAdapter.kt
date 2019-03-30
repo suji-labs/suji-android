@@ -1,43 +1,22 @@
 package com.suji.android.suji_android.adapter
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.suji.android.suji_android.R
-import com.suji.android.suji_android.databinding.ViewPagerItemBinding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.suji.android.suji_android.food.FoodFragment
+import com.suji.android.suji_android.sell.SellFragment
 
 
-class ViewPagerAdapter : RecyclerView.Adapter<ViewPagerAdapter.Companion.ViewPagerViewHolder>() {
-    private lateinit var items: ArrayList<String>
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder {
-//        val view = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
-//        return MyViewHolder(view)
-
-        val binding = DataBindingUtil
-            .inflate<ViewPagerItemBinding>(
-                LayoutInflater.from(parent.context), R.layout.view_pager_item,
-                parent, false
-            )
-//        binding.callback = clickListener
-        return ViewPagerAdapter.Companion.ViewPagerViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {
-        holder.binding.text = "Page $position"
+class ViewPagerAdapter(private val tabCount: Int, fragmentManager: FragmentManager) : FragmentStateAdapter(fragmentManager) {
+    override fun getItem(position: Int): Fragment {
+        return when (position) {
+            0 -> SellFragment()
+            1 -> FoodFragment()
+            else -> SellFragment()
+        }
     }
 
     override fun getItemCount(): Int {
-//        return items.size
-        return 3
-    }
-
-    fun setViewPagerItems(items: ArrayList<String>) {
-        this.items = items
-    }
-
-    companion object {
-        class ViewPagerViewHolder(val binding: ViewPagerItemBinding) : RecyclerView.ViewHolder(binding.root)
+        return tabCount
     }
 }
