@@ -1,4 +1,4 @@
-package com.suji.android.suji_android.callback
+package com.suji.android.suji_android.listener
 
 interface DialogClickListener {
     fun createFood()

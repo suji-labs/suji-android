@@ -1,4 +1,4 @@
-package com.suji.android.suji_android.callback
+package com.suji.android.suji_android.listener
 
 import com.suji.android.suji_android.database.model.Food
 

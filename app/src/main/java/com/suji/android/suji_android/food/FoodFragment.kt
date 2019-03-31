@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodListAdapter
 import com.suji.android.suji_android.basic.BasicApp
-import com.suji.android.suji_android.callback.CreateFoodClick
-import com.suji.android.suji_android.callback.FoodClickListener
+import com.suji.android.suji_android.listener.CreateFoodClickListener
+import com.suji.android.suji_android.listener.FoodClickListener
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodFragmentBinding
 import com.suji.android.suji_android.helper.DialogHelper
@@ -54,7 +54,7 @@ class FoodFragment : Fragment() {
         })
     }
 
-    private var createFood: CreateFoodClick = object : CreateFoodClick {
+    private var createFood: CreateFoodClickListener = object : CreateFoodClickListener {
         override fun onClick() {
             DialogHelper(context!!, foodViewModel).show()
         }

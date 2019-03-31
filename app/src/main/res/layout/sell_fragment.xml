@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="listener" type="com.suji.android.suji_android.listener.SellFoodClickListener"/>
+    </data>
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Sell Fragment"/>
-    </LinearLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/sell_fragment_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="15sp"
+                app:backgroundTint="#9500ff"
+                android:src="@drawable/ic_add_white_24dp"
+                android:onClick="@{() -> listener.sell()}"/>
+    </FrameLayout>
 </layout>

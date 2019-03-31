@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,7 @@ import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.callback.DialogClickListener
+import com.suji.android.suji_android.listener.DialogClickListener
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.DialogLayoutBinding
 import com.suji.android.suji_android.food.FoodViewModel

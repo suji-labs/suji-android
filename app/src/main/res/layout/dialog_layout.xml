@@ -6,7 +6,7 @@
     <data>
         <variable
                 name="listener"
-                type="com.suji.android.suji_android.callback.DialogClickListener"/>
+                type="com.suji.android.suji_android.listener.DialogClickListener"/>
     </data>
 
     <LinearLayout
