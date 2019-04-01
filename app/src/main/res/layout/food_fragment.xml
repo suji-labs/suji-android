@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-                name="callback"
+                name="listener"
                 type="com.suji.android.suji_android.listener.CreateFoodClickListener"/>
     </data>
 
@@ -14,7 +14,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <com.beardedhen.androidbootstrap.BootstrapButton
-                    android:onClick="@{() -> callback.onClick()}"
+                    android:onClick="@{() -> listener.onClick()}"
                     android:text="@string/create_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

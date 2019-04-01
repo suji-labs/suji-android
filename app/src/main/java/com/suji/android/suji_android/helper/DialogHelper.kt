@@ -12,20 +12,23 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModel
 import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.listener.DialogClickListener
 import com.suji.android.suji_android.database.model.Food
-import com.suji.android.suji_android.databinding.DialogLayoutBinding
+import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
 import com.suji.android.suji_android.food.FoodViewModel
+import com.suji.android.suji_android.listener.DialogClickListener
 
 class DialogHelper : Dialog {
-    private lateinit var binding: DialogLayoutBinding
-    private lateinit var foodViewModel: FoodViewModel
+    private lateinit var binding: ViewDataBinding
+    private lateinit var viewModel: ViewModel
     private var food: Food? = null
+    private var layout: Int = 0
     private var subMenuLayoutID: Int = 0x8000
     private var subMenuNameID: Int = 0x7000
     private var subMenuPriceID: Int = 0x6000
@@ -33,15 +36,17 @@ class DialogHelper : Dialog {
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, foodViewModel: FoodViewModel)
+    constructor(context: Context, viewModel: ViewModel, layout: Int)
             : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
-        this.foodViewModel = foodViewModel
+        this.viewModel = viewModel
+        this.layout = layout
     }
 
-    constructor(context: Context, food: Food, foodViewModel: FoodViewModel)
+    constructor(context: Context, food: Food, viewModel: ViewModel, layout: Int)
             : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
         this.food = food
-        this.foodViewModel = foodViewModel
+        this.viewModel = viewModel
+        this.layout = layout
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,15 +63,20 @@ class DialogHelper : Dialog {
     }
 
     private fun initView() {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_layout, null, false)
-        binding.listener = listener
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), layout, null, false)
+
+        if (layout == R.layout.food_create_dialog) {
+            (binding as FoodCreateDialogBinding).listener = createFoodDialog
+        } else if (layout == R.layout.food_sell_dialog) {
+
+        }
     }
 
-    private var listener: DialogClickListener = object : DialogClickListener {
+    private var createFoodDialog: DialogClickListener = object : DialogClickListener {
         override fun createFood() {
             val subMenuList: ArrayList<Food> = ArrayList()
-            val foodName: String = binding.createMenuEditName.text.toString()
-            val foodPrice: String = binding.createMenuEditPrice.text.toString()
+            val foodName: String = (binding as FoodCreateDialogBinding).createMenuEditName.text.toString()
+            val foodPrice: String = (binding as FoodCreateDialogBinding).createMenuEditPrice.text.toString()
 
             if (foodName == "" || foodPrice == "") {
                 Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
@@ -83,15 +93,15 @@ class DialogHelper : Dialog {
 
             if (subMenuList.size == 0) {
                 if (food == null) {
-                    foodViewModel.insert(Food(foodName, foodPrice.toInt()))
+                    (viewModel as FoodViewModel).insert(Food(foodName, foodPrice.toInt()))
                 } else {
-                    foodViewModel.update(Food(foodName, foodPrice.toInt(), id = food!!.id))
+                    (viewModel as FoodViewModel).update(Food(foodName, foodPrice.toInt(), id = food!!.id))
                 }
             } else {
                 if (food == null) {
-                    foodViewModel.insert(Food(foodName, foodPrice.toInt(), subMenuList))
+                    (viewModel as FoodViewModel).insert(Food(foodName, foodPrice.toInt(), subMenuList))
                 } else {
-                    foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, food!!.id))
+                    (viewModel as FoodViewModel).update(Food(foodName, foodPrice.toInt(), subMenuList, food!!.id))
                 }
             }
 

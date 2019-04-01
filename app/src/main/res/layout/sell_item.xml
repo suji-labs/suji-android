@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="listener" type="com.suji.android.suji_android.listener.FoodSellClickListener"/>
+        <variable name="sale" type="com.suji.android.suji_android.database.model.Sale"/>
+    </data>
+    <com.beardedhen.androidbootstrap.BootstrapWell
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{sale.name}"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{sale.price}"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end">
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sell"
+                        android:onClick="@{() -> listener.sell(sale)}"
+                        app:bootstrapBrand="success"/>
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cancel"
+                        android:onClick="@{() -> listener.cancel(sale)}"
+                        app:bootstrapBrand="danger"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.beardedhen.androidbootstrap.BootstrapWell>
+</layout>

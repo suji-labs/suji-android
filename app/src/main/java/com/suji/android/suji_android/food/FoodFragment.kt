@@ -31,7 +31,7 @@ class FoodFragment : Fragment() {
         initViewModel()
         adapter = FoodListAdapter(foodClickListener)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.callback = createFood
+        binding.listener = createFood
         binding.mainFoodList.layoutManager = layoutManager
         binding.mainFoodList.adapter = adapter
         return binding.root
@@ -56,7 +56,7 @@ class FoodFragment : Fragment() {
 
     private var createFood: CreateFoodClickListener = object : CreateFoodClickListener {
         override fun onClick() {
-            DialogHelper(context!!, foodViewModel).show()
+            DialogHelper(context!!, foodViewModel, R.layout.food_create_dialog).show()
         }
     }
 
@@ -66,7 +66,7 @@ class FoodFragment : Fragment() {
         }
 
         override fun onModifyClick(food: Food) {
-            DialogHelper(context!!, food, foodViewModel).show()
+            DialogHelper(context!!, food, foodViewModel, R.layout.food_create_dialog).show()
         }
     }
 }

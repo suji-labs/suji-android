@@ -2,7 +2,7 @@ package com.suji.android.suji_android.basic
 
 import android.app.Application
 import com.suji.android.suji_android.database.AppDatabase
-import com.suji.android.suji_android.repository.DataRepository
+import com.suji.android.suji_android.database.repository.DataRepository
 
 class BasicApp : Application() {
     override fun onCreate() {
