@@ -1,4 +1,4 @@
-package com.suji.android.suji_android
+package com.suji.android.suji_android.database
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

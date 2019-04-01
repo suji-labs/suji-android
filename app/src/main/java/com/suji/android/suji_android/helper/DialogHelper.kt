@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -19,14 +20,18 @@ import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
+import com.suji.android.suji_android.adapter.FoodSaleListAdapter
+import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
+import com.suji.android.suji_android.databinding.FoodSellDialogBinding
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.listener.DialogClickListener
 
 class DialogHelper : Dialog {
     private lateinit var binding: ViewDataBinding
     private lateinit var viewModel: ViewModel
+    private lateinit var foods: ArrayList<Food>
     private var food: Food? = null
     private var layout: Int = 0
     private var subMenuLayoutID: Int = 0x8000
@@ -36,15 +41,22 @@ class DialogHelper : Dialog {
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, viewModel: ViewModel, layout: Int)
+    constructor(context: Context, layout: Int, viewModel: ViewModel)
             : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
         this.viewModel = viewModel
         this.layout = layout
     }
 
-    constructor(context: Context, food: Food, viewModel: ViewModel, layout: Int)
+    constructor(context: Context, layout: Int, food: Food, viewModel: ViewModel)
             : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
         this.food = food
+        this.viewModel = viewModel
+        this.layout = layout
+    }
+
+    constructor(context: Context, layout: Int, viewModel: ViewModel, foods: ArrayList<Food>)
+            : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
+        this.foods = foods
         this.viewModel = viewModel
         this.layout = layout
     }
@@ -68,7 +80,10 @@ class DialogHelper : Dialog {
         if (layout == R.layout.food_create_dialog) {
             (binding as FoodCreateDialogBinding).listener = createFoodDialog
         } else if (layout == R.layout.food_sell_dialog) {
-
+            val list: ArrayList<Food> = ArrayList<Food>()
+            list.add(Food("보리밥", 6000))
+            list.add(Food("뚝배기 묵은지 쪽갈비", 7000))
+            (binding as FoodSellDialogBinding).sellItemSpinner.adapter = FoodSaleListAdapter(foods)
         }
     }
 

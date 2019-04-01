@@ -56,7 +56,7 @@ class FoodFragment : Fragment() {
 
     private var createFood: CreateFoodClickListener = object : CreateFoodClickListener {
         override fun onClick() {
-            DialogHelper(context!!, foodViewModel, R.layout.food_create_dialog).show()
+            DialogHelper(context!!, R.layout.food_create_dialog, foodViewModel).show()
         }
     }
 
@@ -66,7 +66,7 @@ class FoodFragment : Fragment() {
         }
 
         override fun onModifyClick(food: Food) {
-            DialogHelper(context!!, food, foodViewModel, R.layout.food_create_dialog).show()
+            DialogHelper(context!!, R.layout.food_create_dialog, food, foodViewModel).show()
         }
     }
 }

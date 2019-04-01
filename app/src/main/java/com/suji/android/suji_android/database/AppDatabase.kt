@@ -8,7 +8,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.suji.android.suji_android.Converters
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.dao.FoodDAO
 import com.suji.android.suji_android.database.dao.SaleDAO

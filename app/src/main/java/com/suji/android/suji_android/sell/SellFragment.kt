@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.SellListAdapter
 import com.suji.android.suji_android.basic.BasicApp
+import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.SellFragmentBinding
+import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.DialogHelper
 import com.suji.android.suji_android.listener.FloatingButtonClickListener
 
@@ -23,7 +25,9 @@ class SellFragment : Fragment() {
     private lateinit var binding: SellFragmentBinding
     private lateinit var adapter: SellListAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private var viewModel: SellViewModel = SellViewModel(BasicApp.app)
+    private var sellViewModel: SellViewModel = SellViewModel(BasicApp.app)
+    private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
+    private var foods: List<Food>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<SellFragmentBinding>(inflater, R.layout.sell_fragment, container, false)
@@ -43,19 +47,28 @@ class SellFragment : Fragment() {
 
     private val listener: FloatingButtonClickListener = object : FloatingButtonClickListener {
         override fun sell() {
-            DialogHelper(context!!, viewModel, R.layout.food_sell_dialog).show()
+            DialogHelper(context!!, R.layout.food_sell_dialog, sellViewModel, foods as ArrayList<Food>).show()
         }
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(SellViewModel::class.java)
-        viewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
+        sellViewModel = ViewModelProviders.of(this).get(SellViewModel::class.java)
+        sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
             override fun onChanged(@Nullable sales: List<Sale>?) {
                 if (sales != null) {
                     adapter.setSaleList(sales)
                 }
 
                 binding.executePendingBindings()
+            }
+        })
+
+        foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
+            override fun onChanged(@Nullable foods: List<Food>?) {
+                if (foods != null) {
+                    this@SellFragment.foods = foods
+                }
             }
         })
     }
