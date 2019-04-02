@@ -1,5 +1,5 @@
 package com.suji.android.suji_android.listener
 
-interface SellFoodClickListener {
+interface FloatingButtonClickListener {
     fun sell()
 }

@@ -7,25 +7,25 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
-import com.suji.android.suji_android.repository.DataRepository
+import com.suji.android.suji_android.database.repository.DataRepository
 
 class FoodViewModel(application: Application) : AndroidViewModel(application) {
     private var repository: DataRepository
-    private var items: MediatorLiveData<List<Food>> = MediatorLiveData()
+    private var foods: MediatorLiveData<List<Food>> = MediatorLiveData()
 
     init {
-        items.value = null
+        foods.value = null
         repository = (application as BasicApp).getRepository()
         val food = repository.food
-        items.addSource(food, object : Observer<List<Food>> {
+        foods.addSource(food, object : Observer<List<Food>> {
             override fun onChanged(foods: List<Food>?) {
-                items.value = foods
+                this@FoodViewModel.foods.value = foods
             }
         })
     }
 
     fun getAllFood(): LiveData<List<Food>> {
-        return items
+        return foods
     }
 
     fun insert(food: Food) {

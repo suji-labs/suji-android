@@ -9,23 +9,35 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModel
 import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.listener.DialogClickListener
+import com.suji.android.suji_android.adapter.FoodSaleListAdapter
 import com.suji.android.suji_android.database.model.Food
-import com.suji.android.suji_android.databinding.DialogLayoutBinding
+import com.suji.android.suji_android.database.model.Sale
+import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
+import com.suji.android.suji_android.databinding.FoodSellDialogBinding
 import com.suji.android.suji_android.food.FoodViewModel
+import com.suji.android.suji_android.listener.CreateSaleClickListener
+import com.suji.android.suji_android.listener.DialogClickListener
+import com.suji.android.suji_android.sell.SellViewModel
+import org.joda.time.DateTime
+import java.text.DecimalFormat
 
 class DialogHelper : Dialog {
-    private lateinit var binding: DialogLayoutBinding
-    private lateinit var foodViewModel: FoodViewModel
+    private lateinit var binding: ViewDataBinding
+    private lateinit var viewModel: ViewModel
+    private lateinit var foods: ArrayList<Food>
     private var food: Food? = null
+    private var layout: Int = 0
     private var subMenuLayoutID: Int = 0x8000
     private var subMenuNameID: Int = 0x7000
     private var subMenuPriceID: Int = 0x6000
@@ -33,15 +45,24 @@ class DialogHelper : Dialog {
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, foodViewModel: FoodViewModel)
+    constructor(context: Context, layout: Int, viewModel: ViewModel)
             : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
-        this.foodViewModel = foodViewModel
+        this.viewModel = viewModel
+        this.layout = layout
     }
 
-    constructor(context: Context, food: Food, foodViewModel: FoodViewModel)
+    constructor(context: Context, layout: Int, food: Food, viewModel: ViewModel)
             : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
         this.food = food
-        this.foodViewModel = foodViewModel
+        this.viewModel = viewModel
+        this.layout = layout
+    }
+
+    constructor(context: Context, layout: Int, viewModel: ViewModel, foods: ArrayList<Food>)
+            : super(context, R.style.AppTheme_AppCompat_CustomDialog) {
+        this.foods = foods
+        this.viewModel = viewModel
+        this.layout = layout
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,15 +79,75 @@ class DialogHelper : Dialog {
     }
 
     private fun initView() {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_layout, null, false)
-        binding.listener = listener
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), layout, null, false)
+
+        if (layout == R.layout.food_create_dialog) {
+            (binding as FoodCreateDialogBinding).listener = createFoodDialog
+        } else if (layout == R.layout.food_sell_dialog) {
+            (binding as FoodSellDialogBinding).sellItemSpinner.adapter = FoodSaleListAdapter(foods)
+            (binding as FoodSellDialogBinding).sellItemSpinner.onItemSelectedListener = spinnerItemClick
+            (binding as FoodSellDialogBinding).listener = foodSellClickListener
+        }
     }
 
-    private var listener: DialogClickListener = object : DialogClickListener {
+    private val foodSellClickListener: CreateSaleClickListener = object : CreateSaleClickListener {
+        override fun createSale() {
+            var sumPrice = 0
+            val formatter = DecimalFormat("###,###")
+
+            sumPrice += findViewById<BootstrapEditText>(R.id.sell_main_food_count).text.toString().toInt() * food!!.price
+            for (i in 0 until food!!.sub.size) {
+                sumPrice += findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString().toInt() * food!!.sub[i].price
+            }
+
+            (viewModel as SellViewModel).insert(Sale(food!!.name, formatter.format(sumPrice), DateTime()))
+            dismiss()
+        }
+
+        override fun cancel() {
+            dismiss()
+        }
+    }
+
+    private val spinnerItemClick: AdapterView.OnItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            food = foods[position]
+            val linearLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+            labelWeight.weight = 1f
+            val editWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+            editWeight.weight = 2f
+
+            for (i in 0 until foods[position].sub.size) {
+                val layout = LinearLayout(context)
+                layout.layoutParams = linearLayoutParams
+                layout.orientation = LinearLayout.HORIZONTAL
+
+                val label = BootstrapLabel(context)
+                label.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
+                label.text = foods[position].sub[i].name
+
+                val edit = BootstrapEditText(context)
+                edit.id = subMenuPriceID + i
+                edit.setTextColor(Color.BLACK)
+                edit.inputType = InputType.TYPE_CLASS_NUMBER
+
+                layout.addView(label, labelWeight)
+                layout.addView(edit, editWeight)
+                (binding as FoodSellDialogBinding).sellSubFoodLayout.addView(layout)
+            }
+        }
+    }
+
+    private val createFoodDialog: DialogClickListener = object : DialogClickListener {
         override fun createFood() {
             val subMenuList: ArrayList<Food> = ArrayList()
-            val foodName: String = binding.createMenuEditName.text.toString()
-            val foodPrice: String = binding.createMenuEditPrice.text.toString()
+            val foodName: String = (binding as FoodCreateDialogBinding).createMenuEditName.text.toString()
+            val foodPrice: String = (binding as FoodCreateDialogBinding).createMenuEditPrice.text.toString()
 
             if (foodName == "" || foodPrice == "") {
                 Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
@@ -83,15 +164,15 @@ class DialogHelper : Dialog {
 
             if (subMenuList.size == 0) {
                 if (food == null) {
-                    foodViewModel.insert(Food(foodName, foodPrice.toInt()))
+                    (viewModel as FoodViewModel).insert(Food(foodName, foodPrice.toInt()))
                 } else {
-                    foodViewModel.update(Food(foodName, foodPrice.toInt(), id = food!!.id))
+                    (viewModel as FoodViewModel).update(Food(foodName, foodPrice.toInt(), id = food!!.id))
                 }
             } else {
                 if (food == null) {
-                    foodViewModel.insert(Food(foodName, foodPrice.toInt(), subMenuList))
+                    (viewModel as FoodViewModel).insert(Food(foodName, foodPrice.toInt(), subMenuList))
                 } else {
-                    foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, food!!.id))
+                    (viewModel as FoodViewModel).update(Food(foodName, foodPrice.toInt(), subMenuList, food!!.id))
                 }
             }
 

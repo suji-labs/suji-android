@@ -8,14 +8,16 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.suji.android.suji_android.Converters
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.dao.FoodDAO
+import com.suji.android.suji_android.database.dao.SaleDAO
+import com.suji.android.suji_android.database.model.Sale
 
-@Database(entities = [Food::class], version = 2, exportSchema = false)
+@Database(entities = [Food::class, Sale::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun foodDAO(): FoodDAO
+    abstract fun saleDAO(): SaleDAO
 
     object Singleton {
         private const val DATABASE_NAME = "suji-android"
@@ -46,7 +48,7 @@ abstract class AppDatabase : RoomDatabase() {
                         super.onCreate(db)
 //                        val database = getInstance(appContext)
 //                        insertData(database!!)
-                        Log.i("AppDataBase", "after insert data")
+                        Log.i("AppDataBase", "after insertFood data")
                     }
                 })
                 .setJournalMode(JournalMode.TRUNCATE)
