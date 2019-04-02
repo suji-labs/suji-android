@@ -22,10 +22,15 @@ import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodSaleListAdapter
 import com.suji.android.suji_android.database.model.Food
+import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
 import com.suji.android.suji_android.databinding.FoodSellDialogBinding
 import com.suji.android.suji_android.food.FoodViewModel
+import com.suji.android.suji_android.listener.CreateSaleClickListener
 import com.suji.android.suji_android.listener.DialogClickListener
+import com.suji.android.suji_android.sell.SellViewModel
+import org.joda.time.DateTime
+import java.text.DecimalFormat
 
 class DialogHelper : Dialog {
     private lateinit var binding: ViewDataBinding
@@ -81,6 +86,26 @@ class DialogHelper : Dialog {
         } else if (layout == R.layout.food_sell_dialog) {
             (binding as FoodSellDialogBinding).sellItemSpinner.adapter = FoodSaleListAdapter(foods)
             (binding as FoodSellDialogBinding).sellItemSpinner.onItemSelectedListener = spinnerItemClick
+            (binding as FoodSellDialogBinding).listener = foodSellClickListener
+        }
+    }
+
+    private val foodSellClickListener: CreateSaleClickListener = object : CreateSaleClickListener {
+        override fun createSale() {
+            var sumPrice = 0
+            val formatter = DecimalFormat("###,###")
+
+            sumPrice += findViewById<BootstrapEditText>(R.id.sell_main_food_count).text.toString().toInt() * food!!.price
+            for (i in 0 until food!!.sub.size) {
+                sumPrice += findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString().toInt() * food!!.sub[i].price
+            }
+
+            (viewModel as SellViewModel).insert(Sale(food!!.name, formatter.format(sumPrice), DateTime()))
+            dismiss()
+        }
+
+        override fun cancel() {
+            dismiss()
         }
     }
 
@@ -90,6 +115,7 @@ class DialogHelper : Dialog {
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            food = foods[position]
             val linearLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
             labelWeight.weight = 1f
@@ -108,6 +134,7 @@ class DialogHelper : Dialog {
                 val edit = BootstrapEditText(context)
                 edit.id = subMenuPriceID + i
                 edit.setTextColor(Color.BLACK)
+                edit.inputType = InputType.TYPE_CLASS_NUMBER
 
                 layout.addView(label, labelWeight)
                 layout.addView(edit, editWeight)

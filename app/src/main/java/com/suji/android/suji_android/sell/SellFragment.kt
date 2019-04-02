@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.DialogHelper
 import com.suji.android.suji_android.listener.FloatingButtonClickListener
+import com.suji.android.suji_android.listener.FoodSellClickListener
 
 class SellFragment : Fragment() {
     private lateinit var binding: SellFragmentBinding
@@ -32,12 +34,11 @@ class SellFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<SellFragmentBinding>(inflater, R.layout.sell_fragment, container, false)
         initViewModel()
-        binding.listener = listener
-        adapter = SellListAdapter()
+        binding.listener = floatingButtonClickListener
+        adapter = SellListAdapter(foodSellClickListener)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-//        binding.listener = createFood
-//        binding.mainFoodList.layoutManager = layoutManager
-//        binding.mainFoodList.adapter = adapter
+        binding.sellFragmentItems.layoutManager = layoutManager
+        binding.sellFragmentItems.adapter = adapter
         return binding.root
     }
 
@@ -45,9 +46,23 @@ class SellFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private val listener: FloatingButtonClickListener = object : FloatingButtonClickListener {
+    private val floatingButtonClickListener: FloatingButtonClickListener = object : FloatingButtonClickListener {
         override fun sell() {
             DialogHelper(context!!, R.layout.food_sell_dialog, sellViewModel, foods as ArrayList<Food>).show()
+        }
+    }
+
+    private val foodSellClickListener: FoodSellClickListener = object : FoodSellClickListener {
+        override fun sell(sale: Sale) {
+            sellViewModel.delete(sale)
+        }
+
+        override fun addFood() {
+            Toast.makeText(context, "addFood", Toast.LENGTH_SHORT).show()
+        }
+
+        override fun cancel(sale: Sale) {
+            sellViewModel.delete(sale)
         }
     }
 

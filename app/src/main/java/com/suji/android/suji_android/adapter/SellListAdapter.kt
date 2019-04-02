@@ -1,26 +1,42 @@
 package com.suji.android.suji_android.adapter
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.FoodItemBinding
+import com.suji.android.suji_android.databinding.SellItemBinding
+import com.suji.android.suji_android.listener.FoodSellClickListener
 import java.util.*
 
-class SellListAdapter :
-    RecyclerView.Adapter<FoodListAdapter.Companion.FoodViewHolder>() {
+class SellListAdapter(var listener: FoodSellClickListener) :
+    RecyclerView.Adapter<SellListAdapter.Companion.SellViewHolder>() {
     private var items: List<Sale>? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodListAdapter.Companion.FoodViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellListAdapter.Companion.SellViewHolder {
+        val binding = DataBindingUtil
+            .inflate<SellItemBinding>(
+                LayoutInflater.from(parent.context), R.layout.sell_item,
+                parent, false
+            )
+        binding.listener = listener
+        return SellViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return if (items == null) {
+            0
+        } else {
+            items!!.size
+        }
     }
 
-    override fun onBindViewHolder(holder: FoodListAdapter.Companion.FoodViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onBindViewHolder(holder: SellListAdapter.Companion.SellViewHolder, position: Int) {
+        holder.binding.sale = items!![position]
+        holder.binding.executePendingBindings()
     }
 
     fun setSaleList(saleList: List<Sale>?) {
@@ -56,6 +72,6 @@ class SellListAdapter :
     }
 
     companion object {
-        class FoodViewHolder(val binding: FoodItemBinding) : RecyclerView.ViewHolder(binding.root)
+        class SellViewHolder(val binding: SellItemBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

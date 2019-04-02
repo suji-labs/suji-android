@@ -6,6 +6,10 @@
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sell_fragment_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/sell_fragment_fab"
                 android:layout_width="wrap_content"

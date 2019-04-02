@@ -12,19 +12,18 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <LinearLayout
-                    android:orientation="horizontal"
+            <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@{sale.name}"/>
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@{sale.price}"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:text="@{sale.name}"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:text="@{sale.price}"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -36,6 +35,12 @@
                         android:text="@string/sell"
                         android:onClick="@{() -> listener.sell(sale)}"
                         app:bootstrapBrand="success"/>
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/modify"
+                        android:onClick="@{() -> listener.addFood()}"
+                        app:bootstrapBrand="primary"/>
                 <com.beardedhen.androidbootstrap.BootstrapButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
