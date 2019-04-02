@@ -9,7 +9,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.ArrayAdapter
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -21,7 +21,6 @@ import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodSaleListAdapter
-import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
 import com.suji.android.suji_android.databinding.FoodSellDialogBinding
@@ -80,14 +79,44 @@ class DialogHelper : Dialog {
         if (layout == R.layout.food_create_dialog) {
             (binding as FoodCreateDialogBinding).listener = createFoodDialog
         } else if (layout == R.layout.food_sell_dialog) {
-            val list: ArrayList<Food> = ArrayList<Food>()
-            list.add(Food("보리밥", 6000))
-            list.add(Food("뚝배기 묵은지 쪽갈비", 7000))
             (binding as FoodSellDialogBinding).sellItemSpinner.adapter = FoodSaleListAdapter(foods)
+            (binding as FoodSellDialogBinding).sellItemSpinner.onItemSelectedListener = spinnerItemClick
         }
     }
 
-    private var createFoodDialog: DialogClickListener = object : DialogClickListener {
+    private val spinnerItemClick: AdapterView.OnItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val linearLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+            labelWeight.weight = 1f
+            val editWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+            editWeight.weight = 2f
+
+            for (i in 0 until foods[position].sub.size) {
+                val layout = LinearLayout(context)
+                layout.layoutParams = linearLayoutParams
+                layout.orientation = LinearLayout.HORIZONTAL
+
+                val label = BootstrapLabel(context)
+                label.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
+                label.text = foods[position].sub[i].name
+
+                val edit = BootstrapEditText(context)
+                edit.id = subMenuPriceID + i
+                edit.setTextColor(Color.BLACK)
+
+                layout.addView(label, labelWeight)
+                layout.addView(edit, editWeight)
+                (binding as FoodSellDialogBinding).sellSubFoodLayout.addView(layout)
+            }
+        }
+    }
+
+    private val createFoodDialog: DialogClickListener = object : DialogClickListener {
         override fun createFood() {
             val subMenuList: ArrayList<Food> = ArrayList()
             val foodName: String = (binding as FoodCreateDialogBinding).createMenuEditName.text.toString()

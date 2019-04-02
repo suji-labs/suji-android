@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="listener" type="com.suji.android.suji_android.listener.FoodSellClickListener"/>
     </data>
@@ -9,9 +9,47 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/sell_item_spinner"
+        <com.beardedhen.androidbootstrap.BootstrapWell
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/sell_item_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </com.beardedhen.androidbootstrap.BootstrapWell>
+
+        <LinearLayout
+                android:id="@+id/sell_food_info"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <com.beardedhen.androidbootstrap.BootstrapLabel
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="25sp"
+                        android:text="@string/count"
+                        app:bootstrapBrand="primary"/>
+
+                <com.beardedhen.androidbootstrap.BootstrapEditText
+                        android:id="@+id/sell_main_food_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textColor="#000000"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/sell_sub_food_layout"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </layout>
