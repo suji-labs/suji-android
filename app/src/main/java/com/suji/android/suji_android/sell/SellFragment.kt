@@ -48,7 +48,7 @@ class SellFragment : Fragment() {
 
     private val floatingButtonClickListener: FloatingButtonClickListener = object : FloatingButtonClickListener {
         override fun sell() {
-            DialogHelper(context!!, R.layout.food_sell_dialog, sellViewModel, foods as ArrayList<Food>).show()
+//            DialogHelper(context!!, R.layout.food_sell_dialog, sellViewModel, foods as ArrayList<Food>).show()
         }
     }
 

@@ -4,9 +4,17 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable name="dialog" type="android.content.DialogInterface"/>
+        <variable name="which" type="int"/>
         <variable
-                name="listener"
-                type="com.suji.android.suji_android.listener.DialogClickListener"/>
+                name="positive"
+                type="android.content.DialogInterface.OnClickListener"/>
+        <variable
+                name="negative"
+                type="android.content.DialogInterface.OnClickListener"/>
+        <variable
+                name="neutral"
+                type="android.content.DialogInterface.OnClickListener"/>
     </data>
 
     <LinearLayout
@@ -93,7 +101,7 @@
                     app:showOutline="false"
                     app:roundedCorners="true"
                     android:text="@string/create"
-                    android:onClick="@{() -> listener.createFood()}"
+                    android:onClick="@{() -> positive.onClick(dialog, which)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"/>
@@ -105,7 +113,7 @@
                     app:showOutline="false"
                     app:roundedCorners="true"
                     android:text="@string/cancel"
-                    android:onClick="@{() -> listener.cancelFood()}"
+                    android:onClick="@{() -> negative.onClick(dialog, which)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -121,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:onClick="@{() -> listener.addSubMenuClick()}"/>
+                    android:onClick="@{() -> neutral.onClick(dialog, which)}"/>
         </LinearLayout>
     </LinearLayout>
 
