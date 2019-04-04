@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Food
 
-class FoodSaleListAdapter(private var foods: ArrayList<Food>) : BaseAdapter() {
+class FoodSaleListAdapter(private var foods: List<Food>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
 

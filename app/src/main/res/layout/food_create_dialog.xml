@@ -3,31 +3,24 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable name="dialog" type="android.content.DialogInterface"/>
-        <variable name="which" type="int"/>
-        <variable
-                name="positive"
-                type="android.content.DialogInterface.OnClickListener"/>
-        <variable
-                name="negative"
-                type="android.content.DialogInterface.OnClickListener"/>
-        <variable
-                name="neutral"
-                type="android.content.DialogInterface.OnClickListener"/>
-    </data>
-
     <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+        <com.beardedhen.androidbootstrap.BootstrapLabel
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/create_food"
+                android:layout_marginBottom="10dp"
+                app:bootstrapBrand="success"/>
+
         <RelativeLayout
                 android:layout_marginBottom="30dp"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
             <LinearLayout
                     android:layout_marginBottom="15dp"
@@ -87,50 +80,6 @@
             </LinearLayout>
 
         </RelativeLayout>
-
-        <LinearLayout
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                    app:bootstrapBrand="success"
-                    app:bootstrapSize="lg"
-                    app:buttonMode="regular"
-                    app:showOutline="false"
-                    app:roundedCorners="true"
-                    android:text="@string/create"
-                    android:onClick="@{() -> positive.onClick(dialog, which)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"/>
-
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                    app:bootstrapBrand="danger"
-                    app:bootstrapSize="lg"
-                    app:buttonMode="regular"
-                    app:showOutline="false"
-                    app:roundedCorners="true"
-                    android:text="@string/cancel"
-                    android:onClick="@{() -> negative.onClick(dialog, which)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"/>
-
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                    app:bootstrapBrand="primary"
-                    app:bootstrapSize="lg"
-                    app:buttonMode="regular"
-                    app:showOutline="false"
-                    app:roundedCorners="true"
-                    android:text="@string/sub_menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:onClick="@{() -> neutral.onClick(dialog, which)}"/>
-        </LinearLayout>
     </LinearLayout>
 
 </layout>

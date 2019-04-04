@@ -4,12 +4,16 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <TextView
-                android:id="@+id/spinner_item_name"
-                android:gravity="center"
+        <com.beardedhen.androidbootstrap.BootstrapWell
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="35sp"/>
+                android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/spinner_item_name"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="25sp"/>
+        </com.beardedhen.androidbootstrap.BootstrapWell>
     </LinearLayout>
 </layout>

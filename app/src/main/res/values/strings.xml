@@ -15,4 +15,6 @@
     <string name="delete">삭제</string>
     <string name="sell">판매</string>
     <string name="count">수량</string>
+    <string name="create_food">메뉴 만들기</string>
+    <string name="total_price">총 금액</string>
 </resources>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable name="listener" type="com.suji.android.suji_android.listener.CreateSaleClickListener"/>
-    </data>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
             android:orientation="vertical"
@@ -44,35 +43,31 @@
                         android:inputType="number"
                         android:textColor="#000000"/>
             </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/sell_sub_food_layout"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-            </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+                android:id="@+id/sell_sub_food_layout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+        </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="end|bottom">
-
-            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:layout_height="match_parent">
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sell"
-                    android:onClick="@{() -> listener.createSale()}"
-                    app:bootstrapBrand="primary"
-                    app:bootstrapSize="xl"/>
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                    android:layout_width="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:text="@string/total_price"/>
+            <TextView
+                    android:id="@+id/food_sale_total_price"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cancel"
-                    android:onClick="@{() -> listener.cancel()}"
-                    app:bootstrapBrand="danger"
-                    app:bootstrapSize="xl"/>
+                    android:gravity="end"
+                    android:textSize="25sp"
+                    android:textColor="#000000"/>
         </LinearLayout>
     </LinearLayout>
 </layout>
