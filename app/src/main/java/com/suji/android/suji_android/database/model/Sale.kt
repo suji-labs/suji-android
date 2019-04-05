@@ -13,6 +13,8 @@ data class Sale(
     var price: String,
     @ColumnInfo(name = "time")
     var time: DateTime,
+    @ColumnInfo(name = "foods")
+    var foods: HashMap<String, Int>,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )

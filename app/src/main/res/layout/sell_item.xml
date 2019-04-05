@@ -24,6 +24,12 @@
                     android:textColor="#000000"
                     android:textSize="25sp"
                     android:text="@{sale.price}"/>
+            <TextView
+                    android:id="@+id/sell_food_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"/>
+
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"

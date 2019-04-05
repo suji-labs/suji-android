@@ -86,6 +86,9 @@ class FoodFragment : Fragment() {
                         val foodPrice: String =
                             foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_price).text.toString()
 
+                        foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_name).setText("")
+                        foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_price).setText("")
+
                         if (foodName == "" || foodPrice == "") {
                             Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
                             return
@@ -96,6 +99,10 @@ class FoodFragment : Fragment() {
                                 foodCreateView.findViewById<BootstrapEditText>(subMenuNameID + i).text.toString()
                             val subMenuPrice =
                                 foodCreateView.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString()
+
+                            foodCreateView.findViewById<BootstrapEditText>(subMenuNameID + i).setText("")
+                            foodCreateView.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+
                             subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
                         }
 

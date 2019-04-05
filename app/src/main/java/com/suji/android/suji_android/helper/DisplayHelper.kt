@@ -7,18 +7,14 @@ import android.view.Display
 import android.view.WindowManager
 import com.suji.android.suji_android.basic.BasicApp
 
+object DisplayHelper {
+    private fun getDisplay(): Display {
+        return (BasicApp.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+    }
 
-class DisplayHelper {
-    object Singleton {
-        private val displayMetrics = DisplayMetrics()
-
-        private fun getDisplay(): Display {
-            return (BasicApp.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
-        }
-
-        fun getDisplaySize(): Point {
-            getDisplay().getMetrics(displayMetrics)
-            return Point(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        }
+    fun getDisplaySize(): Point {
+        val displayMetrics = DisplayMetrics()
+        getDisplay().getMetrics(displayMetrics)
+        return Point(displayMetrics.widthPixels, displayMetrics.heightPixels)
     }
 }
