@@ -12,6 +12,8 @@ data class Food(
     val price: Int,
     @ColumnInfo(name = "sub")
     val sub: ArrayList<Food> = ArrayList<Food>(),
+    @ColumnInfo(name = "count")
+    var count: Int = 0,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )

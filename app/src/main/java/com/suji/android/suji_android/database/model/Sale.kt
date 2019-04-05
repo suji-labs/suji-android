@@ -14,7 +14,7 @@ data class Sale(
     @ColumnInfo(name = "time")
     var time: DateTime,
     @ColumnInfo(name = "foods")
-    var foods: HashMap<String, Int>,
+    var foods: HashSet<Food>,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )

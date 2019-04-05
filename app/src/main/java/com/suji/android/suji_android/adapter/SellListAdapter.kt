@@ -7,11 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Sale
-import com.suji.android.suji_android.databinding.FoodItemBinding
 import com.suji.android.suji_android.databinding.SellItemBinding
 import com.suji.android.suji_android.listener.FoodSellClickListener
 import java.util.*
-import kotlin.collections.HashSet
 
 class SellListAdapter(var listener: FoodSellClickListener) :
     RecyclerView.Adapter<SellListAdapter.Companion.SellViewHolder>() {
@@ -37,9 +35,10 @@ class SellListAdapter(var listener: FoodSellClickListener) :
 
     override fun onBindViewHolder(holder: SellListAdapter.Companion.SellViewHolder, position: Int) {
         holder.binding.sale = items!![position]
-        val keyList = items!![position].foods.entries
-        for (item in keyList) {
-            holder.binding.sellFoodDescription.text = "${holder.binding.sellFoodDescription.text.toString()} ${item.key} ${item.value}"
+        val iter = items!![position].foods.iterator()
+        while (iter.hasNext()) {
+            val f = iter.next()
+            holder.binding.sellFoodDescription.text = String.format(holder.binding.root.context.getString(R.string.sell_item), f.name, f.count)
         }
         holder.binding.executePendingBindings()
     }

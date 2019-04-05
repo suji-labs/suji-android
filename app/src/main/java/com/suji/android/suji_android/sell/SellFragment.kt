@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,6 +72,7 @@ class SellFragment : Fragment() {
         override fun sell() {
             foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).adapter = FoodSaleListAdapter(foods)
             foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).onItemSelectedListener = spinnerItemClick
+            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
 
             val dialog = AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
                 .setPositiveButton("판매", object : DialogInterface.OnClickListener {
@@ -80,6 +82,9 @@ class SellFragment : Fragment() {
                         } else {
                             sellViewModel.insert(sale!!)
 
+                            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
+                            sale = null
+
                             dialog!!.dismiss()
                         }
 
@@ -88,6 +93,8 @@ class SellFragment : Fragment() {
                 })
                 .setNegativeButton("취소", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
+                        foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
+                        sale = null
                         (foodSaleView.parent as ViewGroup).removeView(foodSaleView)
                         dialog!!.dismiss()
                     }
@@ -100,32 +107,58 @@ class SellFragment : Fragment() {
                 override fun onClick(v: View?) {
                     var sumPrice = 0
                     var foodCount: Int
+                    var temp: Food? = null
+
+                    foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
 
                     if (sale == null) {
-                        sale = Sale("총 금액", formatter.format(sumPrice), DateTime(), HashMap<String, Int>())
+                        sale = Sale("총 금액", formatter.format(sumPrice), DateTime(), HashSet<Food>())
+                    }
+
+                    if (foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).text.toString() == "") {
+                        Toast.makeText(context, "수량을 입력하세요!", Toast.LENGTH_SHORT).show()
+                        return
                     }
 
                     foodCount = foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count)
                         .text
                         .toString()
                         .toInt()
-                    sumPrice += foodCount * food!!.price
-                    sale!!.foods[food!!.name] = foodCount
+
+                    if (sale!!.foods.find { it.name == food!!.name } != null) {
+                        temp = sale!!.foods.find { it.name == food!!.name }
+                        sale!!.foods.remove(temp)
+                        sale!!.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
+                    } else {
+                        sale!!.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
+                    }
+
+
+                    val iter = sale!!.foods.iterator()
+                    while (iter.hasNext()) {
+                        val f = iter.next()
+                        sumPrice += f.price * f.count
+                    }
 
                     foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
 
                     for (i in 0 until food!!.sub.size) {
+                        if (foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
+                            continue
+                        }
                         foodCount = foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i)
                             .text
                             .toString()
                             .toInt()
-                        sumPrice += foodCount * food!!.sub[i].price
-                        sale!!.foods[food!!.sub[i].name] = foodCount
+
+                        sale!!.foods.add(Food(food!!.sub[i].name, food!!.sub[i].price, food!!.sub[i].sub, food!!.sub[i].count + foodCount))
+
+                        sumPrice += food!!.sub[i].price * (food!!.sub[i].count + foodCount)
 
                         foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
                     }
 
-                    sale!!.price = formatter.format(formatter.parse(sale!!.price).toInt() + sumPrice)
+                    sale!!.price = formatter.format(sumPrice)
 
                     foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = sale!!.price
                     foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")

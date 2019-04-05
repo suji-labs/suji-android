@@ -8,13 +8,13 @@ import org.joda.time.DateTime
 
 class Converters {
     @TypeConverter
-    fun fromMapString(value: String): HashMap<String, Int> {
-        val listType = object : TypeToken<HashMap<String, Int>>() {}.type
+    fun fromMapString(value: String): HashSet<Food> {
+        val listType = object : TypeToken<HashSet<Food>>() {}.type
         return Gson().fromJson(value, listType)
     }
 
     @TypeConverter
-    fun fromMap(list: HashMap<String, Int>): String {
+    fun fromMap(list: HashSet<Food>): String {
         val gson = Gson()
         return gson.toJson(list)
     }
