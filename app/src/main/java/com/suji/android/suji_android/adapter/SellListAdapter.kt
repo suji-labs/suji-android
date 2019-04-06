@@ -38,7 +38,10 @@ class SellListAdapter(var listener: FoodSellClickListener) :
         val iter = items!![position].foods.iterator()
         while (iter.hasNext()) {
             val f = iter.next()
-            holder.binding.sellFoodDescription.text = String.format(holder.binding.root.context.getString(R.string.sell_item), f.name, f.count)
+            holder.binding.sellFoodDescription.text =
+                holder.binding.sellFoodDescription.text.toString() +
+                        String.format(holder.binding.root.context.getString(R.string.sell_item), f.name, f.count) +
+                        " "
         }
         holder.binding.executePendingBindings()
     }
