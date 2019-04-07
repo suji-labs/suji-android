@@ -1,4 +1,4 @@
-package com.suji.android.suji_android.sell
+package com.suji.android.suji_android.account
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -9,22 +9,22 @@ import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.database.repository.DataRepository
 
-class SellViewModel(application: Application) : AndroidViewModel(application) {
+class AccountViewModel(application: Application) : AndroidViewModel(application) {
     private var repository: DataRepository
     private var sales: MediatorLiveData<List<Sale>> = MediatorLiveData()
 
     init {
         sales.value = null
         repository = (application as BasicApp).getRepository()
-        val sale = repository.selling
-        sales.addSource(sale, object : Observer<List<Sale>> {
+        val sold = repository.sold
+        sales.addSource(sold, object : Observer<List<Sale>> {
             override fun onChanged(sales: List<Sale>?) {
-                this@SellViewModel.sales.value = sales
+                this@AccountViewModel.sales.value = sales
             }
         })
     }
 
-    fun getAllSale(): LiveData<List<Sale>> {
+    fun getAllSold(): LiveData<List<Sale>> {
         return sales
     }
 

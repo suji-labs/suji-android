@@ -9,6 +9,12 @@ interface SaleDAO {
     @Query("SELECT * FROM sale")
     fun loadAllSale(): LiveData<List<Sale>>
 
+    @Query("SELECT * FROM sale WHERE sale.sell IS 1")
+    fun loadSold(): LiveData<List<Sale>>
+
+    @Query("SELECT * FROM sale WHERE sale.sell IS 0")
+    fun loadSale(): LiveData<List<Sale>>
+
     @Insert
     fun insert(sale: Sale)
 

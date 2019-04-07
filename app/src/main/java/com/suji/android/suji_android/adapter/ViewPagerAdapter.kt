@@ -3,6 +3,7 @@ package com.suji.android.suji_android.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.suji.android.suji_android.account.AccountFragment
 import com.suji.android.suji_android.food.FoodFragment
 import com.suji.android.suji_android.sell.SellFragment
 
@@ -12,6 +13,7 @@ class ViewPagerAdapter(private val tabCount: Int, fragmentManager: FragmentManag
         return when (position) {
             0 -> SellFragment()
             1 -> FoodFragment()
+            2 -> AccountFragment()
             else -> SellFragment()
         }
     }

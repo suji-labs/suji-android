@@ -9,7 +9,6 @@ import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.SellItemBinding
 import com.suji.android.suji_android.listener.FoodSellClickListener
-import java.util.*
 
 class SellListAdapter(var listener: FoodSellClickListener) :
     RecyclerView.Adapter<SellListAdapter.Companion.SellViewHolder>() {
@@ -35,13 +34,19 @@ class SellListAdapter(var listener: FoodSellClickListener) :
 
     override fun onBindViewHolder(holder: SellListAdapter.Companion.SellViewHolder, position: Int) {
         holder.binding.sale = items!![position]
+        holder.binding.sellFoodDescription.text = ""
         val iter = items!![position].foods.iterator()
         while (iter.hasNext()) {
             val f = iter.next()
             holder.binding.sellFoodDescription.text =
-                holder.binding.sellFoodDescription.text.toString() +
-                        String.format(holder.binding.root.context.getString(R.string.sell_item), f.name, f.count) +
-                        " "
+                String.format(
+                    holder.binding.root.context.getString(R.string.sell_item),
+                    holder.binding.sellFoodDescription.text.toString(),
+                    f.name,
+                    f.count
+                )
+
+            holder.binding.sellFoodDescription.text = holder.binding.sellFoodDescription.text.toString().trim()
         }
         holder.binding.executePendingBindings()
     }
@@ -68,9 +73,7 @@ class SellListAdapter(var listener: FoodSellClickListener) :
                 override fun areContentsTheSame(newItemPosition: Int, oldItemPosition: Int): Boolean {
                     val newProduct = saleList!![oldItemPosition]
                     val oldProduct = items!![newItemPosition]
-                    return (newProduct.id == oldProduct.id
-                            && Objects.equals(newProduct.name, oldProduct.name)
-                            && Objects.equals(newProduct.price, oldProduct.price))
+                    return newProduct.id == oldProduct.id
                 }
             })
             items = saleList

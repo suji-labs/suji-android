@@ -78,7 +78,7 @@ class SellFragment : Fragment() {
                 .setPositiveButton("판매", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
                         if (sale == null) {
-                            Toast.makeText(context, "수량이 입력되지 않았습니다!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "음식을 추가하세요!", Toast.LENGTH_SHORT).show()
                         } else {
                             sellViewModel.insert(sale!!)
 
@@ -113,11 +113,6 @@ class SellFragment : Fragment() {
 
                     if (sale == null) {
                         sale = Sale("총 금액", formatter.format(sumPrice), DateTime(), HashSet<Food>())
-                    }
-
-                    if (foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).text.toString() == "") {
-                        Toast.makeText(context, "수량을 입력하세요!", Toast.LENGTH_SHORT).show()
-                        return
                     }
 
                     foodCount = foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count)
@@ -209,7 +204,8 @@ class SellFragment : Fragment() {
 
     private val foodSellClickListener: FoodSellClickListener = object : FoodSellClickListener {
         override fun sell(sale: Sale) {
-            sellViewModel.delete(sale)
+            sale.sell = true
+            sellViewModel.update(sale)
         }
 
         override fun addFood() {

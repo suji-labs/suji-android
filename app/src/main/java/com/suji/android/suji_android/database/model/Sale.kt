@@ -15,6 +15,8 @@ data class Sale(
     var time: DateTime,
     @ColumnInfo(name = "foods")
     var foods: HashSet<Food>,
+    @ColumnInfo(name = "sell")
+    var sell: Boolean = false,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )

@@ -11,11 +11,14 @@ import com.suji.android.suji_android.executor.AppExecutors
 class DataRepository private constructor(private val database: AppDatabase) {
     private val observableFood: MediatorLiveData<List<Food>> = MediatorLiveData()
     private val observableSale: MediatorLiveData<List<Sale>> = MediatorLiveData()
+    private val observableSold: MediatorLiveData<List<Sale>> = MediatorLiveData()
+    private val observableSelling: MediatorLiveData<List<Sale>> = MediatorLiveData()
     private val executors: AppExecutors = AppExecutors()
 
     val food: LiveData<List<Food>> get() = observableFood
-
     val sale: LiveData<List<Sale>> get() = observableSale
+    val sold: LiveData<List<Sale>> get() = observableSold
+    val selling: LiveData<List<Sale>> get() = observableSelling
 
     init {
         observableFood.addSource(this.database.foodDAO().loadAllFood(), object : Observer<List<Food>> {
@@ -27,6 +30,18 @@ class DataRepository private constructor(private val database: AppDatabase) {
         observableSale.addSource(this.database.saleDAO().loadAllSale(), object : Observer<List<Sale>> {
             override fun onChanged(t: List<Sale>) {
                 observableSale.postValue(t)
+            }
+        })
+
+        observableSold.addSource(this.database.saleDAO().loadSold(), object : Observer<List<Sale>> {
+            override fun onChanged(t: List<Sale>?) {
+                observableSold.postValue(t)
+            }
+        })
+
+        observableSelling.addSource(this.database.saleDAO().loadSale(), object : Observer<List<Sale>> {
+            override fun onChanged(t: List<Sale>?) {
+                observableSelling.postValue(t)
             }
         })
     }
@@ -52,28 +67,12 @@ class DataRepository private constructor(private val database: AppDatabase) {
         }
     }
 
-//    fun insertFood(food: Food) {
-//        executors.diskIO().execute(Runnable { database.foodDAO().insert(food) })
-//    }
-//
-//    fun deleteFood(food: Food) {
-//        executors.diskIO().execute(Runnable { database.foodDAO().delete(food) })
-//    }
-//
-//    fun updateFood(food: Food) {
-//        executors.diskIO().execute(Runnable { database.foodDAO().update(food) })
-//    }
-//
-//    fun insertSale(sale: Sale) {
-//        executors.diskIO().execute(Runnable { database.saleDAO().insert(sale) })
-//    }
-//
-//    fun deleteSale(sale: Sale) {
-//        executors.diskIO().execute(Runnable { database.saleDAO().delete(sale) })
-//    }
-//
-//    fun updateSale(sale: Sale) {
-//        executors.diskIO().execute(Runnable { database.saleDAO().update(sale) })
+//    fun loadSaleProduct(isSale: Boolean) {
+//        if (isSale) {
+//            executors.diskIO().execute(Runnable { database.saleDAO().loadSold() })
+//        } else {
+//            executors.diskIO().execute(Runnable { database.saleDAO().loadSale() })
+//        }
 //    }
 
     object Singleton {
