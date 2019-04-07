@@ -23,16 +23,17 @@ import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.adapter.FoodListAdapter
+import com.suji.android.suji_android.adapter.ProductListAdapter
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodFragmentBinding
+import com.suji.android.suji_android.helper.ViewType
 import com.suji.android.suji_android.listener.CreateFoodClickListener
 import com.suji.android.suji_android.listener.FoodClickListener
 
 class FoodFragment : Fragment() {
     private lateinit var binding: FoodFragmentBinding
-    private lateinit var adapter: FoodListAdapter
+    private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
 
@@ -47,7 +48,7 @@ class FoodFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<FoodFragmentBinding>(inflater, R.layout.food_fragment, container, false)
         initViewModel()
-        adapter = FoodListAdapter(foodClickListener)
+        adapter = ProductListAdapter(ViewType.FOOD_VIEW)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.listener = createFood
         binding.mainFoodList.layoutManager = layoutManager
@@ -67,7 +68,7 @@ class FoodFragment : Fragment() {
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
             override fun onChanged(@Nullable foods: List<Food>?) {
                 if (foods != null) {
-                    adapter.setFoodList(foods)
+                    adapter.setItems(foods)
                 }
 
                 binding.executePendingBindings()

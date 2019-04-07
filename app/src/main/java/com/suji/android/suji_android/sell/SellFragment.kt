@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,26 +18,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.beardedhen.androidbootstrap.BootstrapLabel
-import com.beardedhen.androidbootstrap.BootstrapText
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodSaleListAdapter
-import com.suji.android.suji_android.adapter.SellListAdapter
+import com.suji.android.suji_android.adapter.ProductListAdapter
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
-import com.suji.android.suji_android.databinding.FoodSellDialogBinding
 import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
+import com.suji.android.suji_android.helper.ViewType
 import com.suji.android.suji_android.listener.FloatingButtonClickListener
 import com.suji.android.suji_android.listener.FoodSellClickListener
-import kotlinx.android.synthetic.main.food_sell_dialog.*
 import org.joda.time.DateTime
 import java.text.DecimalFormat
 
 class SellFragment : Fragment() {
     private lateinit var binding: SellFragmentBinding
-    private lateinit var adapter: SellListAdapter
+    private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var sellViewModel: SellViewModel = SellViewModel(BasicApp.app)
     private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
@@ -54,7 +51,7 @@ class SellFragment : Fragment() {
         binding = DataBindingUtil.inflate<SellFragmentBinding>(inflater, R.layout.sell_fragment, container, false)
         initViewModel()
         binding.listener = floatingButtonClickListener
-        adapter = SellListAdapter(foodSellClickListener)
+        adapter = ProductListAdapter(ViewType.SALE_VIEW)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.sellFragmentItems.layoutManager = layoutManager
         binding.sellFragmentItems.adapter = adapter
@@ -222,7 +219,7 @@ class SellFragment : Fragment() {
         sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
             override fun onChanged(@Nullable sales: List<Sale>?) {
                 if (sales != null) {
-                    adapter.setSaleList(sales)
+                    adapter.setItems(sales)
                 }
 
                 binding.executePendingBindings()
