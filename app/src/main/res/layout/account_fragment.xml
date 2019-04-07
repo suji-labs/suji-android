@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
+    <FrameLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -9,5 +9,25 @@
                 android:id="@+id/sold_fragment_items"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-    </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:text="@string/total_price"/>
+            <TextView
+                    android:id="@+id/food_sold_total_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textSize="25sp"
+                    android:textColor="#000000"/>
+        </LinearLayout>
+    </FrameLayout>
 </layout>

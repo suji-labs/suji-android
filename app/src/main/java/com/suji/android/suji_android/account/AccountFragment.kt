@@ -16,6 +16,7 @@ import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.AccountFragmentBinding
 import com.suji.android.suji_android.helper.ViewType
+import java.text.NumberFormat
 
 class AccountFragment : Fragment() {
     private lateinit var binding: AccountFragmentBinding
@@ -36,6 +37,13 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val formatter: NumberFormat = NumberFormat.getInstance()
+//        var sumPrice = 0
+//        for (item in soldItems) {
+//            sumPrice += formatter.parse(item.price).toInt()
+//        }
+        binding.foodSoldTotalPrice.text = formatter.parse("1,000").toString()
     }
 
     private fun initViewModel() {
