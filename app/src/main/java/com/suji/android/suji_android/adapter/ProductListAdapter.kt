@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Food
@@ -12,17 +11,17 @@ import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.FoodItemBinding
 import com.suji.android.suji_android.databinding.SellItemBinding
 import com.suji.android.suji_android.databinding.SoldItemBinding
+import com.suji.android.suji_android.helper.ListenerHashMap
 import com.suji.android.suji_android.helper.ViewType.FOOD_VIEW
 import com.suji.android.suji_android.helper.ViewType.SALE_VIEW
 import com.suji.android.suji_android.helper.ViewType.SOLD_VIEW
-import com.suji.android.suji_android.listener.FoodClickListener
 
 class ProductListAdapter(private val viewType: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<Any>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        var binding: ViewDataBinding? = null
+        val binding: ViewDataBinding?
         when (this.viewType) {
             FOOD_VIEW -> {
                 binding = DataBindingUtil.inflate<FoodItemBinding>(
@@ -31,6 +30,10 @@ class ProductListAdapter(private val viewType: Int) :
                     parent,
                     false
                 )
+                if (binding is FoodItemBinding) {
+                    binding.delete = ListenerHashMap.listenerList["foodDeleteClickListener"]
+                    binding.modify = ListenerHashMap.listenerList["foodModifyClickListener"]
+                }
                 return FoodViewHolder(binding)
             }
             SALE_VIEW -> {
@@ -40,6 +43,11 @@ class ProductListAdapter(private val viewType: Int) :
                     parent,
                     false
                 )
+                if (binding is SellItemBinding) {
+                    binding.sell = ListenerHashMap.listenerList["foodSellClickListener"]
+                    binding.modify = ListenerHashMap.listenerList["addSaleClickListener"]
+                    binding.delete = ListenerHashMap.listenerList["foodSaleCancelClickListener"]
+                }
                 return SellViewHolder(binding)
             }
             else -> {
@@ -88,7 +96,23 @@ class ProductListAdapter(private val viewType: Int) :
                 holder.binding.executePendingBindings()
             }
             is ProductListViewHolder -> {
-                holder.binding.soldItemName.text = (items!![position] as Sale).name
+                holder.binding.sale = items!![position] as Sale
+                holder.binding.sellFoodDescription.text = ""
+                val iter = (items!![position] as Sale).foods.iterator()
+                while (iter.hasNext()) {
+                    val f = iter.next()
+                    holder.binding.sellFoodDescription.text =
+                        String.format(
+                            holder.binding.root.context.getString(R.string.sell_item),
+                            holder.binding.sellFoodDescription.text.toString(),
+                            f.name,
+                            f.count
+                        )
+
+                    holder.binding.sellFoodDescription.text =
+                        holder.binding.sellFoodDescription.text.toString().trim()
+                }
+                holder.binding.executePendingBindings()
             }
         }
     }

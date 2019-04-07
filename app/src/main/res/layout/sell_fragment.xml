@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="listener" type="com.suji.android.suji_android.listener.FloatingButtonClickListener"/>
+        <variable name="listener" type="com.suji.android.suji_android.listener.ItemClickListener"/>
     </data>
     <FrameLayout
             android:layout_width="match_parent"
@@ -18,6 +18,6 @@
                 android:layout_margin="15sp"
                 app:backgroundTint="#9500ff"
                 android:src="@drawable/ic_add_white_24dp"
-                android:onClick="@{() -> listener.sell()}"/>
+                android:onClick="@{() -> listener.onClick(null)}"/>
     </FrameLayout>
 </layout>

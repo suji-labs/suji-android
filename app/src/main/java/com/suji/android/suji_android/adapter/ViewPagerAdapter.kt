@@ -12,8 +12,8 @@ class ViewPagerAdapter(private val tabCount: Int, fragmentManager: FragmentManag
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> SellFragment()
-            1 -> FoodFragment()
-            2 -> AccountFragment()
+            1 -> AccountFragment()
+            2 -> FoodFragment()
             else -> SellFragment()
         }
     }

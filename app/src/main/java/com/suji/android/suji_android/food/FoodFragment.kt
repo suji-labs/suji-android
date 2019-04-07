@@ -27,19 +27,17 @@ import com.suji.android.suji_android.adapter.ProductListAdapter
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodFragmentBinding
+import com.suji.android.suji_android.helper.ListenerHashMap
 import com.suji.android.suji_android.helper.ViewType
-import com.suji.android.suji_android.listener.CreateFoodClickListener
-import com.suji.android.suji_android.listener.FoodClickListener
+import com.suji.android.suji_android.listener.ItemClickListener
 
 class FoodFragment : Fragment() {
     private lateinit var binding: FoodFragmentBinding
     private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
-
     private lateinit var inflater: LayoutInflater
     private lateinit var foodCreateView: View
-
     private val subMenuLayoutID: Int = 0x8000
     private val subMenuNameID: Int = 0x7000
     private val subMenuPriceID: Int = 0x6000
@@ -48,6 +46,8 @@ class FoodFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<FoodFragmentBinding>(inflater, R.layout.food_fragment, container, false)
         initViewModel()
+        ListenerHashMap.listenerList["foodDeleteClickListener"] = foodDeleteClickListener
+        ListenerHashMap.listenerList["foodModifyClickListener"] = foodModifyClickListener
         adapter = ProductListAdapter(ViewType.FOOD_VIEW)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.listener = createFood
@@ -76,8 +76,8 @@ class FoodFragment : Fragment() {
         })
     }
 
-    private var createFood: CreateFoodClickListener = object : CreateFoodClickListener {
-        override fun onClick() {
+    private var createFood: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
             val dialog = AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
                 .setPositiveButton("만들기", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -180,12 +180,120 @@ class FoodFragment : Fragment() {
         }
     }
 
-    private var foodClickListener: FoodClickListener = object : FoodClickListener {
-        override fun onDeleteClick(food: Food) {
-            foodViewModel.delete(food)
-        }
+//    private var createFood: CreateFoodClickListener = object : CreateFoodClickListener {
+//        override fun onClick() {
+//            val dialog = AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
+//                .setPositiveButton("만들기", object : DialogInterface.OnClickListener {
+//                    override fun onClick(dialog: DialogInterface?, which: Int) {
+//                        val subMenuList: ArrayList<Food> = ArrayList()
+//                        val foodName: String =
+//                            foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_name).text.toString()
+//                        val foodPrice: String =
+//                            foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_price).text.toString()
+//
+//                        foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_name).setText("")
+//                        foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_price).setText("")
+//
+//                        if (foodName == "" || foodPrice == "") {
+//                            Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
+//                            return
+//                        }
+//
+//                        for (i in 0 until subMenuCount) {
+//                            val subMenuName =
+//                                foodCreateView.findViewById<BootstrapEditText>(subMenuNameID + i).text.toString()
+//                            val subMenuPrice =
+//                                foodCreateView.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString()
+//
+//                            foodCreateView.findViewById<BootstrapEditText>(subMenuNameID + i).setText("")
+//                            foodCreateView.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+//
+//                            subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
+//                        }
+//
+//                        if (subMenuList.size == 0) {
+//                            foodViewModel.insert(Food(foodName, foodPrice.toInt()))
+//                        } else {
+//                            foodViewModel.insert(Food(foodName, foodPrice.toInt(), subMenuList))
+//                        }
+//
+//                        (foodCreateView.parent as ViewGroup).removeView(foodCreateView)
+//                        dialog!!.dismiss()
+//                    }
+//                })
+//                .setNegativeButton("취소", object : DialogInterface.OnClickListener {
+//                    override fun onClick(dialog: DialogInterface?, which: Int) {
+//                        (foodCreateView.parent as ViewGroup).removeView(foodCreateView)
+//                        dialog!!.dismiss()
+//                    }
+//                })
+//                .setNeutralButton("부가 메뉴", null)
+//                .setView(foodCreateView)
+//                .show()
+//
+//            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
+//                override fun onClick(v: View?) {
+//                    val outerLayout: LinearLayout = foodCreateView.findViewById(R.id.create_sub_menu)
+//                    val innerLayout = LinearLayout(foodCreateView.context)
+//                    innerLayout.id = subMenuLayoutID + subMenuCount
+//                    innerLayout.orientation = LinearLayout.HORIZONTAL
+//                    innerLayout.gravity = Gravity.CENTER
+//
+//                    val nameLabel = BootstrapLabel(foodCreateView.context)
+//                    nameLabel.text = "이름"
+//
+//                    val nameEditText = BootstrapEditText(foodCreateView.context)
+//                    nameEditText.id = subMenuNameID + subMenuCount
+//                    nameEditText.setTextColor(Color.BLACK)
+//                    nameEditText.width = 300
+//                    nameEditText.bottom = 15
+//
+//                    val priceLabel = BootstrapLabel(foodCreateView.context)
+//                    priceLabel.text = "가격"
+//
+//                    val priceEditText = BootstrapEditText(foodCreateView.context)
+//                    priceEditText.id = subMenuPriceID + subMenuCount
+//                    priceEditText.setTextColor(Color.BLACK)
+//                    priceEditText.inputType = InputType.TYPE_CLASS_NUMBER
+//                    priceEditText.width = 300
+//                    priceEditText.bottom = 15
+//
+//                    val subMenuDelete = BootstrapButton(foodCreateView.context)
+//                    subMenuDelete.id = subMenuCount
+//                    subMenuDelete.text = "X"
+//                    subMenuDelete.bootstrapBrand = DefaultBootstrapBrand.DANGER
+//                    subMenuDelete.setOnClickListener(View.OnClickListener {
+//                        if (subMenuCount < 0) {
+//                            return@OnClickListener
+//                        }
+//                        val layout = foodCreateView.findViewById<LinearLayout>(subMenuLayoutID + it.id)
+//                        outerLayout.removeView(layout)
+//                        subMenuCount--
+//                    })
+//
+//                    innerLayout.addView(nameLabel)
+//                    innerLayout.addView(nameEditText)
+//                    innerLayout.addView(priceLabel)
+//                    innerLayout.addView(priceEditText)
+//                    innerLayout.addView(subMenuDelete)
+//
+//                    outerLayout.addView(innerLayout)
+//                    subMenuCount++
+//                }
+//            })
+//        }
+//    }
 
-        override fun onModifyClick(food: Food) {
+    private var foodDeleteClickListener: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
+            if (item is Food) {
+                foodViewModel.delete(item)
+            }
+        }
+    }
+
+    private var foodModifyClickListener: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
             AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
                 .setPositiveButton("수정", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -212,9 +320,9 @@ class FoodFragment : Fragment() {
                         }
 
                         if (subMenuList.size == 0) {
-                            foodViewModel.update(Food(foodName, foodPrice.toInt(), id = food.id))
+                            foodViewModel.update(Food(foodName, foodPrice.toInt(), id = (item as Food).id))
                         } else {
-                            foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, food.id))
+                            foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, (item as Food).id))
                         }
 
                         (foodCreateView.parent as ViewGroup).removeView(foodCreateView)
@@ -231,4 +339,56 @@ class FoodFragment : Fragment() {
                 .show()
         }
     }
+
+//    private var foodClickListener: FoodClickListener = object : FoodClickListener {
+//        override fun onDeleteClick(food: Food) {
+//            foodViewModel.delete(food)
+//        }
+//
+//        override fun onModifyClick(food: Food) {
+//            AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
+//                .setPositiveButton("수정", object : DialogInterface.OnClickListener {
+//                    override fun onClick(dialog: DialogInterface?, which: Int) {
+//                        val subMenuList: ArrayList<Food> = ArrayList()
+//                        val foodName: String =
+//                            foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_name).text.toString()
+//                        val foodPrice: String =
+//                            foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_price).text.toString()
+//
+//                        foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_name).setText("")
+//                        foodCreateView.findViewById<BootstrapEditText>(R.id.create_menu_edit_price).setText("")
+//
+//                        if (foodName == "" || foodPrice == "") {
+//                            Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
+//                            return
+//                        }
+//
+//                        for (i in 0 until subMenuCount) {
+//                            val subMenuName =
+//                                foodCreateView.findViewById<BootstrapEditText>(subMenuNameID + i).text.toString()
+//                            val subMenuPrice =
+//                                foodCreateView.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString()
+//                            subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
+//                        }
+//
+//                        if (subMenuList.size == 0) {
+//                            foodViewModel.update(Food(foodName, foodPrice.toInt(), id = food.id))
+//                        } else {
+//                            foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, food.id))
+//                        }
+//
+//                        (foodCreateView.parent as ViewGroup).removeView(foodCreateView)
+//                        dialog!!.dismiss()
+//                    }
+//                })
+//                .setNegativeButton("취소", object : DialogInterface.OnClickListener {
+//                    override fun onClick(dialog: DialogInterface?, which: Int) {
+//                        (foodCreateView.parent as ViewGroup).removeView(foodCreateView)
+//                        dialog!!.dismiss()
+//                    }
+//                })
+//                .setView(foodCreateView)
+//                .show()
+//        }
+//    }
 }

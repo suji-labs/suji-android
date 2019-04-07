@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("장사"))
+        binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("장부"))
         binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("메뉴"))
 
         binding.mainViewPager.adapter = ViewPagerAdapter(binding.mainTabLayout.tabCount, supportFragmentManager)

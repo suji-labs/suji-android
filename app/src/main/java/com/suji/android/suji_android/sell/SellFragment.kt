@@ -27,9 +27,9 @@ import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
+import com.suji.android.suji_android.helper.ListenerHashMap
 import com.suji.android.suji_android.helper.ViewType
-import com.suji.android.suji_android.listener.FloatingButtonClickListener
-import com.suji.android.suji_android.listener.FoodSellClickListener
+import com.suji.android.suji_android.listener.ItemClickListener
 import org.joda.time.DateTime
 import java.text.DecimalFormat
 
@@ -50,6 +50,9 @@ class SellFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<SellFragmentBinding>(inflater, R.layout.sell_fragment, container, false)
         initViewModel()
+        ListenerHashMap.listenerList["foodSellClickListener"] = foodSellClickListener
+        ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
+        ListenerHashMap.listenerList["foodSaleCancelClickListener"] = foodSaleCancelClickListener
         binding.listener = floatingButtonClickListener
         adapter = ProductListAdapter(ViewType.SALE_VIEW)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -65,8 +68,8 @@ class SellFragment : Fragment() {
         foodSaleView = inflater.inflate(R.layout.food_sell_dialog, null)
     }
 
-    private val floatingButtonClickListener: FloatingButtonClickListener = object : FloatingButtonClickListener {
-        override fun sell() {
+    private val floatingButtonClickListener: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
             foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).adapter = FoodSaleListAdapter(foods)
             foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).onItemSelectedListener = spinnerItemClick
             foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
@@ -104,7 +107,7 @@ class SellFragment : Fragment() {
                 override fun onClick(v: View?) {
                     var sumPrice = 0
                     var foodCount: Int
-                    var temp: Food? = null
+                    val temp: Food?
 
                     foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
 
@@ -199,18 +202,26 @@ class SellFragment : Fragment() {
         }
     }
 
-    private val foodSellClickListener: FoodSellClickListener = object : FoodSellClickListener {
-        override fun sell(sale: Sale) {
-            sale.sell = true
-            sellViewModel.update(sale)
+    private val foodSellClickListener: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
+            if (item is Sale) {
+                item.sell = true
+                sellViewModel.update(item)
+            }
         }
+    }
 
-        override fun addFood() {
+    private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
             Toast.makeText(context, "addFood", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        override fun cancel(sale: Sale) {
-            sellViewModel.delete(sale)
+    private val foodSaleCancelClickListener: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
+            if (item is Sale) {
+                sellViewModel.delete(item)
+            }
         }
     }
 

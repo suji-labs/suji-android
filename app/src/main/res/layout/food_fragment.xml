@@ -3,7 +3,7 @@
     <data>
         <variable
                 name="listener"
-                type="com.suji.android.suji_android.listener.CreateFoodClickListener"/>
+                type="com.suji.android.suji_android.listener.ItemClickListener"/>
     </data>
 
     <LinearLayout
@@ -14,7 +14,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <com.beardedhen.androidbootstrap.BootstrapButton
-                    android:onClick="@{() -> listener.onClick()}"
+                    android:onClick="@{() -> listener.onClick(null)}"
                     android:text="@string/create_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
