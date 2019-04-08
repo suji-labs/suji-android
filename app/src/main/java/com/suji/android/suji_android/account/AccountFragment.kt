@@ -1,7 +1,6 @@
 package com.suji.android.suji_android.account
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +15,8 @@ import com.suji.android.suji_android.adapter.ProductListAdapter
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.AccountFragmentBinding
-import com.suji.android.suji_android.helper.ViewType
+import com.suji.android.suji_android.helper.Constant
 import java.text.DecimalFormat
-import java.text.NumberFormat
 
 class AccountFragment : Fragment() {
     private lateinit var binding: AccountFragmentBinding
@@ -30,7 +28,7 @@ class AccountFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.account_fragment, container, false)
         initViewModel()
-        adapter = ProductListAdapter(ViewType.SOLD_VIEW)
+        adapter = ProductListAdapter(Constant.ViewType.SOLD_VIEW)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.soldFragmentItems.layoutManager = layoutManager
         binding.soldFragmentItems.adapter = adapter

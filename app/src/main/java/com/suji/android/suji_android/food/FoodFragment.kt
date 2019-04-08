@@ -27,8 +27,7 @@ import com.suji.android.suji_android.adapter.ProductListAdapter
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodFragmentBinding
-import com.suji.android.suji_android.helper.ListenerHashMap
-import com.suji.android.suji_android.helper.ViewType
+import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.listener.ItemClickListener
 
 class FoodFragment : Fragment() {
@@ -46,9 +45,9 @@ class FoodFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<FoodFragmentBinding>(inflater, R.layout.food_fragment, container, false)
         initViewModel()
-        ListenerHashMap.listenerList["foodDeleteClickListener"] = foodDeleteClickListener
-        ListenerHashMap.listenerList["foodModifyClickListener"] = foodModifyClickListener
-        adapter = ProductListAdapter(ViewType.FOOD_VIEW)
+        Constant.ListenerHashMap.listenerList["foodDeleteClickListener"] = foodDeleteClickListener
+        Constant.ListenerHashMap.listenerList["foodModifyClickListener"] = foodModifyClickListener
+        adapter = ProductListAdapter(Constant.ViewType.FOOD_VIEW)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.listener = createFood
         binding.mainFoodList.layoutManager = layoutManager

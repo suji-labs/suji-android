@@ -11,10 +11,7 @@ import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.FoodItemBinding
 import com.suji.android.suji_android.databinding.SellItemBinding
 import com.suji.android.suji_android.databinding.SoldItemBinding
-import com.suji.android.suji_android.helper.ListenerHashMap
-import com.suji.android.suji_android.helper.ViewType.FOOD_VIEW
-import com.suji.android.suji_android.helper.ViewType.SALE_VIEW
-import com.suji.android.suji_android.helper.ViewType.SOLD_VIEW
+import com.suji.android.suji_android.helper.Constant
 
 class ProductListAdapter(private val viewType: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -23,7 +20,7 @@ class ProductListAdapter(private val viewType: Int) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: ViewDataBinding?
         when (this.viewType) {
-            FOOD_VIEW -> {
+            Constant.ViewType.FOOD_VIEW -> {
                 binding = DataBindingUtil.inflate<FoodItemBinding>(
                     LayoutInflater.from(parent.context),
                     R.layout.food_item,
@@ -31,12 +28,12 @@ class ProductListAdapter(private val viewType: Int) :
                     false
                 )
                 if (binding is FoodItemBinding) {
-                    binding.delete = ListenerHashMap.listenerList["foodDeleteClickListener"]
-                    binding.modify = ListenerHashMap.listenerList["foodModifyClickListener"]
+                    binding.delete = Constant.ListenerHashMap.listenerList["foodDeleteClickListener"]
+                    binding.modify = Constant.ListenerHashMap.listenerList["foodModifyClickListener"]
                 }
                 return FoodViewHolder(binding)
             }
-            SALE_VIEW -> {
+            Constant.ViewType.SALE_VIEW -> {
                 binding = DataBindingUtil.inflate<SellItemBinding>(
                     LayoutInflater.from(parent.context),
                     R.layout.sell_item,
@@ -44,9 +41,9 @@ class ProductListAdapter(private val viewType: Int) :
                     false
                 )
                 if (binding is SellItemBinding) {
-                    binding.sell = ListenerHashMap.listenerList["foodSellClickListener"]
-                    binding.modify = ListenerHashMap.listenerList["addSaleClickListener"]
-                    binding.delete = ListenerHashMap.listenerList["foodSaleCancelClickListener"]
+                    binding.sell = Constant.ListenerHashMap.listenerList["foodSellClickListener"]
+                    binding.modify = Constant.ListenerHashMap.listenerList["addSaleClickListener"]
+                    binding.delete = Constant.ListenerHashMap.listenerList["foodSaleCancelClickListener"]
                 }
                 return SellViewHolder(binding)
             }
@@ -119,9 +116,9 @@ class ProductListAdapter(private val viewType: Int) :
 
     override fun getItemViewType(position: Int): Int {
         return when (viewType) {
-            viewType -> FOOD_VIEW
-            viewType -> SALE_VIEW
-            else -> SOLD_VIEW
+            viewType -> Constant.ViewType.FOOD_VIEW
+            viewType -> Constant.ViewType.SALE_VIEW
+            else -> Constant.ViewType.SOLD_VIEW
         }
     }
 

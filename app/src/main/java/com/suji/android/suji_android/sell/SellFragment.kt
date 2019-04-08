@@ -8,6 +8,7 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
@@ -27,8 +28,8 @@ import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
-import com.suji.android.suji_android.helper.ListenerHashMap
-import com.suji.android.suji_android.helper.ViewType
+import com.suji.android.suji_android.helper.Constant
+import com.suji.android.suji_android.helper.DisplayHelper
 import com.suji.android.suji_android.listener.ItemClickListener
 import org.joda.time.DateTime
 import java.text.DecimalFormat
@@ -49,11 +50,11 @@ class SellFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<SellFragmentBinding>(inflater, R.layout.sell_fragment, container, false)
         initViewModel()
-        ListenerHashMap.listenerList["foodSellClickListener"] = foodSellClickListener
-        ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
-        ListenerHashMap.listenerList["foodSaleCancelClickListener"] = foodSaleCancelClickListener
+        Constant.ListenerHashMap.listenerList["foodSellClickListener"] = foodSellClickListener
+        Constant.ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
+        Constant.ListenerHashMap.listenerList["foodSaleCancelClickListener"] = foodSaleCancelClickListener
         binding.listener = floatingButtonClickListener
-        adapter = ProductListAdapter(ViewType.SALE_VIEW)
+        adapter = ProductListAdapter(Constant.ViewType.SALE_VIEW)
         layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.sellFragmentItems.layoutManager = layoutManager
         binding.sellFragmentItems.adapter = adapter
@@ -158,6 +159,12 @@ class SellFragment : Fragment() {
                     foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
                 }
             })
+
+            val layoutParams = dialog.window!!.attributes
+            val point = DisplayHelper.getDisplaySize()
+            layoutParams.width = (point.x * 0.9).toInt()
+//            layoutParams.height = (point.y * 0.5).toInt()
+            dialog.window!!.attributes = layoutParams
 
             executePendingBindings()
         }
