@@ -10,7 +10,7 @@ data class Sale(
     @ColumnInfo(name = "name")
     var name: String,
     @ColumnInfo(name = "price")
-    var price: String,
+    var price: Int,
     @ColumnInfo(name = "time")
     var time: DateTime,
     @ColumnInfo(name = "foods")

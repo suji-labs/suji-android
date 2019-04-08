@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable name="sale" type="com.suji.android.suji_android.database.model.Sale"/>
+        <variable name="formatter" type="java.text.DecimalFormat"/>
     </data>
 
     <com.beardedhen.androidbootstrap.BootstrapWell
@@ -23,7 +24,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
                     android:textSize="15sp"
-                    android:text="@{sale.price}"/>
+                    android:text="@{formatter.getCurrencyInstance().format(sale.price).toString()}"/>
             <TextView
                     android:id="@+id/sell_food_description"
                     android:layout_width="match_parent"

@@ -40,7 +40,6 @@ class SellFragment : Fragment() {
     private var sellViewModel: SellViewModel = SellViewModel(BasicApp.app)
     private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
     private lateinit var foods: List<Food>
-    private val formatter: DecimalFormat = DecimalFormat("###,###")
     private lateinit var inflater: LayoutInflater
     private lateinit var foodSaleView: View
     private var food: Food? = null
@@ -112,7 +111,7 @@ class SellFragment : Fragment() {
                     foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
 
                     if (sale == null) {
-                        sale = Sale("총 금액", formatter.format(sumPrice), DateTime(), HashSet<Food>())
+                        sale = Sale("총 금액", sumPrice, DateTime(), HashSet<Food>())
                     }
 
                     foodCount = foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count)
@@ -153,12 +152,14 @@ class SellFragment : Fragment() {
                         foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
                     }
 
-                    sale!!.price = formatter.format(sumPrice)
+                    sale!!.price = sumPrice
 
-                    foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = sale!!.price
+                    foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = DecimalFormat.getCurrencyInstance().format(sale!!.price).toString()
                     foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
                 }
             })
+
+            executePendingBindings()
         }
     }
 
@@ -199,6 +200,8 @@ class SellFragment : Fragment() {
                 layout.addView(edit, editWeight)
                 foodSaleView.findViewById<LinearLayout>(R.id.sell_sub_food_layout).addView(layout)
             }
+
+            executePendingBindings()
         }
     }
 
@@ -208,12 +211,16 @@ class SellFragment : Fragment() {
                 item.sell = true
                 sellViewModel.update(item)
             }
+
+            executePendingBindings()
         }
     }
 
     private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
             Toast.makeText(context, "addFood", Toast.LENGTH_SHORT).show()
+
+            executePendingBindings()
         }
     }
 
@@ -222,6 +229,8 @@ class SellFragment : Fragment() {
             if (item is Sale) {
                 sellViewModel.delete(item)
             }
+
+            executePendingBindings()
         }
     }
 
@@ -233,7 +242,7 @@ class SellFragment : Fragment() {
                     adapter.setItems(sales)
                 }
 
-                binding.executePendingBindings()
+                executePendingBindings()
             }
         })
 
@@ -243,7 +252,13 @@ class SellFragment : Fragment() {
                 if (foods != null) {
                     this@SellFragment.foods = foods
                 }
+
+                executePendingBindings()
             }
         })
+    }
+
+    private fun executePendingBindings() {
+        binding.executePendingBindings()
     }
 }
