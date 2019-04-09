@@ -26,12 +26,17 @@ class AccountFragment : Fragment() {
     private var viewModel: AccountViewModel = AccountViewModel(BasicApp.app)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.account_fragment, container, false)
         initViewModel()
-        adapter = ProductListAdapter(Constant.ViewType.SOLD_VIEW)
-        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.soldFragmentItems.layoutManager = layoutManager
-        binding.soldFragmentItems.adapter = adapter
+        binding = DataBindingUtil.inflate<AccountFragmentBinding>(inflater,
+            R.layout.account_fragment,
+            container,
+            false)
+            .apply {
+                adapter = ProductListAdapter(Constant.ViewType.SOLD_VIEW)
+                layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                soldFragmentItems.layoutManager = layoutManager
+                soldFragmentItems.adapter = adapter
+            }
         return binding.root
     }
 
@@ -43,7 +48,7 @@ class AccountFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
         viewModel.getAllSold().observe(this, object : Observer<List<Sale>> {
             override fun onChanged(t: List<Sale>?) {
-                if (t != null) {
+                t?.let {
                     adapter.setItems(t)
                     soldItems = t
 

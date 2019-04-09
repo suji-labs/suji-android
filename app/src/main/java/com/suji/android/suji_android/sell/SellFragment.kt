@@ -8,7 +8,6 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
@@ -48,16 +47,23 @@ class SellFragment : Fragment() {
     private val subMenuPriceID = 0x6000
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate<SellFragmentBinding>(inflater, R.layout.sell_fragment, container, false)
         initViewModel()
+        binding = DataBindingUtil.inflate<SellFragmentBinding>(
+            inflater,
+            R.layout.sell_fragment,
+            container,
+            false
+        )
+            .apply {
+                adapter = ProductListAdapter(Constant.ViewType.SALE_VIEW)
+                layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                listener = floatingButtonClickListener
+                sellFragmentItems.layoutManager = layoutManager
+                sellFragmentItems.adapter = adapter
+            }
         Constant.ListenerHashMap.listenerList["foodSellClickListener"] = foodSellClickListener
         Constant.ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
         Constant.ListenerHashMap.listenerList["foodSaleCancelClickListener"] = foodSaleCancelClickListener
-        binding.listener = floatingButtonClickListener
-        adapter = ProductListAdapter(Constant.ViewType.SALE_VIEW)
-        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.sellFragmentItems.layoutManager = layoutManager
-        binding.sellFragmentItems.adapter = adapter
         return binding.root
     }
 
@@ -74,7 +80,7 @@ class SellFragment : Fragment() {
             foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).onItemSelectedListener = spinnerItemClick
             foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
 
-            val dialog = AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
+            AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
                 .setPositiveButton("판매", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
                         if (sale == null) {
@@ -101,70 +107,80 @@ class SellFragment : Fragment() {
                 })
                 .setNeutralButton("추가", null)
                 .setView(foodSaleView)
-                .show()
+                .show().let {
+                    it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
+                        override fun onClick(v: View?) {
+                            var sumPrice = 0
+                            var foodCount: Int
+                            val temp: Food?
 
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View?) {
-                    var sumPrice = 0
-                    var foodCount: Int
-                    val temp: Food?
+                            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
 
-                    foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
+                            if (sale == null) {
+                                sale = Sale("총 금액", sumPrice, DateTime(), HashSet<Food>())
+                            }
 
-                    if (sale == null) {
-                        sale = Sale("총 금액", sumPrice, DateTime(), HashSet<Food>())
-                    }
+                            foodCount = foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count)
+                                .text
+                                .toString()
+                                .toInt()
 
-                    foodCount = foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count)
-                        .text
-                        .toString()
-                        .toInt()
-
-                    if (sale!!.foods.find { it.name == food!!.name } != null) {
-                        temp = sale!!.foods.find { it.name == food!!.name }
-                        sale!!.foods.remove(temp)
-                        sale!!.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
-                    } else {
-                        sale!!.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
-                    }
+                            sale!!.foods.find { it.name == food!!.name }?.let {
+                                temp = sale!!.foods.find { it.name == food!!.name }
+                                sale!!.foods.remove(temp)
+                                sale!!.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
+                            }.let {
+                                sale!!.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
+                            }
 
 
-                    val iter = sale!!.foods.iterator()
-                    while (iter.hasNext()) {
-                        val f = iter.next()
-                        sumPrice += f.price * f.count
-                    }
+                            sale!!.foods.iterator().let { iter ->
+                                while (iter.hasNext()) {
+                                    val f = iter.next()
+                                    sumPrice += f.price * f.count
+                                }
+                            }
 
-                    foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
+                            foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
 
-                    for (i in 0 until food!!.sub.size) {
-                        if (foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
-                            continue
+                            for (i in 0 until food!!.sub.size) {
+                                if (foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
+                                    continue
+                                }
+                                foodCount = foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i)
+                                    .text
+                                    .toString()
+                                    .toInt()
+
+                                sale!!.foods.add(
+                                    Food(
+                                        food!!.sub[i].name,
+                                        food!!.sub[i].price,
+                                        food!!.sub[i].sub,
+                                        food!!.sub[i].count + foodCount
+                                    )
+                                )
+
+                                sumPrice += food!!.sub[i].price * (food!!.sub[i].count + foodCount)
+
+                                foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+                            }
+
+                            sale!!.price = sumPrice
+
+                            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text =
+                                DecimalFormat.getCurrencyInstance().format(sale!!.price).toString()
+                            foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
                         }
-                        foodCount = foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i)
-                            .text
-                            .toString()
-                            .toInt()
+                    })
 
-                        sale!!.foods.add(Food(food!!.sub[i].name, food!!.sub[i].price, food!!.sub[i].sub, food!!.sub[i].count + foodCount))
-
-                        sumPrice += food!!.sub[i].price * (food!!.sub[i].count + foodCount)
-
-                        foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+                    it.window!!.attributes = it.window!!.attributes.apply {
+                        DisplayHelper.getDisplaySize().let { point ->
+                            width = (point.x * 0.9).toInt()
+                            height = (point.y * 0.5).toInt()
+                        }
                     }
-
-                    sale!!.price = sumPrice
-
-                    foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = DecimalFormat.getCurrencyInstance().format(sale!!.price).toString()
-                    foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
                 }
-            })
-
-            val layoutParams = dialog.window!!.attributes
-            val point = DisplayHelper.getDisplaySize()
-            layoutParams.width = (point.x * 0.9).toInt()
-//            layoutParams.height = (point.y * 0.5).toInt()
-            dialog.window!!.attributes = layoutParams
 
             executePendingBindings()
         }
@@ -182,26 +198,31 @@ class SellFragment : Fragment() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
-            labelWeight.weight = 1f
-            val editWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
-            editWeight.weight = 2f
+            val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                weight = 1f
+            }
+            val editWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                weight = 2f
+            }
 
             foodSaleView.findViewById<LinearLayout>(R.id.sell_sub_food_layout).removeAllViews()
 
             for (i in 0 until foods[position].sub.size) {
-                val layout = LinearLayout(context)
-                layout.layoutParams = linearLayoutParams
-                layout.orientation = LinearLayout.HORIZONTAL
+                val layout = LinearLayout(context).apply {
+                    layoutParams = linearLayoutParams
+                    orientation = LinearLayout.HORIZONTAL
+                }
 
-                val label = BootstrapLabel(context)
-                label.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
-                label.text = foods[position].sub[i].name
+                val label = BootstrapLabel(context).apply {
+                    bootstrapBrand = DefaultBootstrapBrand.SUCCESS
+                    text = foods[position].sub[i].name
+                }
 
-                val edit = BootstrapEditText(context)
-                edit.id = subMenuPriceID + i
-                edit.setTextColor(Color.BLACK)
-                edit.inputType = InputType.TYPE_CLASS_NUMBER
+                val edit = BootstrapEditText(context).apply {
+                    setId(subMenuPriceID + i)
+                    setTextColor(Color.BLACK)
+                    inputType = InputType.TYPE_CLASS_NUMBER
+                }
 
                 layout.addView(label, labelWeight)
                 layout.addView(edit, editWeight)
@@ -245,7 +266,7 @@ class SellFragment : Fragment() {
         sellViewModel = ViewModelProviders.of(this).get(SellViewModel::class.java)
         sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
             override fun onChanged(@Nullable sales: List<Sale>?) {
-                if (sales != null) {
+                sales?.let {
                     adapter.setItems(sales)
                 }
 
@@ -256,7 +277,7 @@ class SellFragment : Fragment() {
         foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
             override fun onChanged(@Nullable foods: List<Food>?) {
-                if (foods != null) {
+                foods?.let {
                     this@SellFragment.foods = foods
                 }
 

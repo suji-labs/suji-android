@@ -13,8 +13,9 @@ object DisplayHelper {
     }
 
     fun getDisplaySize(): Point {
-        val displayMetrics = DisplayMetrics()
-        getDisplay().getMetrics(displayMetrics)
-        return Point(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        DisplayMetrics().let {
+            getDisplay().getMetrics(it)
+            return Point(it.widthPixels, it.heightPixels)
+        }
     }
 }

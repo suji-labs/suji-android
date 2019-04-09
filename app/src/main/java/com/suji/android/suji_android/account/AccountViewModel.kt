@@ -16,8 +16,7 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
     init {
         sales.value = null
         repository = (application as BasicApp).getRepository()
-        val sold = repository.sold
-        sales.addSource(sold, object : Observer<List<Sale>> {
+        sales.addSource(repository.sold, object : Observer<List<Sale>> {
             override fun onChanged(sales: List<Sale>?) {
                 this@AccountViewModel.sales.value = sales
             }

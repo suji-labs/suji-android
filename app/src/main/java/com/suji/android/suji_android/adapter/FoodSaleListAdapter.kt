@@ -14,13 +14,14 @@ class FoodSaleListAdapter(private var foods: List<Food>) : BaseAdapter() {
         var view = convertView
 
         if (view == null) {
-            val inflater = parent!!.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.spinner_item, parent, false)
+            (parent!!.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).let {
+                view = it.inflate(R.layout.spinner_item, parent, false)
+            }
         }
 
         view!!.findViewById<TextView>(R.id.spinner_item_name).text = foods[position].name
 
-        return view
+        return view as View
     }
 
     override fun getItem(position: Int): Any {
@@ -39,12 +40,13 @@ class FoodSaleListAdapter(private var foods: List<Food>) : BaseAdapter() {
         var view = convertView
 
         if (view == null) {
-            val inflater = parent!!.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.spinner_item, parent, false)
+            (parent!!.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).let {
+                view = it.inflate(R.layout.spinner_item, parent, false)
+            }
         }
 
         view!!.findViewById<TextView>(R.id.spinner_item_name).text = foods[position].name
 
-        return view
+        return view as View
     }
 }

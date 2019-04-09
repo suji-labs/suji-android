@@ -43,15 +43,21 @@ class FoodFragment : Fragment() {
     private var subMenuCount = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate<FoodFragmentBinding>(inflater, R.layout.food_fragment, container, false)
         initViewModel()
+        binding = DataBindingUtil.inflate<FoodFragmentBinding>(
+            inflater,
+            R.layout.food_fragment,
+            container,
+            false)
+            .apply {
+                adapter = ProductListAdapter(Constant.ViewType.FOOD_VIEW)
+                layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                listener = createFood
+                mainFoodList.layoutManager = layoutManager
+                mainFoodList.adapter = adapter
+            }
         Constant.ListenerHashMap.listenerList["foodDeleteClickListener"] = foodDeleteClickListener
         Constant.ListenerHashMap.listenerList["foodModifyClickListener"] = foodModifyClickListener
-        adapter = ProductListAdapter(Constant.ViewType.FOOD_VIEW)
-        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.listener = createFood
-        binding.mainFoodList.layoutManager = layoutManager
-        binding.mainFoodList.adapter = adapter
         return binding.root
     }
 
@@ -66,7 +72,7 @@ class FoodFragment : Fragment() {
         foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
             override fun onChanged(@Nullable foods: List<Food>?) {
-                if (foods != null) {
+                foods?.let {
                     adapter.setItems(foods)
                 }
 
@@ -77,7 +83,7 @@ class FoodFragment : Fragment() {
 
     private var createFood: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            val dialog = AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
+            AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
                 .setPositiveButton("만들기", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
                         val subMenuList: ArrayList<Food> = ArrayList()
@@ -125,57 +131,64 @@ class FoodFragment : Fragment() {
                 .setNeutralButton("부가 메뉴", null)
                 .setView(foodCreateView)
                 .show()
+                .let {
+                    it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
+                        override fun onClick(v: View?) {
+                            val outerLayout: LinearLayout = foodCreateView.findViewById(R.id.create_sub_menu)
+                            val innerLayout = LinearLayout(foodCreateView.context).apply {
+                                id = subMenuLayoutID + subMenuCount
+                                orientation = LinearLayout.HORIZONTAL
+                                gravity = Gravity.CENTER
+                            }
 
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View?) {
-                    val outerLayout: LinearLayout = foodCreateView.findViewById(R.id.create_sub_menu)
-                    val innerLayout = LinearLayout(foodCreateView.context)
-                    innerLayout.id = subMenuLayoutID + subMenuCount
-                    innerLayout.orientation = LinearLayout.HORIZONTAL
-                    innerLayout.gravity = Gravity.CENTER
+                            val nameLabel = BootstrapLabel(foodCreateView.context).apply {
+                                text = "이름"
+                            }
 
-                    val nameLabel = BootstrapLabel(foodCreateView.context)
-                    nameLabel.text = "이름"
+                            val nameEditText = BootstrapEditText(foodCreateView.context).apply {
+                                id = subMenuNameID + subMenuCount
+                                setTextColor(Color.BLACK)
+                                width = 300
+                                bottom = 15
+                            }
 
-                    val nameEditText = BootstrapEditText(foodCreateView.context)
-                    nameEditText.id = subMenuNameID + subMenuCount
-                    nameEditText.setTextColor(Color.BLACK)
-                    nameEditText.width = 300
-                    nameEditText.bottom = 15
+                            val priceLabel = BootstrapLabel(foodCreateView.context).apply {
+                                text = "가격"
+                            }
 
-                    val priceLabel = BootstrapLabel(foodCreateView.context)
-                    priceLabel.text = "가격"
+                            val priceEditText = BootstrapEditText(foodCreateView.context).apply {
+                                id = subMenuPriceID + subMenuCount
+                                setTextColor(Color.BLACK)
+                                inputType = InputType.TYPE_CLASS_NUMBER
+                                width = 300
+                                bottom = 15
+                            }
 
-                    val priceEditText = BootstrapEditText(foodCreateView.context)
-                    priceEditText.id = subMenuPriceID + subMenuCount
-                    priceEditText.setTextColor(Color.BLACK)
-                    priceEditText.inputType = InputType.TYPE_CLASS_NUMBER
-                    priceEditText.width = 300
-                    priceEditText.bottom = 15
+                            val subMenuDelete = BootstrapButton(foodCreateView.context).apply {
+                                id = subMenuCount
+                                text = "X"
+                                bootstrapBrand = DefaultBootstrapBrand.DANGER
+                                setOnClickListener(View.OnClickListener {
+                                    if (subMenuCount < 0) {
+                                        return@OnClickListener
+                                    }
+                                    val layout = foodCreateView.findViewById<LinearLayout>(subMenuLayoutID + it.id)
+                                    outerLayout.removeView(layout)
+                                    subMenuCount--
+                                })
+                            }
 
-                    val subMenuDelete = BootstrapButton(foodCreateView.context)
-                    subMenuDelete.id = subMenuCount
-                    subMenuDelete.text = "X"
-                    subMenuDelete.bootstrapBrand = DefaultBootstrapBrand.DANGER
-                    subMenuDelete.setOnClickListener(View.OnClickListener {
-                        if (subMenuCount < 0) {
-                            return@OnClickListener
+                            innerLayout.addView(nameLabel)
+                            innerLayout.addView(nameEditText)
+                            innerLayout.addView(priceLabel)
+                            innerLayout.addView(priceEditText)
+                            innerLayout.addView(subMenuDelete)
+
+                            outerLayout.addView(innerLayout)
+                            subMenuCount++
                         }
-                        val layout = foodCreateView.findViewById<LinearLayout>(subMenuLayoutID + it.id)
-                        outerLayout.removeView(layout)
-                        subMenuCount--
                     })
-
-                    innerLayout.addView(nameLabel)
-                    innerLayout.addView(nameEditText)
-                    innerLayout.addView(priceLabel)
-                    innerLayout.addView(priceEditText)
-                    innerLayout.addView(subMenuDelete)
-
-                    outerLayout.addView(innerLayout)
-                    subMenuCount++
                 }
-            })
 
             executePendingBindings()
         }
@@ -183,7 +196,7 @@ class FoodFragment : Fragment() {
 
     private var foodDeleteClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            if (item is Food) {
+            (item as Food).let {
                 foodViewModel.delete(item)
             }
 

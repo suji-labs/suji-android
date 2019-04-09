@@ -16,8 +16,7 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
     init {
         foods.value = null
         repository = (application as BasicApp).getRepository()
-        val food = repository.food
-        foods.addSource(food, object : Observer<List<Food>> {
+        foods.addSource(repository.food, object : Observer<List<Food>> {
             override fun onChanged(foods: List<Food>?) {
                 this@FoodViewModel.foods.value = foods
             }

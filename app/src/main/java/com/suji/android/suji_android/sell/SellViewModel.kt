@@ -16,8 +16,7 @@ class SellViewModel(application: Application) : AndroidViewModel(application) {
     init {
         sales.value = null
         repository = (application as BasicApp).getRepository()
-        val sale = repository.selling
-        sales.addSource(sale, object : Observer<List<Sale>> {
+        sales.addSource(repository.selling, object : Observer<List<Sale>> {
             override fun onChanged(sales: List<Sale>?) {
                 this@SellViewModel.sales.value = sales
             }

@@ -76,38 +76,40 @@ class ProductListAdapter(private val viewType: Int) :
             is SellViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
                 holder.binding.sellFoodDescription.text = ""
-                val iter = (items!![position] as Sale).foods.iterator()
-                while (iter.hasNext()) {
-                    val f = iter.next()
-                    holder.binding.sellFoodDescription.text =
-                        String.format(
-                            holder.binding.root.context.getString(R.string.sell_item),
-                            holder.binding.sellFoodDescription.text.toString(),
-                            f.name,
-                            f.count
-                        )
+                (items!![position] as Sale).foods.iterator().let { iter ->
+                    while (iter.hasNext()) {
+                        val f = iter.next()
+                        holder.binding.sellFoodDescription.text =
+                            String.format(
+                                holder.binding.root.context.getString(R.string.sell_item),
+                                holder.binding.sellFoodDescription.text.toString(),
+                                f.name,
+                                f.count
+                            )
 
-                    holder.binding.sellFoodDescription.text =
-                        holder.binding.sellFoodDescription.text.toString().trim()
+                        holder.binding.sellFoodDescription.text =
+                            holder.binding.sellFoodDescription.text.toString().trim()
+                    }
                 }
                 holder.binding.executePendingBindings()
             }
             is ProductListViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
                 holder.binding.sellFoodDescription.text = ""
-                val iter = (items!![position] as Sale).foods.iterator()
-                while (iter.hasNext()) {
-                    val f = iter.next()
-                    holder.binding.sellFoodDescription.text =
-                        String.format(
-                            holder.binding.root.context.getString(R.string.sell_item),
-                            holder.binding.sellFoodDescription.text.toString(),
-                            f.name,
-                            f.count
-                        )
+                (items!![position] as Sale).foods.iterator().let { iter ->
+                    while (iter.hasNext()) {
+                        val f = iter.next()
+                        holder.binding.sellFoodDescription.text =
+                            String.format(
+                                holder.binding.root.context.getString(R.string.sell_item),
+                                holder.binding.sellFoodDescription.text.toString(),
+                                f.name,
+                                f.count
+                            )
 
-                    holder.binding.sellFoodDescription.text =
-                        holder.binding.sellFoodDescription.text.toString().trim()
+                        holder.binding.sellFoodDescription.text =
+                            holder.binding.sellFoodDescription.text.toString().trim()
+                    }
                 }
                 holder.binding.executePendingBindings()
             }
@@ -123,12 +125,8 @@ class ProductListAdapter(private val viewType: Int) :
     }
 
     fun setItems(saleList: List<Any>?) {
-        if (this.items == null) {
-            this.items = saleList
-            notifyItemRangeInserted(0, saleList!!.size)
-        } else {
-            items = saleList
-        }
+        this.items = saleList
+        notifyItemRangeInserted(0, saleList!!.size)
     }
 
     companion object {
