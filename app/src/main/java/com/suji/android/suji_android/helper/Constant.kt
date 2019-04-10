@@ -9,6 +9,11 @@ object Constant {
         const val SOLD_VIEW = 2
     }
 
+    object PayType {
+        const val CARD = 0
+        const val CASH = 1
+    }
+
     object ListenerHashMap {
         val listenerList: HashMap<String, ItemClickListener> = HashMap<String, ItemClickListener>()
     }

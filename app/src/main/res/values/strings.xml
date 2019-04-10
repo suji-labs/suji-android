@@ -18,4 +18,6 @@
     <string name="create_food">메뉴 만들기</string>
     <string name="total_price">총 금액</string>
     <string name="sell_item">%1$s %2$s : %3$d개</string>
+    <string name="pay_cash">현금 계산</string>
+    <string name="pay_card">카드 계산</string>
 </resources>

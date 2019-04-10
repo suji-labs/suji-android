@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <FrameLayout
+    <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/sold_fragment_items"
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:text="@string/pay_card"/>
+            <TextView
+                    android:id="@+id/food_sold_card_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textSize="25sp"
+                    android:textColor="#000000"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:text="@string/pay_cash"/>
+            <TextView
+                    android:id="@+id/food_sold_cash_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textSize="25sp"
+                    android:textColor="#000000"/>
+        </LinearLayout>
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -29,5 +64,10 @@
                     android:textSize="25sp"
                     android:textColor="#000000"/>
         </LinearLayout>
-    </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sold_fragment_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 </layout>

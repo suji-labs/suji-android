@@ -53,10 +53,20 @@ class AccountFragment : Fragment() {
                     soldItems = t
 
                     var sumPrice = 0
+                    var cardMoney = 0
+                    var cashMoney = 0
                     for (item in soldItems) {
                         sumPrice += item.price
+
+                        if (item.pay == Constant.PayType.CARD) {
+                            cardMoney += item.price
+                        } else {
+                            cashMoney += item.price
+                        }
                     }
                     binding.foodSoldTotalPrice.text = DecimalFormat.getCurrencyInstance().format(sumPrice).toString()
+                    binding.foodSoldCardPrice.text = DecimalFormat.getCurrencyInstance().format(cardMoney).toString()
+                    binding.foodSoldCashPrice.text = DecimalFormat.getCurrencyInstance().format(cashMoney).toString()
                 }
 
                 executePendingBindings()

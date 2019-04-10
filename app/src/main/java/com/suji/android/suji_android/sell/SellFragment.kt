@@ -235,10 +235,32 @@ class SellFragment : Fragment() {
 
     private val foodSellClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            if (item is Sale) {
-                item.sell = true
-                sellViewModel.update(item)
-            }
+            AlertDialog.Builder(context)
+                .setTitle("결제 방식을 선택하세요")
+                .setPositiveButton("현금", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        if (item is Sale) {
+                            item.sell = true
+                            item.pay = Constant.PayType.CASH
+                            sellViewModel.update(item)
+                        }
+                    }
+                })
+                .setNegativeButton("카드", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        if (item is Sale) {
+                            item.sell = true
+                            item.pay = Constant.PayType.CARD
+                            sellViewModel.update(item)
+                        }
+                    }
+                })
+                .setNeutralButton("취소", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        dialog!!.dismiss()
+                    }
+                })
+                .show()
 
             executePendingBindings()
         }

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
@@ -95,10 +96,16 @@ class ProductListAdapter(private val viewType: Int) :
             }
             is ProductListViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
-                holder.binding.sellFoodDescription.text = ""
                 (items!![position] as Sale).foods.iterator().let { iter ->
                     while (iter.hasNext()) {
                         val f = iter.next()
+                        if ((holder.binding.sale as Sale).pay == Constant.PayType.CARD) {
+                            holder.binding.soldPay.text = "카드"
+                            holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.PRIMARY
+                        } else {
+                            holder.binding.soldPay.text = "현금"
+                            holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
+                        }
                         holder.binding.sellFoodDescription.text =
                             String.format(
                                 holder.binding.root.context.getString(R.string.sell_item),
