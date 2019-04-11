@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,12 +37,11 @@ import java.text.DecimalFormat
 class SellFragment : Fragment() {
     private lateinit var binding: SellFragmentBinding
     private lateinit var adapter: ProductListAdapter
+    private lateinit var spinnerAdapter: FoodSaleListAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var sellViewModel: SellViewModel = SellViewModel(BasicApp.app)
     private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
-    private lateinit var foods: List<Food>
-    private lateinit var inflater: LayoutInflater
-    private lateinit var foodSaleView: View
+    private lateinit var foodSaleView: LinearLayout
     private var food: Food? = null
     private var sale: Sale? = null
     private val subMenuPriceID = 0x6000
@@ -61,6 +61,14 @@ class SellFragment : Fragment() {
                 sellFragmentItems.layoutManager = layoutManager
                 sellFragmentItems.adapter = adapter
             }
+
+        foodSaleView = inflater.inflate(R.layout.food_sell_dialog, null) as LinearLayout
+
+        foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).apply {
+            spinnerAdapter = FoodSaleListAdapter()
+            adapter = spinnerAdapter
+            onItemSelectedListener = spinnerItemClick
+        }
         Constant.ListenerHashMap.listenerList["foodSellClickListener"] = foodSellClickListener
         Constant.ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
         Constant.ListenerHashMap.listenerList["foodSaleCancelClickListener"] = foodSaleCancelClickListener
@@ -69,15 +77,10 @@ class SellFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        inflater = activity!!.layoutInflater
-        foodSaleView = inflater.inflate(R.layout.food_sell_dialog, null)
     }
 
     private val floatingButtonClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).adapter = FoodSaleListAdapter(foods)
-            foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).onItemSelectedListener = spinnerItemClick
             foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
 
             AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
@@ -192,22 +195,25 @@ class SellFragment : Fragment() {
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            food = foods[position]
+            val food = parent!!.getItemAtPosition(position) as Food
+            this@SellFragment.food = food
 
             val linearLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+                .apply {
                 weight = 1f
             }
-            val editWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            val editWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+                .apply {
                 weight = 2f
             }
 
             foodSaleView.findViewById<LinearLayout>(R.id.sell_sub_food_layout).removeAllViews()
 
-            for (i in 0 until foods[position].sub.size) {
+            for (i in 0 until food.sub.size) {
                 val layout = LinearLayout(context).apply {
                     layoutParams = linearLayoutParams
                     orientation = LinearLayout.HORIZONTAL
@@ -215,7 +221,7 @@ class SellFragment : Fragment() {
 
                 val label = BootstrapLabel(context).apply {
                     bootstrapBrand = DefaultBootstrapBrand.SUCCESS
-                    text = foods[position].sub[i].name
+                    text = food.sub[i].name
                 }
 
                 val edit = BootstrapEditText(context).apply {
@@ -300,7 +306,7 @@ class SellFragment : Fragment() {
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
             override fun onChanged(@Nullable foods: List<Food>?) {
                 foods?.let {
-                    this@SellFragment.foods = foods
+                    spinnerAdapter.setItems(it)
                 }
 
                 executePendingBindings()
