@@ -177,7 +177,7 @@ class SellFragment : Fragment() {
                     it.window!!.attributes = it.window!!.attributes.apply {
                         DisplayHelper.getDisplaySize().let { point ->
                             width = (point.x * 0.9).toInt()
-                            height = (point.y * 0.5).toInt()
+//                            height = (point.y * 0.5).toInt()
                         }
                     }
                 }

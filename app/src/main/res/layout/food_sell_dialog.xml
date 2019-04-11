@@ -8,6 +8,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <com.beardedhen.androidbootstrap.BootstrapLabel
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/sell_food"
+                android:layout_marginBottom="10dp"
+                app:bootstrapBrand="success"
+                app:bootstrapHeading="h1"/>
+
         <com.beardedhen.androidbootstrap.BootstrapWell
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

@@ -14,7 +14,8 @@
                 android:layout_height="100dp"
                 android:text="@string/create_food"
                 android:layout_marginBottom="10dp"
-                app:bootstrapBrand="success"/>
+                app:bootstrapBrand="success"
+                app:bootstrapHeading="h1"/>
 
         <RelativeLayout
                 android:layout_marginBottom="30dp"

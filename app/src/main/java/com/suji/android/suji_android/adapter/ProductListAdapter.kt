@@ -79,43 +79,46 @@ class ProductListAdapter(private val viewType: Int) :
                 holder.binding.sellFoodDescription.text = ""
                 (items!![position] as Sale).foods.iterator().let { iter ->
                     while (iter.hasNext()) {
-                        val f = iter.next()
-                        holder.binding.sellFoodDescription.text =
-                            String.format(
-                                holder.binding.root.context.getString(R.string.sell_item),
-                                holder.binding.sellFoodDescription.text.toString(),
-                                f.name,
-                                f.count
-                            )
+                        iter.next().let {
+                            holder.binding.sellFoodDescription.text =
+                                String.format(
+                                    holder.binding.root.context.getString(R.string.sell_item),
+                                    holder.binding.sellFoodDescription.text.toString(),
+                                    it.name,
+                                    it.count
+                                )
 
-                        holder.binding.sellFoodDescription.text =
-                            holder.binding.sellFoodDescription.text.toString().trim()
+                            holder.binding.sellFoodDescription.text =
+                                holder.binding.sellFoodDescription.text.toString().trim()
+                        }
                     }
                 }
                 holder.binding.executePendingBindings()
             }
             is ProductListViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
+                holder.binding.soldFoodDescription.text = ""
                 (items!![position] as Sale).foods.iterator().let { iter ->
                     while (iter.hasNext()) {
-                        val f = iter.next()
-                        if ((holder.binding.sale as Sale).pay == Constant.PayType.CARD) {
-                            holder.binding.soldPay.text = "카드"
-                            holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.PRIMARY
-                        } else {
-                            holder.binding.soldPay.text = "현금"
-                            holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
-                        }
-                        holder.binding.sellFoodDescription.text =
-                            String.format(
-                                holder.binding.root.context.getString(R.string.sell_item),
-                                holder.binding.sellFoodDescription.text.toString(),
-                                f.name,
-                                f.count
-                            )
+                        iter.next().let {
+                            if ((holder.binding.sale as Sale).pay == Constant.PayType.CARD) {
+                                holder.binding.soldPay.text = "카드"
+                                holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.PRIMARY
+                            } else {
+                                holder.binding.soldPay.text = "현금"
+                                holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
+                            }
+                            holder.binding.soldFoodDescription.text =
+                                String.format(
+                                    holder.binding.root.context.getString(R.string.sell_item),
+                                    holder.binding.soldFoodDescription.text.toString(),
+                                    it.name,
+                                    it.count
+                                )
 
-                        holder.binding.sellFoodDescription.text =
-                            holder.binding.sellFoodDescription.text.toString().trim()
+                            holder.binding.soldFoodDescription.text =
+                                holder.binding.soldFoodDescription.text.toString().trim()
+                        }
                     }
                 }
                 holder.binding.executePendingBindings()
@@ -131,9 +134,10 @@ class ProductListAdapter(private val viewType: Int) :
         }
     }
 
-    fun setItems(saleList: List<Any>?) {
-        this.items = saleList
-        notifyItemRangeInserted(0, saleList!!.size)
+    fun setItems(items: List<Any>?) {
+        this.items = items
+//        notifyItemRangeInserted(0, items!!.size)
+        notifyDataSetChanged()
     }
 
     companion object {

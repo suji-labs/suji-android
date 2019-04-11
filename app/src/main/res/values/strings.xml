@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SUJI-Android</string>
+    <string name="app_name">수지</string>
     <!--Menu-->
     <string name="create_menu">메뉴 만들기</string>
     <string name="create">만들기</string>
@@ -20,4 +20,5 @@
     <string name="sell_item">%1$s %2$s : %3$d개</string>
     <string name="pay_cash">현금 계산</string>
     <string name="pay_card">카드 계산</string>
+    <string name="sell_food">음식 판매</string>
 </resources>
