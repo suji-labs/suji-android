@@ -2,7 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="sell" type="com.suji.android.suji_android.listener.ItemClickListener"/>
-        <variable name="modify" type="com.suji.android.suji_android.listener.ItemClickListener"/>
         <variable name="delete" type="com.suji.android.suji_android.listener.ItemClickListener"/>
         <variable name="sale" type="com.suji.android.suji_android.database.model.Sale"/>
         <variable name="formatter" type="java.text.DecimalFormat"/>
@@ -45,12 +44,6 @@
                         android:text="@string/sell"
                         android:onClick="@{() -> sell.onClick(sale)}"
                         app:bootstrapBrand="success"/>
-                <com.beardedhen.androidbootstrap.BootstrapButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/modify"
-                        android:onClick="@{() -> modify.onClick(sale)}"
-                        app:bootstrapBrand="primary"/>
                 <com.beardedhen.androidbootstrap.BootstrapButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

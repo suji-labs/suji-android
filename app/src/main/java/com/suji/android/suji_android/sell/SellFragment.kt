@@ -76,7 +76,7 @@ class SellFragment : Fragment() {
             onItemSelectedListener = spinnerItemClick
         }
         Constant.ListenerHashMap.listenerList["foodSellClickListener"] = foodSellClickListener
-        Constant.ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
+//        Constant.ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
         Constant.ListenerHashMap.listenerList["foodSaleCancelClickListener"] = foodSaleCancelClickListener
         return binding.root
     }
@@ -275,22 +275,22 @@ class SellFragment : Fragment() {
         }
     }
 
-    private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
-        override fun onClick(item: Any?) {
-            if (item is Sale) {
-                AlertDialog.Builder(context, R.style.AppTheme_AppCompat_CustomDialog)
-                    .setPositiveButton("추가", object : DialogInterface.OnClickListener {
-                        override fun onClick(dialog: DialogInterface?, which: Int) {
-                            dialog!!.dismiss()
-                        }
-                    })
-                    .setView(dialogBinding.root)
-                    .show()
-            }
-
-            executePendingBindings()
-        }
-    }
+//    private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
+//        override fun onClick(item: Any?) {
+//            if (item is Sale) {
+//                AlertDialog.Builder(context, R.style.AppTheme_AppCompat_CustomDialog)
+//                    .setPositiveButton("추가", object : DialogInterface.OnClickListener {
+//                        override fun onClick(dialog: DialogInterface?, which: Int) {
+//                            dialog!!.dismiss()
+//                        }
+//                    })
+//                    .setView(dialogBinding.root)
+//                    .show()
+//            }
+//
+//            executePendingBindings()
+//        }
+//    }
 
     private val foodSaleCancelClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
