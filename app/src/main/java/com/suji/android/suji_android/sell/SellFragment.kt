@@ -26,6 +26,7 @@ import com.suji.android.suji_android.adapter.ProductListAdapter
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
+import com.suji.android.suji_android.databinding.FoodSellDialogBinding
 import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.Constant
@@ -41,7 +42,7 @@ class SellFragment : Fragment() {
     private lateinit var layoutManager: LinearLayoutManager
     private var sellViewModel: SellViewModel = SellViewModel(BasicApp.app)
     private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
-    private lateinit var foodSaleView: LinearLayout
+    private lateinit var dialogBinding: FoodSellDialogBinding
     private var food: Food? = null
     private var sale: Sale? = null
     private val subMenuPriceID = 0x6000
@@ -62,9 +63,14 @@ class SellFragment : Fragment() {
                 sellFragmentItems.adapter = adapter
             }
 
-        foodSaleView = inflater.inflate(R.layout.food_sell_dialog, null) as LinearLayout
+        dialogBinding = DataBindingUtil.inflate<FoodSellDialogBinding>(
+            inflater,
+            R.layout.food_sell_dialog,
+            null,
+            false
+        )
 
-        foodSaleView.findViewById<Spinner>(R.id.sell_item_spinner).apply {
+        dialogBinding.sellItemSpinner.apply {
             spinnerAdapter = FoodSaleListAdapter()
             adapter = spinnerAdapter
             onItemSelectedListener = spinnerItemClick
@@ -81,7 +87,7 @@ class SellFragment : Fragment() {
 
     private val floatingButtonClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
+            dialogBinding.foodSaleTotalPrice.text = "0"
 
             AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
                 .setPositiveButton("판매", object : DialogInterface.OnClickListener {
@@ -91,25 +97,25 @@ class SellFragment : Fragment() {
                         } else {
                             sellViewModel.insert(sale!!)
 
-                            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
+                            dialogBinding.foodSaleTotalPrice.text = "0"
                             sale = null
 
                             dialog!!.dismiss()
                         }
 
-                        (foodSaleView.parent as ViewGroup).removeView(foodSaleView)
+                        (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
                     }
                 })
                 .setNegativeButton("취소", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
-                        foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
+                        dialogBinding.foodSaleTotalPrice.text = "0"
                         sale = null
-                        (foodSaleView.parent as ViewGroup).removeView(foodSaleView)
+                        (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
                         dialog!!.dismiss()
                     }
                 })
                 .setNeutralButton("추가", null)
-                .setView(foodSaleView)
+                .setView(dialogBinding.root)
                 .show().let {
                     it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
                         override fun onClick(v: View?) {
@@ -117,16 +123,13 @@ class SellFragment : Fragment() {
                             var foodCount: Int
                             val temp: Food?
 
-                            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text = "0"
+                            dialogBinding.foodSaleTotalPrice.text = "0"
 
                             if (sale == null) {
                                 sale = Sale("총 금액", sumPrice, DateTime(), HashSet<Food>())
                             }
 
-                            foodCount = foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count)
-                                .text
-                                .toString()
-                                .toInt()
+                            foodCount = dialogBinding.sellMainFoodCount.text.toString().toInt()
 
                             sale!!.foods.find { it.name == food!!.name }?.let {
                                 temp = sale!!.foods.find { it.name == food!!.name }
@@ -144,13 +147,13 @@ class SellFragment : Fragment() {
                                 }
                             }
 
-                            foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
+                            dialogBinding.sellMainFoodCount.setText("")
 
                             for (i in 0 until food!!.sub.size) {
-                                if (foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
+                                if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
                                     continue
                                 }
-                                foodCount = foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i)
+                                foodCount = dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i)
                                     .text
                                     .toString()
                                     .toInt()
@@ -166,14 +169,14 @@ class SellFragment : Fragment() {
 
                                 sumPrice += food!!.sub[i].price * (food!!.sub[i].count + foodCount)
 
-                                foodSaleView.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+                                dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
                             }
 
                             sale!!.price = sumPrice
 
-                            foodSaleView.findViewById<TextView>(R.id.food_sale_total_price).text =
+                            dialogBinding.foodSaleTotalPrice.text =
                                 DecimalFormat.getCurrencyInstance().format(sale!!.price).toString()
-                            foodSaleView.findViewById<BootstrapEditText>(R.id.sell_main_food_count).setText("")
+                            dialogBinding.sellMainFoodCount.setText("")
                         }
                     })
 
@@ -204,14 +207,14 @@ class SellFragment : Fragment() {
             )
             val labelWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
                 .apply {
-                weight = 1f
-            }
+                    weight = 1f
+                }
             val editWeight = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
                 .apply {
-                weight = 2f
-            }
+                    weight = 2f
+                }
 
-            foodSaleView.findViewById<LinearLayout>(R.id.sell_sub_food_layout).removeAllViews()
+            dialogBinding.sellSubFoodLayout.removeAllViews()
 
             for (i in 0 until food.sub.size) {
                 val layout = LinearLayout(context).apply {
@@ -232,7 +235,7 @@ class SellFragment : Fragment() {
 
                 layout.addView(label, labelWeight)
                 layout.addView(edit, editWeight)
-                foodSaleView.findViewById<LinearLayout>(R.id.sell_sub_food_layout).addView(layout)
+                dialogBinding.sellSubFoodLayout.addView(layout)
             }
 
             executePendingBindings()
@@ -274,7 +277,16 @@ class SellFragment : Fragment() {
 
     private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            Toast.makeText(context, "addFood", Toast.LENGTH_SHORT).show()
+            if (item is Sale) {
+                AlertDialog.Builder(context, R.style.AppTheme_AppCompat_CustomDialog)
+                    .setPositiveButton("추가", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface?, which: Int) {
+                            dialog!!.dismiss()
+                        }
+                    })
+                    .setView(dialogBinding.root)
+                    .show()
+            }
 
             executePendingBindings()
         }
