@@ -76,7 +76,7 @@ class SellFragment : Fragment() {
             onItemSelectedListener = spinnerItemClick
         }
         Constant.ListenerHashMap.listenerList["foodSellClickListener"] = foodSellClickListener
-//        Constant.ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
+        Constant.ListenerHashMap.listenerList["addSaleClickListener"] = addSaleClickListener
         Constant.ListenerHashMap.listenerList["foodSaleCancelClickListener"] = foodSaleCancelClickListener
         return binding.root
     }
@@ -275,22 +275,100 @@ class SellFragment : Fragment() {
         }
     }
 
-//    private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
-//        override fun onClick(item: Any?) {
-//            if (item is Sale) {
-//                AlertDialog.Builder(context, R.style.AppTheme_AppCompat_CustomDialog)
-//                    .setPositiveButton("추가", object : DialogInterface.OnClickListener {
-//                        override fun onClick(dialog: DialogInterface?, which: Int) {
-//                            dialog!!.dismiss()
-//                        }
-//                    })
-//                    .setView(dialogBinding.root)
-//                    .show()
-//            }
-//
-//            executePendingBindings()
-//        }
-//    }
+    private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
+        override fun onClick(item: Any?) {
+            if (item is Sale) {
+                dialogBinding.foodSaleTotalPrice.text = DecimalFormat.getCurrencyInstance().format(item.price).toString()
+
+                AlertDialog.Builder(context, R.style.AppTheme_AppCompat_CustomDialog)
+                    .setPositiveButton("적용", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface?, which: Int) {
+                            sellViewModel.update(item)
+
+                            (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
+
+                            dialog!!.dismiss()
+                        }
+                    })
+                    .setNegativeButton("취소", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface?, which: Int) {
+                            (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
+
+                            dialog!!.dismiss()
+                        }
+                    })
+                    .setNeutralButton("추가", null)
+                    .setView(dialogBinding.root)
+                    .show().let {
+                        it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
+                            override fun onClick(v: View?) {
+                                var sumPrice = 0
+                                var foodCount: Int
+                                val temp: Food?
+
+                                foodCount = dialogBinding.sellMainFoodCount.text.toString().toInt()
+
+                                if (item.foods.find { it.name == food!!.name } != null) {
+                                    temp = item.foods.find { it.name == food!!.name }
+                                    item.foods.remove(temp)
+                                    item.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
+                                } else {
+                                    item.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
+                                }
+
+//                                item.foods.find { it.name == food!!.name }?.let {
+//                                    temp = item.foods.find { it.name == food!!.name }
+//                                    item.foods.remove(temp)
+//                                    item.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
+//                                }.let {
+//                                    item.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
+//                                }
+
+
+                                item.foods.iterator().let { iter ->
+                                    while (iter.hasNext()) {
+                                        val f = iter.next()
+                                        sumPrice += f.price * f.count
+                                    }
+                                }
+
+                                dialogBinding.sellMainFoodCount.setText("")
+
+                                for (i in 0 until food!!.sub.size) {
+                                    if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
+                                        continue
+                                    }
+                                    foodCount = dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i)
+                                        .text
+                                        .toString()
+                                        .toInt()
+
+                                    item.foods.add(
+                                        Food(
+                                            food!!.sub[i].name,
+                                            food!!.sub[i].price,
+                                            food!!.sub[i].sub,
+                                            food!!.sub[i].count + foodCount
+                                        )
+                                    )
+
+                                    sumPrice += food!!.sub[i].price * (food!!.sub[i].count + foodCount)
+
+                                    dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+                                }
+
+                                item.price = sumPrice
+
+                                dialogBinding.foodSaleTotalPrice.text = DecimalFormat.getCurrencyInstance().format(item.price).toString()
+                                dialogBinding.sellMainFoodCount.setText("")
+                            }
+                        })
+                    }
+            }
+
+            executePendingBindings()
+        }
+    }
 
     private val foodSaleCancelClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
