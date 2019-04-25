@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="day" type="com.suji.android.suji_android.listener.ItemClickListener"/>
+        <variable name="week" type="com.suji.android.suji_android.listener.ItemClickListener"/>
+        <variable name="month" type="com.suji.android.suji_android.listener.ItemClickListener"/>
+        <variable name="all" type="com.suji.android.suji_android.listener.ItemClickListener"/>
+    </data>
+
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/day"
+                    android:onClick="@{() -> day.onClick(null)}"
+                    app:bootstrapBrand="primary"/>
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/week"
+                    android:onClick="@{() -> week.onClick(null)}"
+                    app:bootstrapBrand="success"/>
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/month"
+                    android:onClick="@{() -> month.onClick(null)}"
+                    app:bootstrapBrand="info"/>
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/all"
+                    android:onClick="@{() -> all.onClick(null)}"
+                    app:bootstrapBrand="regular"/>
+
+        </LinearLayout>
 
         <LinearLayout
                 android:orientation="horizontal"

@@ -7,6 +7,10 @@ import com.suji.android.suji_android.database.AppDatabase
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.executor.AppExecutors
+import org.joda.time.DateTime
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class DataRepository private constructor(private val database: AppDatabase) {
     private val observableFood: MediatorLiveData<List<Food>> = MediatorLiveData()
@@ -74,6 +78,13 @@ class DataRepository private constructor(private val database: AppDatabase) {
 //            executors.diskIO().execute(Runnable { database.saleDAO().loadSale() })
 //        }
 //    }
+
+    fun findSaleOfDate(start: DateTime, end: DateTime): List<Sale> {
+//        executors.diskIO().execute(Runnable { database.saleDAO().findSaleOfDate(start, end) })
+        val result = executors.cacheIO().submit(Callable<List<Sale>> { database.saleDAO().findSaleOfDate(start, end) })
+        return result.get()
+//        executors.diskIO().execute(Callable<LiveData<List<Sale>>> { database.saleDAO().findSaleOfDate(start, end) })
+    }
 
     object Singleton {
         private lateinit var INSTANCE: DataRepository

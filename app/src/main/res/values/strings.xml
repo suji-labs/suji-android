@@ -21,4 +21,8 @@
     <string name="pay_cash">현금 계산</string>
     <string name="pay_card">카드 계산</string>
     <string name="sell_food">음식 판매</string>
+    <string name="day">일간</string>
+    <string name="week">주간</string>
+    <string name="month">월간</string>
+    <string name="all">전체</string>
 </resources>
