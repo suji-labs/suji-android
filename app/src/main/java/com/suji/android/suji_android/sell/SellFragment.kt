@@ -97,7 +97,7 @@ class SellFragment : Fragment() {
                             Toast.makeText(context, "음식을 추가하세요!", Toast.LENGTH_SHORT).show()
                         } else {
                             sellViewModel.insert(sale!!)
-
+                            adapter.setItems(sellViewModel.getAllSale())
                             dialogBinding.foodSaleTotalPrice.text = "0"
                             sale = null
 
@@ -253,7 +253,6 @@ class SellFragment : Fragment() {
                             item.sell = true
                             item.pay = Constant.PayType.CASH
                             sellViewModel.update(item)
-                            executePendingBindings()
                         }
                     }
                 })
@@ -263,7 +262,6 @@ class SellFragment : Fragment() {
                             item.sell = true
                             item.pay = Constant.PayType.CARD
                             sellViewModel.update(item)
-                            executePendingBindings()
                         }
                     }
                 })
@@ -273,6 +271,9 @@ class SellFragment : Fragment() {
                     }
                 })
                 .show()
+
+            adapter.setItems(sellViewModel.getAllSale())
+            executePendingBindings()
         }
     }
 
@@ -285,7 +286,7 @@ class SellFragment : Fragment() {
                     .setPositiveButton("적용", object : DialogInterface.OnClickListener {
                         override fun onClick(dialog: DialogInterface?, which: Int) {
                             sellViewModel.update(item)
-
+                            adapter.setItems(sellViewModel.getAllSale())
                             (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
 
                             dialog!!.dismiss()
@@ -314,17 +315,12 @@ class SellFragment : Fragment() {
                                     item.foods.remove(temp)
                                     item.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
                                 } else {
+                                    if (foodCount == -1) {
+                                        Toast.makeText(context, "주문되지 않은 음식은 뺄 수 없습니다!", Toast.LENGTH_SHORT).show()
+                                        return
+                                    }
                                     item.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
                                 }
-
-//                                item.foods.find { it.name == food!!.name }?.let {
-//                                    temp = item.foods.find { it.name == food!!.name }
-//                                    item.foods.remove(temp)
-//                                    item.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
-//                                }.let {
-//                                    item.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
-//                                }
-
 
                                 item.foods.iterator().let { iter ->
                                     while (iter.hasNext()) {
@@ -375,6 +371,7 @@ class SellFragment : Fragment() {
         override fun onClick(item: Any?) {
             if (item is Sale) {
                 sellViewModel.delete(item)
+                adapter.setItems(sellViewModel.getAllSale())
             }
 
             executePendingBindings()
