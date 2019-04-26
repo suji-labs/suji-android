@@ -55,7 +55,7 @@ class ProductListAdapter(private val viewType: Int) :
                     parent,
                     false
                 )
-                return ProductListViewHolder(binding)
+                return SoldViewHolder(binding)
             }
         }
     }
@@ -93,9 +93,12 @@ class ProductListAdapter(private val viewType: Int) :
                         }
                     }
                 }
+                if ((items!![position] as Sale).foods.size == 0) {
+                    holder.binding.sellFoodDescription.text = holder.binding.root.context.getString(R.string.no_sales)
+                }
                 holder.binding.executePendingBindings()
             }
-            is ProductListViewHolder -> {
+            is SoldViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
                 holder.binding.soldFoodDescription.text = ""
                 (items!![position] as Sale).foods.iterator().let { iter ->
@@ -136,12 +139,11 @@ class ProductListAdapter(private val viewType: Int) :
 
     fun setItems(items: List<Any>?) {
         this.items = items
-//        notifyItemRangeInserted(0, items!!.size)
         notifyDataSetChanged()
     }
 
     companion object {
-        class ProductListViewHolder(var binding: SoldItemBinding) : RecyclerView.ViewHolder(binding.root)
+        class SoldViewHolder(val binding: SoldItemBinding) : RecyclerView.ViewHolder(binding.root)
         class FoodViewHolder(val binding: FoodItemBinding) : RecyclerView.ViewHolder(binding.root)
         class SellViewHolder(val binding: SellItemBinding) : RecyclerView.ViewHolder(binding.root)
     }

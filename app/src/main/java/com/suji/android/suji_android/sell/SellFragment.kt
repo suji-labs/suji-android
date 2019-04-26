@@ -309,8 +309,18 @@ class SellFragment : Fragment() {
 
                                 if (item.foods.find { it.name == food!!.name } != null) {
                                     temp = item.foods.find { it.name == food!!.name }
+                                    if (foodCount < 0 && (foodCount * -1) > temp!!.count) {
+                                        Toast.makeText(context, "수량을 확인해주세요!", Toast.LENGTH_SHORT).show()
+                                        return
+                                    }
                                     item.foods.remove(temp)
-                                    item.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
+                                    if (foodCount < 0) {
+                                        if (temp!!.count + foodCount > 0) {
+                                            item.foods.add(Food(temp.name, temp.price, temp.sub, temp.count + foodCount))
+                                        }
+                                    } else {
+                                        item.foods.add(Food(temp?.name!!, temp.price, temp.sub, temp.count + foodCount))
+                                    }
                                 } else {
                                     if (foodCount == -1) {
                                         Toast.makeText(context, "주문되지 않은 음식은 뺄 수 없습니다!", Toast.LENGTH_SHORT).show()

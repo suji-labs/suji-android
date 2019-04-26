@@ -18,6 +18,7 @@
     <string name="create_food">메뉴 만들기</string>
     <string name="total_price">총 금액</string>
     <string name="sell_item">%1$s %2$s : %3$d개</string>
+    <string name="no_sales">판매중인 물품이 없습니다.\n수정 버튼을 눌러 추가하거나\n취소 버튼을 눌러 제거하세요!</string>
     <string name="pay_cash">현금 계산</string>
     <string name="pay_card">카드 계산</string>
     <string name="sell_food">음식 판매</string>
