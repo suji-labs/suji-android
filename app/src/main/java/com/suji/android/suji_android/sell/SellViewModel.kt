@@ -2,29 +2,15 @@ package com.suji.android.suji_android.sell
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.database.repository.DataRepository
 
 class SellViewModel(application: Application) : AndroidViewModel(application) {
-    private var repository: DataRepository
-    private var sales: MediatorLiveData<List<Sale>> = MediatorLiveData()
+    private var repository: DataRepository = (application as BasicApp).getRepository()
 
-    init {
-        sales.value = null
-        repository = (application as BasicApp).getRepository()
-        sales.addSource(repository.selling, object : Observer<List<Sale>> {
-            override fun onChanged(sales: List<Sale>?) {
-                this@SellViewModel.sales.value = sales
-            }
-        })
-    }
-
-    fun getAllSale(): LiveData<List<Sale>> {
-        return sales
+    fun getAllSale(): List<Sale> {
+        return repository.loadProduct(false)
     }
 
     fun insert(sale: Sale) {

@@ -209,108 +209,111 @@ class FoodFragment : Fragment() {
 
     private var foodModifyClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            dialogBinding.createMenuEditName.setText((item as Food).name)
-            dialogBinding.createMenuEditPrice.setText((item as Food).price.toString())
+            if (item is Food) {
+                dialogBinding.createMenuEditName.setText(item.name)
+                dialogBinding.createMenuEditPrice.setText(item.price.toString())
 
-            AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
-                .setPositiveButton("수정", object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
-                        val subMenuList: ArrayList<Food> = ArrayList()
-                        val foodName: String = dialogBinding.createMenuEditName.text.toString()
-                        val foodPrice: String = dialogBinding.createMenuEditPrice.text.toString()
+                AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
+                    .setPositiveButton("수정", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface?, which: Int) {
+                            val subMenuList: ArrayList<Food> = ArrayList()
+                            val foodName: String = dialogBinding.createMenuEditName.text.toString()
+                            val foodPrice: String = dialogBinding.createMenuEditPrice.text.toString()
 
-                        if (foodName == "" || foodPrice == "") {
-                            Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
-                            return
-                        }
-
-                        for (i in 0 until subMenuCount) {
-                            val subMenuName =
-                                dialogBinding.root.findViewById<BootstrapEditText>(subMenuNameID + i)
-                                    .text.toString()
-                            val subMenuPrice =
-                                dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i)
-                                    .text.toString()
-                            subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
-                        }
-
-                        if (subMenuCount == 0) {
-                            foodViewModel.update(Food(foodName, foodPrice.toInt(), id = item.id))
-                        } else {
-                            foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, item.id))
-                        }
-
-                        (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
-                        dialog!!.dismiss()
-                    }
-                })
-                .setNegativeButton("취소", object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
-                        (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
-                        dialog!!.dismiss()
-                    }
-                })
-                .setNeutralButton("부가 메뉴", null)
-                .setView(dialogBinding.root)
-                .show()
-                .let {
-                    it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
-                        override fun onClick(v: View?) {
-                            val outerLayout: LinearLayout = dialogBinding.createSubMenu
-                            val innerLayout = LinearLayout(dialogBinding.root.context).apply {
-                                id = subMenuLayoutID + subMenuCount
-                                orientation = LinearLayout.HORIZONTAL
-                                gravity = Gravity.CENTER
+                            if (foodName == "" || foodPrice == "") {
+                                Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
+                                return
                             }
 
-                            val nameLabel = BootstrapLabel(dialogBinding.root.context).apply {
-                                text = "이름"
+                            for (i in 0 until subMenuCount) {
+                                val subMenuName =
+                                    dialogBinding.root.findViewById<BootstrapEditText>(subMenuNameID + i)
+                                        .text.toString()
+                                val subMenuPrice =
+                                    dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i)
+                                        .text.toString()
+                                subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
                             }
 
-                            val nameEditText = BootstrapEditText(dialogBinding.root.context).apply {
-                                id = subMenuNameID + subMenuCount
-                                setTextColor(Color.BLACK)
-                                width = 300
-                                bottom = 15
+                            if (subMenuCount == 0) {
+                                foodViewModel.update(Food(foodName, foodPrice.toInt(), id = item.id))
+                            } else {
+                                foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, item.id))
                             }
 
-                            val priceLabel = BootstrapLabel(dialogBinding.root.context).apply {
-                                text = "가격"
-                            }
-
-                            val priceEditText = BootstrapEditText(dialogBinding.root.context).apply {
-                                id = subMenuPriceID + subMenuCount
-                                setTextColor(Color.BLACK)
-                                inputType = InputType.TYPE_CLASS_NUMBER
-                                width = 300
-                                bottom = 15
-                            }
-
-                            val subMenuDelete = BootstrapButton(dialogBinding.root.context).apply {
-                                id = subMenuCount
-                                text = "X"
-                                bootstrapBrand = DefaultBootstrapBrand.DANGER
-                                setOnClickListener(View.OnClickListener {
-                                    if (subMenuCount < 0) {
-                                        return@OnClickListener
-                                    }
-                                    val layout = dialogBinding.root.findViewById<LinearLayout>(subMenuLayoutID + it.id)
-                                    outerLayout.removeView(layout)
-                                    subMenuCount--
-                                })
-                            }
-
-                            innerLayout.addView(nameLabel)
-                            innerLayout.addView(nameEditText)
-                            innerLayout.addView(priceLabel)
-                            innerLayout.addView(priceEditText)
-                            innerLayout.addView(subMenuDelete)
-
-                            outerLayout.addView(innerLayout)
-                            subMenuCount++
+                            (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
+                            dialog!!.dismiss()
                         }
                     })
-                }
+                    .setNegativeButton("취소", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface?, which: Int) {
+                            (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
+                            dialog!!.dismiss()
+                        }
+                    })
+                    .setNeutralButton("부가 메뉴", null)
+                    .setView(dialogBinding.root)
+                    .show()
+                    .let {
+                        it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
+                            override fun onClick(v: View?) {
+                                val outerLayout: LinearLayout = dialogBinding.createSubMenu
+                                val innerLayout = LinearLayout(dialogBinding.root.context).apply {
+                                    id = subMenuLayoutID + subMenuCount
+                                    orientation = LinearLayout.HORIZONTAL
+                                    gravity = Gravity.CENTER
+                                }
+
+                                val nameLabel = BootstrapLabel(dialogBinding.root.context).apply {
+                                    text = "이름"
+                                }
+
+                                val nameEditText = BootstrapEditText(dialogBinding.root.context).apply {
+                                    id = subMenuNameID + subMenuCount
+                                    setTextColor(Color.BLACK)
+                                    width = 300
+                                    bottom = 15
+                                }
+
+                                val priceLabel = BootstrapLabel(dialogBinding.root.context).apply {
+                                    text = "가격"
+                                }
+
+                                val priceEditText = BootstrapEditText(dialogBinding.root.context).apply {
+                                    id = subMenuPriceID + subMenuCount
+                                    setTextColor(Color.BLACK)
+                                    inputType = InputType.TYPE_CLASS_NUMBER
+                                    width = 300
+                                    bottom = 15
+                                }
+
+                                val subMenuDelete = BootstrapButton(dialogBinding.root.context).apply {
+                                    id = subMenuCount
+                                    text = "X"
+                                    bootstrapBrand = DefaultBootstrapBrand.DANGER
+                                    setOnClickListener(View.OnClickListener {
+                                        if (subMenuCount < 0) {
+                                            return@OnClickListener
+                                        }
+                                        val layout =
+                                            dialogBinding.root.findViewById<LinearLayout>(subMenuLayoutID + it.id)
+                                        outerLayout.removeView(layout)
+                                        subMenuCount--
+                                    })
+                                }
+
+                                innerLayout.addView(nameLabel)
+                                innerLayout.addView(nameEditText)
+                                innerLayout.addView(priceLabel)
+                                innerLayout.addView(priceEditText)
+                                innerLayout.addView(subMenuDelete)
+
+                                outerLayout.addView(innerLayout)
+                                subMenuCount++
+                            }
+                        })
+                    }
+            }
 
             executePendingBindings()
         }

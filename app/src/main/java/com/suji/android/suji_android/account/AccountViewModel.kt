@@ -2,30 +2,16 @@ package com.suji.android.suji_android.account
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.database.repository.DataRepository
 import org.joda.time.DateTime
 
 class AccountViewModel(application: Application) : AndroidViewModel(application) {
-    private var repository: DataRepository
-    private var sales: MediatorLiveData<List<Sale>> = MediatorLiveData()
+    private var repository: DataRepository = (application as BasicApp).getRepository()
 
-    init {
-        sales.value = null
-        repository = (application as BasicApp).getRepository()
-        sales.addSource(repository.sold, object : Observer<List<Sale>> {
-            override fun onChanged(sales: List<Sale>?) {
-                this@AccountViewModel.sales.value = sales
-            }
-        })
-    }
-
-    fun getAllSold(): LiveData<List<Sale>> {
-        return sales
+    fun getAllSold(): List<Sale> {
+        return repository.loadProduct(true)
     }
 
     fun insert(sale: Sale) {

@@ -27,7 +27,6 @@ class AccountFragment : Fragment() {
     private lateinit var binding: AccountFragmentBinding
     private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var soldItems: List<Sale>
     private var viewModel: AccountViewModel = AccountViewModel(BasicApp.app)
     private val dateTime = DateTime()
     private lateinit var items: List<Sale>
@@ -45,6 +44,7 @@ class AccountFragment : Fragment() {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 soldFragmentItems.layoutManager = layoutManager
                 soldFragmentItems.adapter = adapter
+                adapter.setItems(viewModel.getAllSold())
             }
         binding.day = findDay
         binding.week = findWeek
@@ -79,18 +79,18 @@ class AccountFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
-        viewModel.getAllSold().observe(this, object : Observer<List<Sale>> {
-            override fun onChanged(t: List<Sale>?) {
-                t?.let {
-                    adapter.setItems(t)
-                    soldItems = t
-
-                    computePrice(t)
-                }
-
-                executePendingBindings()
-            }
-        })
+//        viewModel.getAllSold().observe(this, object : Observer<List<Sale>> {
+//            override fun onChanged(t: List<Sale>?) {
+//                t?.let {
+//                    adapter.setItems(t)
+//                    soldItems = t
+//
+//                    computePrice(t)
+//                }
+//
+//                executePendingBindings()
+//            }
+//        })
     }
 
     private val findDay: ItemClickListener = object : ItemClickListener {
@@ -121,13 +121,25 @@ class AccountFragment : Fragment() {
         override fun onClick(item: Any?) {
             val days = intArrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
+            if (dateTime.withYear(dateTime.year).year().isLeap) {
+                days[1] = 29
+            } else {
+                days[1] = 28
+            }
+
             items = viewModel.findSaleOfDate(
-                dateTime.withMonthOfYear(dateTime.monthOfYear).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(
-                    0
-                ),
-                dateTime.withMonthOfYear(dateTime.monthOfYear).withDayOfMonth(days[dateTime.monthOfYear - 1]).withHourOfDay(
-                    23
-                ).withMinuteOfHour(59).withSecondOfMinute(59)
+                dateTime
+                    .withMonthOfYear(dateTime.monthOfYear)
+                    .withDayOfMonth(1)
+                    .withHourOfDay(0)
+                    .withMinuteOfHour(0)
+                    .withSecondOfMinute(0),
+                dateTime
+                    .withMonthOfYear(dateTime.monthOfYear)
+                    .withDayOfMonth(days[dateTime.monthOfYear - 1])
+                    .withHourOfDay(23)
+                    .withMinuteOfHour(59)
+                    .withSecondOfMinute(59)
             )
             adapter.setItems(items)
 
@@ -137,18 +149,20 @@ class AccountFragment : Fragment() {
 
     private val findAll: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            viewModel.getAllSold().observe(this@AccountFragment, object : Observer<List<Sale>> {
-                override fun onChanged(t: List<Sale>?) {
-                    t?.let {
-                        adapter.setItems(t)
-                        soldItems = t
-
-                        computePrice(t)
-                    }
-
-                    executePendingBindings()
-                }
-            })
+            adapter.setItems(viewModel.getAllSold())
+            computePrice(viewModel.getAllSold())
+//            viewModel.getAllSold().observe(this@AccountFragment, object : Observer<List<Sale>> {
+//                override fun onChanged(t: List<Sale>?) {
+//                    t?.let {
+//                        adapter.setItems(t)
+//                        soldItems = t
+//
+//                        computePrice(t)
+//                    }
+//
+//                    executePendingBindings()
+//                }
+//            })
         }
     }
 

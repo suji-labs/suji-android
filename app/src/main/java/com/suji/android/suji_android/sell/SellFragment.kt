@@ -61,6 +61,7 @@ class SellFragment : Fragment() {
                 listener = floatingButtonClickListener
                 sellFragmentItems.layoutManager = layoutManager
                 sellFragmentItems.adapter = adapter
+                adapter.setItems(sellViewModel.getAllSale())
             }
 
         dialogBinding = DataBindingUtil.inflate<FoodSellDialogBinding>(
@@ -252,6 +253,7 @@ class SellFragment : Fragment() {
                             item.sell = true
                             item.pay = Constant.PayType.CASH
                             sellViewModel.update(item)
+                            executePendingBindings()
                         }
                     }
                 })
@@ -261,6 +263,7 @@ class SellFragment : Fragment() {
                             item.sell = true
                             item.pay = Constant.PayType.CARD
                             sellViewModel.update(item)
+                            executePendingBindings()
                         }
                     }
                 })
@@ -270,8 +273,6 @@ class SellFragment : Fragment() {
                     }
                 })
                 .show()
-
-            executePendingBindings()
         }
     }
 
@@ -382,15 +383,15 @@ class SellFragment : Fragment() {
 
     private fun initViewModel() {
         sellViewModel = ViewModelProviders.of(this).get(SellViewModel::class.java)
-        sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
-            override fun onChanged(@Nullable sales: List<Sale>?) {
-                sales?.let {
-                    adapter.setItems(sales)
-                }
-
-                executePendingBindings()
-            }
-        })
+//        sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
+//            override fun onChanged(@Nullable sales: List<Sale>?) {
+//                sales?.let {
+//                    adapter.setItems(sales)
+//                }
+//
+//                executePendingBindings()
+//            }
+//        })
 
         foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
