@@ -7,33 +7,27 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class AppExecutors private constructor(
-    private val diskIO: Executor,
-    private val networkIO: Executor,
-    private val mainThread: Executor,
-    private val cache: ExecutorService
+    private val diskIO: ExecutorService,
+    private val networkIO: ExecutorService,
+    private val mainThread: Executor
 ) {
 
     constructor() : this(
         Executors.newSingleThreadExecutor(),
         Executors.newFixedThreadPool(3),
-        MainThreadExecutor(),
-        Executors.newCachedThreadPool()
+        MainThreadExecutor()
     )
 
-    fun diskIO(): Executor {
+    fun diskIO(): ExecutorService {
         return diskIO
     }
 
-    fun networkIO(): Executor {
+    fun networkIO(): ExecutorService {
         return networkIO
     }
 
     fun mainThread(): Executor {
         return mainThread
-    }
-
-    fun cacheIO(): ExecutorService {
-        return cache
     }
 
     private class MainThreadExecutor : Executor {

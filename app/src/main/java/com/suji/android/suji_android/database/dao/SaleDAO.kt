@@ -10,14 +10,8 @@ interface SaleDAO {
     @Query("SELECT * FROM sale")
     fun loadAllSale(): LiveData<List<Sale>>
 
-//    @Query("SELECT * FROM sale WHERE sale.sell IS 1")
-//    fun loadSold(): LiveData<List<Sale>>
-//
-//    @Query("SELECT * FROM sale WHERE sale.sell IS 0")
-//    fun loadSale(): LiveData<List<Sale>>
-
     @Query("SELECT * FROM sale WHERE sale.sell IS :isSale")
-    fun loadProduct(isSale: Boolean): List<Sale>
+    fun loadProduct(isSale: Boolean): LiveData<List<Sale>>
 
     @Query("SELECT * FROM sale WHERE time BETWEEN :start and :end")
     fun findSaleOfDate(start: DateTime, end: DateTime): List<Sale>

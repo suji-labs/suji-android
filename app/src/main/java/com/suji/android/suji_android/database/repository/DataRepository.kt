@@ -15,10 +15,12 @@ import java.util.concurrent.Executors
 class DataRepository private constructor(private val database: AppDatabase) {
     private val observableFood: MediatorLiveData<List<Food>> = MediatorLiveData()
     private val observableSale: MediatorLiveData<List<Sale>> = MediatorLiveData()
+    private val observableSold: MediatorLiveData<List<Sale>> = MediatorLiveData()
     private val executors: AppExecutors = AppExecutors()
 
     val food: LiveData<List<Food>> get() = observableFood
     val sale: LiveData<List<Sale>> get() = observableSale
+    val sold: LiveData<List<Sale>> get() = observableSold
 
     init {
         observableFood.addSource(this.database.foodDAO().loadAllFood(), object : Observer<List<Food>> {
@@ -27,9 +29,15 @@ class DataRepository private constructor(private val database: AppDatabase) {
             }
         })
 
-        observableSale.addSource(this.database.saleDAO().loadAllSale(), object : Observer<List<Sale>> {
+        observableSale.addSource(this.database.saleDAO().loadProduct(false), object : Observer<List<Sale>> {
             override fun onChanged(t: List<Sale>) {
                 observableSale.postValue(t)
+            }
+        })
+
+        observableSold.addSource(this.database.saleDAO().loadProduct(true), object : Observer<List<Sale>> {
+            override fun onChanged(t: List<Sale>) {
+                observableSold.postValue(t)
             }
         })
     }
@@ -55,14 +63,12 @@ class DataRepository private constructor(private val database: AppDatabase) {
         }
     }
 
-    fun loadProduct(isSale: Boolean): List<Sale> {
-        val result = executors.cacheIO().submit(Callable { database.saleDAO().loadProduct(isSale) })
-        return result.get()
+    fun loadProduct(isSale: Boolean): LiveData<List<Sale>> {
+        return executors.diskIO().submit(Callable { database.saleDAO().loadProduct(isSale) }).get()
     }
 
     fun findSaleOfDate(start: DateTime, end: DateTime): List<Sale> {
-        val result = executors.cacheIO().submit(Callable<List<Sale>> { database.saleDAO().findSaleOfDate(start, end) })
-        return result.get()
+        return executors.diskIO().submit(Callable<List<Sale>> { database.saleDAO().findSaleOfDate(start, end) }).get()
     }
 
     object Singleton {

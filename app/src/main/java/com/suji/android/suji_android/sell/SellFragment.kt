@@ -5,11 +5,12 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -61,7 +62,6 @@ class SellFragment : Fragment() {
                 listener = floatingButtonClickListener
                 sellFragmentItems.layoutManager = layoutManager
                 sellFragmentItems.adapter = adapter
-                adapter.setItems(sellViewModel.getAllSale())
             }
 
         dialogBinding = DataBindingUtil.inflate<FoodSellDialogBinding>(
@@ -97,7 +97,6 @@ class SellFragment : Fragment() {
                             Toast.makeText(context, "음식을 추가하세요!", Toast.LENGTH_SHORT).show()
                         } else {
                             sellViewModel.insert(sale!!)
-                            adapter.setItems(sellViewModel.getAllSale())
                             dialogBinding.foodSaleTotalPrice.text = "0"
                             sale = null
 
@@ -272,7 +271,6 @@ class SellFragment : Fragment() {
                 })
                 .show()
 
-            adapter.setItems(sellViewModel.getAllSale())
             executePendingBindings()
         }
     }
@@ -286,7 +284,6 @@ class SellFragment : Fragment() {
                     .setPositiveButton("적용", object : DialogInterface.OnClickListener {
                         override fun onClick(dialog: DialogInterface?, which: Int) {
                             sellViewModel.update(item)
-                            adapter.setItems(sellViewModel.getAllSale())
                             (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
 
                             dialog!!.dismiss()
@@ -371,7 +368,6 @@ class SellFragment : Fragment() {
         override fun onClick(item: Any?) {
             if (item is Sale) {
                 sellViewModel.delete(item)
-                adapter.setItems(sellViewModel.getAllSale())
             }
 
             executePendingBindings()
@@ -380,15 +376,15 @@ class SellFragment : Fragment() {
 
     private fun initViewModel() {
         sellViewModel = ViewModelProviders.of(this).get(SellViewModel::class.java)
-//        sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
-//            override fun onChanged(@Nullable sales: List<Sale>?) {
-//                sales?.let {
-//                    adapter.setItems(sales)
-//                }
-//
-//                executePendingBindings()
-//            }
-//        })
+        sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
+            override fun onChanged(@Nullable sales: List<Sale>?) {
+                sales?.let {
+                    adapter.setItems(sales)
+                }
+
+                executePendingBindings()
+            }
+        })
 
         foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {

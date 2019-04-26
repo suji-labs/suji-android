@@ -1,7 +1,6 @@
 package com.suji.android.suji_android.account
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +43,6 @@ class AccountFragment : Fragment() {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 soldFragmentItems.layoutManager = layoutManager
                 soldFragmentItems.adapter = adapter
-                adapter.setItems(viewModel.getAllSold())
             }
         binding.day = findDay
         binding.week = findWeek
@@ -79,18 +77,17 @@ class AccountFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
-//        viewModel.getAllSold().observe(this, object : Observer<List<Sale>> {
-//            override fun onChanged(t: List<Sale>?) {
-//                t?.let {
-//                    adapter.setItems(t)
-//                    soldItems = t
-//
-//                    computePrice(t)
-//                }
-//
-//                executePendingBindings()
-//            }
-//        })
+        viewModel.getAllSold().observe(this, object : Observer<List<Sale>> {
+            override fun onChanged(t: List<Sale>?) {
+                t?.let {
+                    adapter.setItems(t)
+
+                    computePrice(t)
+                }
+
+                executePendingBindings()
+            }
+        })
     }
 
     private val findDay: ItemClickListener = object : ItemClickListener {
@@ -149,20 +146,17 @@ class AccountFragment : Fragment() {
 
     private val findAll: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            adapter.setItems(viewModel.getAllSold())
-            computePrice(viewModel.getAllSold())
-//            viewModel.getAllSold().observe(this@AccountFragment, object : Observer<List<Sale>> {
-//                override fun onChanged(t: List<Sale>?) {
-//                    t?.let {
-//                        adapter.setItems(t)
-//                        soldItems = t
-//
-//                        computePrice(t)
-//                    }
-//
-//                    executePendingBindings()
-//                }
-//            })
+            viewModel.getAllSold().observe(this@AccountFragment, object : Observer<List<Sale>> {
+                override fun onChanged(t: List<Sale>?) {
+                    t?.let {
+                        adapter.setItems(t)
+
+                        computePrice(t)
+                    }
+
+                    executePendingBindings()
+                }
+            })
         }
     }
 
