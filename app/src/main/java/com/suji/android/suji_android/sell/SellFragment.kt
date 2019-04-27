@@ -88,11 +88,24 @@ class SellFragment : Fragment() {
 
     private val spinnerItemClick: AdapterView.OnItemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
+            val food = parent!!.selectedItem as Food
 
+            if (food.sub.size != 0) {
+                for (item in food.sub) {
+                    item.count = 0
+                }
+            }
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            val food = parent!!.getItemAtPosition(position) as Food
+            val food = parent!!.selectedItem as Food
+
+            if (food.sub.size != 0) {
+                for (item in food.sub) {
+                    item.count = 0
+                }
+            }
+
             this@SellFragment.food = food
 
             val linearLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
@@ -171,6 +184,7 @@ class SellFragment : Fragment() {
 
     private val floatingButtonClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
+            dialogBinding.sellItemSpinner.setSelection(0)
             dialogBinding.foodSaleTotalPrice.text = "0"
 
             AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
@@ -208,7 +222,7 @@ class SellFragment : Fragment() {
                             dialogBinding.foodSaleTotalPrice.text = "0"
 
                             if (sale == null) {
-                                sale = Sale("총 금액", 0, DateTime(), HashSet<Food>())
+                                sale = Sale("총 금액", 0, DateTime())
                             }
 
                             if (sale!!.foods.find { it.name == food!!.name } != null) {
@@ -219,7 +233,7 @@ class SellFragment : Fragment() {
                                 sale!!.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
                             }
 
-                            sale!!.price = addSubFood(sale!!, food!!) + mainFoodPrice(sale!!)
+                            sale!!.price = addSubFood(sale!!) + mainFoodPrice(sale!!)
 
                             dialogBinding.foodSaleTotalPrice.text =
                                 DecimalFormat.getCurrencyInstance().format(sale!!.price).toString()
@@ -236,6 +250,8 @@ class SellFragment : Fragment() {
 
     private val addSaleClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
+            dialogBinding.sellItemSpinner.setSelection(0)
+
             if (item is Sale) {
                 dialogBinding.foodSaleTotalPrice.text =
                     DecimalFormat.getCurrencyInstance().format(item.price).toString()
@@ -300,7 +316,7 @@ class SellFragment : Fragment() {
                                     )
                                 }
 
-                                item.price = addSubFood(item, food!!) + mainFoodPrice(item)
+                                item.price = addSubFood(item) + mainFoodPrice(item)
 
                                 dialogBinding.foodSaleTotalPrice.text =
                                     DecimalFormat.getCurrencyInstance().format(item.price).toString()
@@ -329,29 +345,44 @@ class SellFragment : Fragment() {
         return mainSumPrice
     }
 
-    private fun addSubFood(sale: Sale, food: Food): Int {
+    private fun addSubFood(sale: Sale): Int {
         var subFoodCount = 0
         var subSumPrice = 0
 
-        for (i in 0 until food.sub.size) {
-            if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
+        for (item in sale.foods) {
+            if (item.sub.size == 0) {
                 continue
             }
 
-            subFoodCount = dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i)
-                .text
-                .toString()
-                .toInt()
+            for (i in 0 until item.sub.size) {
+                if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i) != null) {
+                    if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
+                        continue
+                    }
 
-            sale.foods.find { it.name == food.name }?.let {
-                it.sub.find { it.name == food.sub[i].name }?.let {
-                    it.count += subFoodCount
+                    subFoodCount = dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i)
+                        .text
+                        .toString()
+                        .toInt()
+
+                    dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
                 }
+
+                sale.foods.find { it.name == item.name }?.let {
+                    it.sub.find { it.name == item.sub[i].name }?.let {
+                        it.count += subFoodCount
+                        item.sub[i].count = it.count
+                    }
+                }
+
+                subSumPrice += item.sub[i].price * (item.sub[i].count)
             }
+        }
 
-            subSumPrice += food.sub[i].price * (food.sub[i].count + subFoodCount)
-
-            dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+        if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID) != null) {
+            for (i in 0 until food!!.sub.size) {
+                dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
+            }
         }
 
         return subSumPrice

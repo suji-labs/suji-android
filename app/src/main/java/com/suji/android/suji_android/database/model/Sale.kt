@@ -14,7 +14,7 @@ data class Sale(
     @ColumnInfo(name = "time")
     var time: DateTime,
     @ColumnInfo(name = "foods")
-    var foods: HashSet<Food>,
+    var foods: HashSet<Food> = HashSet<Food>(),
     @ColumnInfo(name = "sell")
     var sell: Boolean = false,
     @ColumnInfo(name = "pay")

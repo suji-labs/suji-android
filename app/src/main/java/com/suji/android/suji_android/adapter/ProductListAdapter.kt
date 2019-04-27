@@ -90,13 +90,15 @@ class ProductListAdapter(private val viewType: Int) :
 
                             if (it.sub.size != 0) {
                                 for (item in it.sub) {
-                                    holder.binding.sellFoodDescription.text =
-                                        String.format(
-                                            holder.binding.root.context.getString(R.string.sell_item),
-                                            holder.binding.sellFoodDescription.text.toString(),
-                                            item.name,
-                                            item.count
-                                        )
+                                    if (item.count != 0) {
+                                        holder.binding.sellFoodDescription.text =
+                                            String.format(
+                                                holder.binding.root.context.getString(R.string.sell_item),
+                                                holder.binding.sellFoodDescription.text.toString(),
+                                                item.name,
+                                                item.count
+                                            )
+                                    }
                                 }
                             }
 
