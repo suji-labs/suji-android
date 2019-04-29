@@ -86,15 +86,15 @@ class AccountFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
-        viewModel.deleteSoleDate(
+        viewModel.deleteSoldDate(
             dateTime
-                .withMonthOfYear(dateTime.minusMonths(dateTime.monthOfYear).monthOfYear)
+                .withMonthOfYear(dateTime.minusMonths(1).monthOfYear)
                 .withDayOfMonth(1)
                 .withHourOfDay(0)
                 .withMinuteOfHour(0)
                 .withSecondOfMinute(0),
             dateTime
-                .withMonthOfYear(dateTime.minusMonths(dateTime.monthOfYear).monthOfYear)
+                .withMonthOfYear(dateTime.minusMonths(1).monthOfYear)
                 .withDayOfMonth(days[dateTime.monthOfYear - 1])
                 .withHourOfDay(23)
                 .withMinuteOfHour(59)
