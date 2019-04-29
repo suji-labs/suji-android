@@ -7,7 +7,7 @@ import com.suji.android.suji_android.database.repository.DataRepository
 class BasicApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        BasicApp.app = applicationContext as BasicApp
+        app = applicationContext as BasicApp
     }
 
     private fun getDatabase(): AppDatabase {

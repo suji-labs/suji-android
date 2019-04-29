@@ -1,6 +1,7 @@
 package com.suji.android.suji_android.account
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class AccountFragment : Fragment() {
     private var viewModel: AccountViewModel = AccountViewModel(BasicApp.app)
     private val dateTime = DateTime()
     private lateinit var items: List<Sale>
+    private val days = intArrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         initViewModel()
@@ -48,6 +50,13 @@ class AccountFragment : Fragment() {
         binding.week = findWeek
         binding.month = findMonth
         binding.all = findAll
+
+        if (dateTime.withYear(dateTime.year).year().isLeap) {
+            days[1] = 29
+        } else {
+            days[1] = 28
+        }
+
         return binding.root
     }
 
@@ -77,6 +86,20 @@ class AccountFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
+        viewModel.deleteSoleDate(
+            dateTime
+                .withMonthOfYear(dateTime.minusMonths(dateTime.monthOfYear).monthOfYear)
+                .withDayOfMonth(1)
+                .withHourOfDay(0)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0),
+            dateTime
+                .withMonthOfYear(dateTime.minusMonths(dateTime.monthOfYear).monthOfYear)
+                .withDayOfMonth(days[dateTime.monthOfYear - 1])
+                .withHourOfDay(23)
+                .withMinuteOfHour(59)
+                .withSecondOfMinute(59)
+        )
         viewModel.getAllSold().observe(this, object : Observer<List<Sale>> {
             override fun onChanged(t: List<Sale>?) {
                 t?.let {
@@ -105,8 +128,16 @@ class AccountFragment : Fragment() {
     private val findWeek: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
             items = viewModel.findSaleOfDate(
-                dateTime.withDayOfWeek(DateTimeConstants.MONDAY),
-                dateTime.withDayOfWeek(DateTimeConstants.SUNDAY)
+                dateTime
+                    .withDayOfWeek(DateTimeConstants.MONDAY)
+                    .withHourOfDay(0)
+                    .withMinuteOfHour(0)
+                    .withSecondOfMinute(0),
+                dateTime
+                    .withDayOfWeek(DateTimeConstants.SUNDAY)
+                    .withHourOfDay(23)
+                    .withMinuteOfHour(59)
+                    .withSecondOfMinute(59)
             )
             adapter.setItems(items)
 
@@ -116,14 +147,6 @@ class AccountFragment : Fragment() {
 
     private val findMonth: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            val days = intArrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-
-            if (dateTime.withYear(dateTime.year).year().isLeap) {
-                days[1] = 29
-            } else {
-                days[1] = 28
-            }
-
             items = viewModel.findSaleOfDate(
                 dateTime
                     .withMonthOfYear(dateTime.monthOfYear)

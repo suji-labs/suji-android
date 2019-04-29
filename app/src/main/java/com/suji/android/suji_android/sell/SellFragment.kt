@@ -32,6 +32,7 @@ import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.DisplayHelper
+import com.suji.android.suji_android.helper.Helper
 import com.suji.android.suji_android.listener.ItemClickListener
 import org.joda.time.DateTime
 import java.text.DecimalFormat
@@ -196,7 +197,6 @@ class SellFragment : Fragment() {
                         } else {
                             sale.time = DateTime()
                             sellViewModel.insert(sale)
-                            dialogBinding.foodSaleTotalPrice.text = "0"
 
                             dialog!!.dismiss()
                         }
@@ -206,7 +206,6 @@ class SellFragment : Fragment() {
                 })
                 .setNegativeButton("취소", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
-                        dialogBinding.foodSaleTotalPrice.text = "0"
                         (dialogBinding.root.parent as ViewGroup).removeView(dialogBinding.root)
                         dialog!!.dismiss()
                     }
@@ -216,23 +215,21 @@ class SellFragment : Fragment() {
                 .show().let {
                     it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
                         override fun onClick(v: View?) {
-                            val foodCount = dialogBinding.sellMainFoodCount.text.toString()
+                            val foodCountString = dialogBinding.sellMainFoodCount.text.toString()
                             var item: Food? = sale.foods.find { it.name == food!!.name }
 
-                            if (foodCount == "") {
+                            if (Helper.blankString(foodCountString)) {
                                 Toast.makeText(context, "수량을 확인하세요!", Toast.LENGTH_SHORT).show()
                                 return
                             }
 
-                            dialogBinding.foodSaleTotalPrice.text = "0"
-
-                            if (item != null) {
-                                sale.foods.remove(item)
-                            } else {
+                            if (Helper.nullCheck(item)) {
                                 item = food
+                            } else {
+                                sale.foods.remove(item)
                             }
 
-                            sale.foods.add(Food(item!!.name, item.price, item.sub, item.count + foodCount.toInt()))
+                            sale.foods.add(Food(item!!.name, item.price, item.sub, item.count + foodCountString.toInt()))
 
                             sale.price = sumOfPrice(sale)
 
@@ -282,28 +279,28 @@ class SellFragment : Fragment() {
                                 val removeItem: Food? = item.foods.find { it.name == food!!.name }
                                 val foodCount: Int
 
-                                if (foodCountString == "") {
+                                if (Helper.blankString(foodCountString)) {
                                     Toast.makeText(context, "수량을 확인하세요!", Toast.LENGTH_SHORT).show()
                                     return
                                 }
 
                                 foodCount = foodCountString.toInt()
 
-                                if (removeItem != null) {
-                                    if (foodCount < 0 && removeItem.count + foodCount < 0) {
-                                        Toast.makeText(context, "수량을 확인해주세요!", Toast.LENGTH_SHORT).show()
-                                        return
-                                    }
-                                    item.foods.remove(removeItem)
-                                    if (foodCount + removeItem.count > 0) {
-                                        item.foods.add(Food(removeItem.name, removeItem.price, removeItem.sub, removeItem.count + foodCount))
-                                    }
-                                } else {
+                                if (Helper.nullCheck(removeItem)) {
                                     if (foodCount < 0) {
                                         Toast.makeText(context, "주문되지 않은 음식은 뺄 수 없습니다!", Toast.LENGTH_SHORT).show()
                                         return
                                     }
                                     item.foods.add(Food(food!!.name, food!!.price, food!!.sub, food!!.count + foodCount))
+                                } else {
+                                    if (foodCount < 0 && removeItem!!.count + foodCount < 0) {
+                                        Toast.makeText(context, "수량을 확인해주세요!", Toast.LENGTH_SHORT).show()
+                                        return
+                                    }
+                                    if (foodCount + removeItem!!.count > 0) {
+                                        item.foods.add(Food(removeItem.name, removeItem.price, removeItem.sub, removeItem.count + foodCount))
+                                    }
+                                    item.foods.remove(removeItem)
                                 }
 
                                 item.price = sumOfPrice(item)
@@ -340,8 +337,8 @@ class SellFragment : Fragment() {
             }
 
             for (i in 0 until item.sub.size) {
-                if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i) != null) {
-                    if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString() == "") {
+                if (!Helper.nullCheck(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i))) {
+                    if (Helper.blankString(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString())) {
                         continue
                     }
 
@@ -364,7 +361,7 @@ class SellFragment : Fragment() {
             }
         }
 
-        if (dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID) != null) {
+        if (!Helper.nullCheck(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID))) {
             for (i in 0 until food!!.sub.size) {
                 dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
             }

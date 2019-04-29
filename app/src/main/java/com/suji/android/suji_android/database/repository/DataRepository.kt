@@ -71,6 +71,10 @@ class DataRepository private constructor(private val database: AppDatabase) {
         return executors.diskIO().submit(Callable<List<Sale>> { database.saleDAO().findSaleOfDate(start, end) }).get()
     }
 
+    fun deleteSoldDate(start: DateTime, end: DateTime) {
+        executors.diskIO().execute(Runnable { database.saleDAO().deleteSoldDate(start, end) })
+    }
+
     object Singleton {
         private lateinit var INSTANCE: DataRepository
 

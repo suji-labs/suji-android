@@ -43,4 +43,8 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
     fun findSaleOfDate(start: DateTime, end: DateTime): List<Sale> {
         return repository.findSaleOfDate(start, end)
     }
+
+    fun deleteSoleDate(start: DateTime, end: DateTime) {
+        repository.deleteSoldDate(start, end)
+    }
 }

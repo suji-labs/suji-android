@@ -29,6 +29,7 @@ import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
 import com.suji.android.suji_android.databinding.FoodFragmentBinding
 import com.suji.android.suji_android.helper.Constant
+import com.suji.android.suji_android.helper.Helper
 import com.suji.android.suji_android.listener.ItemClickListener
 
 class FoodFragment : Fragment() {
@@ -96,7 +97,7 @@ class FoodFragment : Fragment() {
                         dialogBinding.createMenuEditName.setText("")
                         dialogBinding.createMenuEditPrice.setText("")
 
-                        if (foodName == "" || foodPrice == "") {
+                        if (Helper.blankString(foodName) || Helper.blankString(foodPrice)) {
                             Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
                             return
                         }
@@ -137,58 +138,7 @@ class FoodFragment : Fragment() {
                 .let {
                     it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
                         override fun onClick(v: View?) {
-                            val outerLayout: LinearLayout = dialogBinding.createSubMenu
-                            val innerLayout = LinearLayout(dialogBinding.root.context).apply {
-                                id = subMenuLayoutID + subMenuCount
-                                orientation = LinearLayout.HORIZONTAL
-                                gravity = Gravity.CENTER
-                            }
-
-                            val nameLabel = BootstrapLabel(dialogBinding.root.context).apply {
-                                text = "이름"
-                            }
-
-                            val nameEditText = BootstrapEditText(dialogBinding.root.context).apply {
-                                id = subMenuNameID + subMenuCount
-                                setTextColor(Color.BLACK)
-                                width = 300
-                                bottom = 15
-                            }
-
-                            val priceLabel = BootstrapLabel(dialogBinding.root.context).apply {
-                                text = "가격"
-                            }
-
-                            val priceEditText = BootstrapEditText(dialogBinding.root.context).apply {
-                                id = subMenuPriceID + subMenuCount
-                                setTextColor(Color.BLACK)
-                                inputType = InputType.TYPE_CLASS_NUMBER
-                                width = 300
-                                bottom = 15
-                            }
-
-                            val subMenuDelete = BootstrapButton(dialogBinding.root.context).apply {
-                                id = subMenuCount
-                                text = "X"
-                                bootstrapBrand = DefaultBootstrapBrand.DANGER
-                                setOnClickListener(View.OnClickListener {
-                                    if (subMenuCount < 0) {
-                                        return@OnClickListener
-                                    }
-                                    val layout = dialogBinding.root.findViewById<LinearLayout>(subMenuLayoutID + it.id)
-                                    outerLayout.removeView(layout)
-                                    subMenuCount--
-                                })
-                            }
-
-                            innerLayout.addView(nameLabel)
-                            innerLayout.addView(nameEditText)
-                            innerLayout.addView(priceLabel)
-                            innerLayout.addView(priceEditText)
-                            innerLayout.addView(subMenuDelete)
-
-                            outerLayout.addView(innerLayout)
-                            subMenuCount++
+                            addSubMenu()
                         }
                     })
                 }
@@ -220,7 +170,7 @@ class FoodFragment : Fragment() {
                             val foodName: String = dialogBinding.createMenuEditName.text.toString()
                             val foodPrice: String = dialogBinding.createMenuEditPrice.text.toString()
 
-                            if (foodName == "" || foodPrice == "") {
+                            if (Helper.blankString(foodName) || Helper.blankString(foodPrice)) {
                                 Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
                                 return
                             }
@@ -257,59 +207,7 @@ class FoodFragment : Fragment() {
                     .let {
                         it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
                             override fun onClick(v: View?) {
-                                val outerLayout: LinearLayout = dialogBinding.createSubMenu
-                                val innerLayout = LinearLayout(dialogBinding.root.context).apply {
-                                    id = subMenuLayoutID + subMenuCount
-                                    orientation = LinearLayout.HORIZONTAL
-                                    gravity = Gravity.CENTER
-                                }
-
-                                val nameLabel = BootstrapLabel(dialogBinding.root.context).apply {
-                                    text = "이름"
-                                }
-
-                                val nameEditText = BootstrapEditText(dialogBinding.root.context).apply {
-                                    id = subMenuNameID + subMenuCount
-                                    setTextColor(Color.BLACK)
-                                    width = 300
-                                    bottom = 15
-                                }
-
-                                val priceLabel = BootstrapLabel(dialogBinding.root.context).apply {
-                                    text = "가격"
-                                }
-
-                                val priceEditText = BootstrapEditText(dialogBinding.root.context).apply {
-                                    id = subMenuPriceID + subMenuCount
-                                    setTextColor(Color.BLACK)
-                                    inputType = InputType.TYPE_CLASS_NUMBER
-                                    width = 300
-                                    bottom = 15
-                                }
-
-                                val subMenuDelete = BootstrapButton(dialogBinding.root.context).apply {
-                                    id = subMenuCount
-                                    text = "X"
-                                    bootstrapBrand = DefaultBootstrapBrand.DANGER
-                                    setOnClickListener(View.OnClickListener {
-                                        if (subMenuCount < 0) {
-                                            return@OnClickListener
-                                        }
-                                        val layout =
-                                            dialogBinding.root.findViewById<LinearLayout>(subMenuLayoutID + it.id)
-                                        outerLayout.removeView(layout)
-                                        subMenuCount--
-                                    })
-                                }
-
-                                innerLayout.addView(nameLabel)
-                                innerLayout.addView(nameEditText)
-                                innerLayout.addView(priceLabel)
-                                innerLayout.addView(priceEditText)
-                                innerLayout.addView(subMenuDelete)
-
-                                outerLayout.addView(innerLayout)
-                                subMenuCount++
+                                addSubMenu()
                             }
                         })
                     }
@@ -317,6 +215,61 @@ class FoodFragment : Fragment() {
 
             executePendingBindings()
         }
+    }
+
+    private fun addSubMenu() {
+        val outerLayout: LinearLayout = dialogBinding.createSubMenu
+        val innerLayout = LinearLayout(dialogBinding.root.context).apply {
+            id = subMenuLayoutID + subMenuCount
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+        }
+
+        val nameLabel = BootstrapLabel(dialogBinding.root.context).apply {
+            text = "이름"
+        }
+
+        val nameEditText = BootstrapEditText(dialogBinding.root.context).apply {
+            id = subMenuNameID + subMenuCount
+            setTextColor(Color.BLACK)
+            width = 300
+            bottom = 15
+        }
+
+        val priceLabel = BootstrapLabel(dialogBinding.root.context).apply {
+            text = "가격"
+        }
+
+        val priceEditText = BootstrapEditText(dialogBinding.root.context).apply {
+            id = subMenuPriceID + subMenuCount
+            setTextColor(Color.BLACK)
+            inputType = InputType.TYPE_CLASS_NUMBER
+            width = 300
+            bottom = 15
+        }
+
+        val subMenuDelete = BootstrapButton(dialogBinding.root.context).apply {
+            id = subMenuCount
+            text = "X"
+            bootstrapBrand = DefaultBootstrapBrand.DANGER
+            setOnClickListener(View.OnClickListener {
+                if (subMenuCount < 0) {
+                    return@OnClickListener
+                }
+                val layout = dialogBinding.root.findViewById<LinearLayout>(subMenuLayoutID + it.id)
+                outerLayout.removeView(layout)
+                subMenuCount--
+            })
+        }
+
+        innerLayout.addView(nameLabel)
+        innerLayout.addView(nameEditText)
+        innerLayout.addView(priceLabel)
+        innerLayout.addView(priceEditText)
+        innerLayout.addView(subMenuDelete)
+
+        outerLayout.addView(innerLayout)
+        subMenuCount++
     }
 
     private fun executePendingBindings() {

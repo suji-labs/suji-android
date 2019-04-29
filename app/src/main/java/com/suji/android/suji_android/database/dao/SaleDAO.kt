@@ -16,6 +16,9 @@ interface SaleDAO {
     @Query("SELECT * FROM sale WHERE time BETWEEN :start and :end")
     fun findSaleOfDate(start: DateTime, end: DateTime): List<Sale>
 
+    @Query("DELETE FROM sale WHERE sale.sell IS 1 BETWEEN :start and :end")
+    fun deleteSoldDate(start: DateTime, end: DateTime)
+
     @Insert
     fun insert(sale: Sale)
 
