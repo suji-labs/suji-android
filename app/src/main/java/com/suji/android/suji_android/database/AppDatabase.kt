@@ -13,7 +13,7 @@ import com.suji.android.suji_android.database.dao.FoodDAO
 import com.suji.android.suji_android.database.dao.SaleDAO
 import com.suji.android.suji_android.database.model.Sale
 
-@Database(entities = [Food::class, Sale::class], version = 2, exportSchema = false)
+@Database(entities = [Food::class, Sale::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun foodDAO(): FoodDAO

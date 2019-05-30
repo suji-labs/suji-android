@@ -29,7 +29,7 @@ import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
 import com.suji.android.suji_android.databinding.FoodFragmentBinding
 import com.suji.android.suji_android.helper.Constant
-import com.suji.android.suji_android.helper.Helper
+import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
 
 class FoodFragment : Fragment() {
@@ -97,7 +97,7 @@ class FoodFragment : Fragment() {
                         dialogBinding.createMenuEditName.setText("")
                         dialogBinding.createMenuEditPrice.setText("")
 
-                        if (Helper.blankString(foodName) || Helper.blankString(foodPrice)) {
+                        if (Utils.blankString(foodName) || Utils.blankString(foodPrice)) {
                             Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
                             return
                         }
@@ -170,7 +170,7 @@ class FoodFragment : Fragment() {
                             val foodName: String = dialogBinding.createMenuEditName.text.toString()
                             val foodPrice: String = dialogBinding.createMenuEditPrice.text.toString()
 
-                            if (Helper.blankString(foodName) || Helper.blankString(foodPrice)) {
+                            if (Utils.blankString(foodName) || Utils.blankString(foodPrice)) {
                                 Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
                                 return
                             }

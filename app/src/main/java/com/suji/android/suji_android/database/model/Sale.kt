@@ -12,7 +12,7 @@ data class Sale(
     @ColumnInfo(name = "price")
     var price: Int,
     @ColumnInfo(name = "time")
-    var time: DateTime,
+    var time: Long,
     @ColumnInfo(name = "foods")
     var foods: HashSet<Food> = HashSet<Food>(),
     @ColumnInfo(name = "sell")

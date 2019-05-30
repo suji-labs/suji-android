@@ -32,7 +32,7 @@ import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.DisplayHelper
-import com.suji.android.suji_android.helper.Helper
+import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
 import org.joda.time.DateTime
 import java.text.DecimalFormat
@@ -184,7 +184,7 @@ class SellFragment : Fragment() {
 
     private val floatingButtonClickListener: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
-            val sale = Sale("총 금액", 0, DateTime())
+            val sale = Sale("총 금액", 0, System.currentTimeMillis())
 
             dialogBinding.sellItemSpinner.setSelection(0)
             dialogBinding.foodSaleTotalPrice.text = "0"
@@ -195,7 +195,7 @@ class SellFragment : Fragment() {
                         if (sale.price == 0) {
                             Toast.makeText(context, "음식을 추가하세요!", Toast.LENGTH_SHORT).show()
                         } else {
-                            sale.time = DateTime()
+                            sale.time = System.currentTimeMillis()
                             sellViewModel.insert(sale)
 
                             dialog!!.dismiss()
@@ -218,12 +218,12 @@ class SellFragment : Fragment() {
                             val foodCountString = dialogBinding.sellMainFoodCount.text.toString()
                             var item: Food? = sale.foods.find { it.name == food!!.name }
 
-                            if (Helper.blankString(foodCountString)) {
+                            if (Utils.blankString(foodCountString)) {
                                 Toast.makeText(context, "수량을 확인하세요!", Toast.LENGTH_SHORT).show()
                                 return
                             }
 
-                            if (Helper.nullCheck(item)) {
+                            if (Utils.nullCheck(item)) {
                                 item = food
                             } else {
                                 sale.foods.remove(item)
@@ -279,14 +279,14 @@ class SellFragment : Fragment() {
                                 val removeItem: Food? = item.foods.find { it.name == food!!.name }
                                 val foodCount: Int
 
-                                if (Helper.blankString(foodCountString)) {
+                                if (Utils.blankString(foodCountString)) {
                                     Toast.makeText(context, "수량을 확인하세요!", Toast.LENGTH_SHORT).show()
                                     return
                                 }
 
                                 foodCount = foodCountString.toInt()
 
-                                if (Helper.nullCheck(removeItem)) {
+                                if (Utils.nullCheck(removeItem)) {
                                     if (foodCount < 0) {
                                         Toast.makeText(context, "주문되지 않은 음식은 뺄 수 없습니다!", Toast.LENGTH_SHORT).show()
                                         return
@@ -337,8 +337,8 @@ class SellFragment : Fragment() {
             }
 
             for (i in 0 until item.sub.size) {
-                if (!Helper.nullCheck(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i))) {
-                    if (Helper.blankString(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString())) {
+                if (!Utils.nullCheck(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i))) {
+                    if (Utils.blankString(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).text.toString())) {
                         continue
                     }
 
@@ -361,7 +361,7 @@ class SellFragment : Fragment() {
             }
         }
 
-        if (!Helper.nullCheck(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID))) {
+        if (!Utils.nullCheck(dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID))) {
             for (i in 0 until food!!.sub.size) {
                 dialogBinding.root.findViewById<BootstrapEditText>(subMenuPriceID + i).setText("")
             }

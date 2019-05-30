@@ -95,7 +95,7 @@ class AccountFragment : Fragment() {
                 .withSecondOfMinute(0),
             dateTime
                 .withMonthOfYear(dateTime.minusMonths(1).monthOfYear)
-                .withDayOfMonth(days[dateTime.monthOfYear - 1])
+                .withDayOfMonth(days[dateTime.minusMonths(1).monthOfYear - 1])
                 .withHourOfDay(23)
                 .withMinuteOfHour(59)
                 .withSecondOfMinute(59)

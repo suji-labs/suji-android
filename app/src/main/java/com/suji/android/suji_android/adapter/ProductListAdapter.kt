@@ -13,6 +13,10 @@ import com.suji.android.suji_android.databinding.FoodItemBinding
 import com.suji.android.suji_android.databinding.SellItemBinding
 import com.suji.android.suji_android.databinding.SoldItemBinding
 import com.suji.android.suji_android.helper.Constant
+import com.suji.android.suji_android.helper.Utils.format
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 
 class ProductListAdapter(private val viewType: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -115,6 +119,7 @@ class ProductListAdapter(private val viewType: Int) :
             is SoldViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
                 holder.binding.soldFoodDescription.text = ""
+                holder.binding.soldFoodDate.text = DateTime((holder.binding.sale as Sale).time).toString(format)
                 (items!![position] as Sale).foods.iterator().let { iter ->
                     while (iter.hasNext()) {
                         iter.next().let {
