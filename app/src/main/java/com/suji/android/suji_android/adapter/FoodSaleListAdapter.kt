@@ -31,7 +31,11 @@ class FoodSaleListAdapter : BaseAdapter() {
     }
 
     override fun getItemId(position: Int): Long {
-        return items!![position].id.toLong()
+        return if (items == null) {
+            0
+        } else {
+            items!![position].id.toLong()
+        }
     }
 
     override fun getCount(): Int {

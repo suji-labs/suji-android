@@ -186,6 +186,11 @@ class SellFragment : Fragment() {
         override fun onClick(item: Any?) {
             val sale = Sale("총 금액", 0, System.currentTimeMillis())
 
+            if (dialogBinding.sellItemSpinner.count == 0) {
+                Toast.makeText(context, "등록된 음식이 없습니다!", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             dialogBinding.sellItemSpinner.setSelection(0)
             dialogBinding.foodSaleTotalPrice.text = "0"
 

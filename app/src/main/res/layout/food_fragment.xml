@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
                 name="listener"
                 type="com.suji.android.suji_android.listener.ItemClickListener"/>
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
         <com.beardedhen.androidbootstrap.BootstrapWell
+                android:id="@+id/food_create_well"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
             <com.beardedhen.androidbootstrap.BootstrapButton
                     android:onClick="@{() -> listener.onClick(null)}"
                     android:text="@string/create_menu"
@@ -23,8 +26,10 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/main_food_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/food_create_well"
+                app:layout_constraintBottom_toBottomOf="parent">
 
         </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
