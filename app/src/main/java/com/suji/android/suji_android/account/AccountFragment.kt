@@ -17,6 +17,7 @@ import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.databinding.AccountFragmentBinding
 import com.suji.android.suji_android.helper.Constant
+import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
@@ -28,9 +29,7 @@ class AccountFragment : Fragment() {
     private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var viewModel: AccountViewModel = AccountViewModel(BasicApp.app)
-    private val dateTime = DateTime()
     private lateinit var items: List<Sale>
-    private val days = intArrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         initViewModel()
@@ -50,12 +49,6 @@ class AccountFragment : Fragment() {
         binding.week = findWeek
         binding.month = findMonth
         binding.all = findAll
-
-        if (dateTime.withYear(dateTime.year).year().isLeap) {
-            days[1] = 29
-        } else {
-            days[1] = 28
-        }
 
         return binding.root
     }
@@ -87,18 +80,8 @@ class AccountFragment : Fragment() {
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
         viewModel.deleteSoldDate(
-            dateTime
-                .withMonthOfYear(dateTime.minusMonths(1).monthOfYear)
-                .withDayOfMonth(1)
-                .withHourOfDay(0)
-                .withMinuteOfHour(0)
-                .withSecondOfMinute(0),
-            dateTime
-                .withMonthOfYear(dateTime.minusMonths(1).monthOfYear)
-                .withDayOfMonth(days[dateTime.minusMonths(1).monthOfYear - 1])
-                .withHourOfDay(23)
-                .withMinuteOfHour(59)
-                .withSecondOfMinute(59)
+            Utils.getStartDate(1),
+            Utils.getEndDate(1)
         )
         viewModel.getAllSold().observe(this, object : Observer<List<Sale>> {
             override fun onChanged(t: List<Sale>?) {
@@ -116,8 +99,8 @@ class AccountFragment : Fragment() {
     private val findDay: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
             items = viewModel.findSaleOfDate(
-                dateTime.withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0),
-                dateTime.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+                Utils.getStartTime(),
+                Utils.getEndTime()
             )
             adapter.setItems(items)
 
@@ -128,16 +111,8 @@ class AccountFragment : Fragment() {
     private val findWeek: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
             items = viewModel.findSaleOfDate(
-                dateTime
-                    .withDayOfWeek(DateTimeConstants.MONDAY)
-                    .withHourOfDay(0)
-                    .withMinuteOfHour(0)
-                    .withSecondOfMinute(0),
-                dateTime
-                    .withDayOfWeek(DateTimeConstants.SUNDAY)
-                    .withHourOfDay(23)
-                    .withMinuteOfHour(59)
-                    .withSecondOfMinute(59)
+                Utils.getStartWeek(),
+                Utils.getEndWeek()
             )
             adapter.setItems(items)
 
@@ -148,18 +123,8 @@ class AccountFragment : Fragment() {
     private val findMonth: ItemClickListener = object : ItemClickListener {
         override fun onClick(item: Any?) {
             items = viewModel.findSaleOfDate(
-                dateTime
-                    .withMonthOfYear(dateTime.monthOfYear)
-                    .withDayOfMonth(1)
-                    .withHourOfDay(0)
-                    .withMinuteOfHour(0)
-                    .withSecondOfMinute(0),
-                dateTime
-                    .withMonthOfYear(dateTime.monthOfYear)
-                    .withDayOfMonth(days[dateTime.monthOfYear - 1])
-                    .withHourOfDay(23)
-                    .withMinuteOfHour(59)
-                    .withSecondOfMinute(59)
+                Utils.getStartDate(0),
+                Utils.getEndDate(0)
             )
             adapter.setItems(items)
 

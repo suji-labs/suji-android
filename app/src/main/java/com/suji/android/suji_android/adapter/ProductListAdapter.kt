@@ -80,14 +80,14 @@ class ProductListAdapter(private val viewType: Int) :
             }
             is SellViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
-                holder.binding.sellFoodDescription.text = ""
+                holder.binding.sellItemDescription.text = ""
                 (items!![position] as Sale).foods.iterator().let { iter ->
                     while (iter.hasNext()) {
                         iter.next().let {
-                            holder.binding.sellFoodDescription.text =
+                            holder.binding.sellItemDescription.text =
                                 String.format(
                                     holder.binding.root.context.getString(R.string.sell_item),
-                                    holder.binding.sellFoodDescription.text.toString(),
+                                    holder.binding.sellItemDescription.text.toString(),
                                     it.name,
                                     it.count
                                 )
@@ -95,10 +95,10 @@ class ProductListAdapter(private val viewType: Int) :
                             if (it.sub.size != 0) {
                                 for (item in it.sub) {
                                     if (item.count != 0) {
-                                        holder.binding.sellFoodDescription.text =
+                                        holder.binding.sellItemDescription.text =
                                             String.format(
                                                 holder.binding.root.context.getString(R.string.sell_item),
-                                                holder.binding.sellFoodDescription.text.toString(),
+                                                holder.binding.sellItemDescription.text.toString(),
                                                 item.name,
                                                 item.count
                                             )
@@ -106,20 +106,20 @@ class ProductListAdapter(private val viewType: Int) :
                                 }
                             }
 
-                            holder.binding.sellFoodDescription.text =
-                                holder.binding.sellFoodDescription.text.toString().trim()
+                            holder.binding.sellItemDescription.text =
+                                holder.binding.sellItemDescription.text.toString().trim()
                         }
                     }
                 }
                 if ((items!![position] as Sale).foods.size == 0) {
-                    holder.binding.sellFoodDescription.text = holder.binding.root.context.getString(R.string.no_sales)
+                    holder.binding.sellItemDescription.text = holder.binding.root.context.getString(R.string.no_sales)
                 }
                 holder.binding.executePendingBindings()
             }
             is SoldViewHolder -> {
                 holder.binding.sale = items!![position] as Sale
-                holder.binding.soldFoodDescription.text = ""
-                holder.binding.soldFoodDate.text = DateTime((holder.binding.sale as Sale).time).toString(format)
+                holder.binding.soldItemDescription.text = ""
+                holder.binding.soldItemDate.text = DateTime((holder.binding.sale as Sale).time).toString(format)
                 (items!![position] as Sale).foods.iterator().let { iter ->
                     while (iter.hasNext()) {
                         iter.next().let {
@@ -130,16 +130,16 @@ class ProductListAdapter(private val viewType: Int) :
                                 holder.binding.soldPay.text = "현금"
                                 holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
                             }
-                            holder.binding.soldFoodDescription.text =
+                            holder.binding.soldItemDescription.text =
                                 String.format(
                                     holder.binding.root.context.getString(R.string.sell_item),
-                                    holder.binding.soldFoodDescription.text.toString(),
+                                    holder.binding.soldItemDescription.text.toString(),
                                     it.name,
                                     it.count
                                 )
 
-                            holder.binding.soldFoodDescription.text =
-                                holder.binding.soldFoodDescription.text.toString().trim()
+                            holder.binding.soldItemDescription.text =
+                                holder.binding.soldItemDescription.text.toString().trim()
                         }
                     }
                 }

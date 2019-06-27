@@ -11,7 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" app:layout_constraintStart_toEndOf="@+id/account_week_btn"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toEndOf="@+id/account_week_btn"
             app:layout_constraintEnd_toEndOf="@+id/account_week_btn">
 
         <com.beardedhen.androidbootstrap.BootstrapButton
@@ -70,12 +71,14 @@
                 app:layout_constraintStart_toStartOf="parent"/>
         <TextView
                 android:id="@+id/food_sold_card_price"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:textSize="25sp"
                 android:textColor="#000000"
-                app:layout_constraintTop_toBottomOf="@id/account_day_btn"/>
+                app:layout_constraintTop_toBottomOf="@id/account_day_btn"
+                app:layout_constraintLeft_toRightOf="@id/account_pay_card_text"
+                app:layout_constraintRight_toRightOf="parent"/>
         <TextView
                 android:id="@+id/account_pay_cash_text"
                 android:layout_width="wrap_content"
@@ -87,15 +90,16 @@
                 app:layout_constraintStart_toStartOf="parent"/>
         <TextView
                 android:id="@+id/food_sold_cash_price"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:textSize="25sp"
                 android:textColor="#000000"
-                app:layout_constraintTop_toBottomOf="@id/food_sold_card_price"/>
-
+                app:layout_constraintTop_toBottomOf="@id/food_sold_card_price"
+                app:layout_constraintLeft_toRightOf="@id/account_pay_cash_text"
+                app:layout_constraintRight_toRightOf="parent"/>
         <TextView
-                android:id="@+id/account_all_pay_text"
+                android:id="@+id/account_pay_all_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
@@ -105,18 +109,20 @@
                 app:layout_constraintStart_toStartOf="parent"/>
         <TextView
                 android:id="@+id/food_sold_total_price"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:textSize="25sp"
                 android:textColor="#000000"
-                app:layout_constraintTop_toBottomOf="@id/food_sold_cash_price"/>
+                app:layout_constraintTop_toBottomOf="@id/food_sold_cash_price"
+                app:layout_constraintLeft_toRightOf="@id/account_pay_all_text"
+                app:layout_constraintRight_toRightOf="parent"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/sold_fragment_items"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@+id/account_all_pay_text"
+                app:layout_constraintTop_toBottomOf="@+id/account_pay_all_text"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

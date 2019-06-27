@@ -141,6 +141,8 @@ class FoodFragment : Fragment() {
                             addSubMenu()
                         }
                     })
+
+                    Utils.dialogReSizing(it)
                 }
 
             executePendingBindings()
@@ -210,6 +212,8 @@ class FoodFragment : Fragment() {
                                 addSubMenu()
                             }
                         })
+
+                        Utils.dialogReSizing(it)
                     }
             }
 

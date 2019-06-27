@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-
         <variable
                 name="food"
                 type="com.suji.android.suji_android.database.model.Food"/>
@@ -16,42 +15,56 @@
     <com.beardedhen.androidbootstrap.BootstrapWell
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
             <com.beardedhen.androidbootstrap.BootstrapLabel
+                    android:id="@+id/food_name"
                     android:text="@{food.name}"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
             <com.beardedhen.androidbootstrap.BootstrapLabel
+                    android:id="@+id/food_price"
                     android:text="@{String.valueOf(food.price)}"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/food_name"/>
             <com.beardedhen.androidbootstrap.BootstrapLabel
+                    android:id="@+id/food_sub_menu"
                     android:text="@{String.valueOf(food.sub.size())}"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/food_price"/>
             <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/food_modify"
                     android:layout_gravity="end"
                     android:text="@string/modify"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> modify.onClick(food)}"
-                    app:bootstrapBrand="primary"/>
+                    app:bootstrapBrand="primary"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/food_sub_menu"
+                    app:layout_constraintRight_toLeftOf="@id/food_delete"/>
             <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/food_delete"
                     android:layout_gravity="end"
                     android:text="@string/delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> delete.onClick(food)}"
-                    app:bootstrapBrand="danger"/>
-        </LinearLayout>
+                    app:bootstrapBrand="danger"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/food_modify"
+                    app:layout_constraintRight_toRightOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.beardedhen.androidbootstrap.BootstrapWell>
-
-
 </layout>

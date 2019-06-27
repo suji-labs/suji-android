@@ -31,10 +31,8 @@ import com.suji.android.suji_android.databinding.FoodSellDialogBinding
 import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.Constant
-import com.suji.android.suji_android.helper.DisplayHelper
 import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
-import org.joda.time.DateTime
 import java.text.DecimalFormat
 
 class SellFragment : Fragment() {
@@ -244,7 +242,7 @@ class SellFragment : Fragment() {
                         }
                     })
 
-                    dialogReSizing(it)
+                    Utils.dialogReSizing(it)
                 }
 
             executePendingBindings()
@@ -316,7 +314,7 @@ class SellFragment : Fragment() {
                             }
                         })
 
-                        dialogReSizing(it)
+                        Utils.dialogReSizing(it)
                     }
             }
 
@@ -373,15 +371,6 @@ class SellFragment : Fragment() {
         }
 
         return mainSumPrice + subSumPrice
-    }
-
-    private fun dialogReSizing(dialog: AlertDialog) {
-        dialog.window!!.attributes = dialog.window!!.attributes.apply {
-            DisplayHelper.getDisplaySize().let { point ->
-                width = (point.x * 0.9).toInt()
-//                height = (point.y * 0.5).toInt()
-            }
-        }
     }
 
     private val foodSaleCancelClickListener: ItemClickListener = object : ItemClickListener {
