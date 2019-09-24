@@ -28,7 +28,9 @@ class AccountFragment : Fragment() {
     private lateinit var binding: AccountFragmentBinding
     private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private var viewModel: AccountViewModel = AccountViewModel(BasicApp.app)
+    private val viewModel: AccountViewModel by lazy {
+        ViewModelProviders.of(this).get(AccountFragment::class.java)
+    }
     private lateinit var items: List<Sale>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -78,7 +80,6 @@ class AccountFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
         viewModel.deleteSoldDate(
             Utils.getStartDate(1),
             Utils.getEndDate(1)

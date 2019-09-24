@@ -40,8 +40,12 @@ class SellFragment : Fragment() {
     private lateinit var adapter: ProductListAdapter
     private lateinit var spinnerAdapter: FoodSaleListAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private var sellViewModel: SellViewModel = SellViewModel(BasicApp.app)
-    private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
+    private val sellViewModel: SellViewModel by lazy {
+        ViewModelProviders.of(this).get(SellViewModel::class.java)
+    }
+    private val foodViewModel: FoodViewModel by lazy {
+        ViewModelProviders.of(this).get(FoodViewModel::class.java)
+    }
     private lateinit var dialogBinding: FoodSellDialogBinding
     private var food: Food? = null
     private val subMenuPriceID = 0x6000
@@ -384,7 +388,6 @@ class SellFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        sellViewModel = ViewModelProviders.of(this).get(SellViewModel::class.java)
         sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
             override fun onChanged(@Nullable sales: List<Sale>?) {
                 sales?.let {
@@ -395,7 +398,6 @@ class SellFragment : Fragment() {
             }
         })
 
-        foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
             override fun onChanged(@Nullable foods: List<Food>?) {
                 foods?.let {

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("장부"))
         binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("메뉴"))
 
-        binding.mainViewPager.adapter = ViewPagerAdapter(binding.mainTabLayout.tabCount, supportFragmentManager)
+        binding.mainViewPager.adapter = ViewPagerAdapter(binding.mainTabLayout.tabCount, supportFragmentManager, lifecycle)
         binding.mainViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)

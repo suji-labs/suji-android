@@ -2,14 +2,19 @@ package com.suji.android.suji_android.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.suji.android.suji_android.account.AccountFragment
 import com.suji.android.suji_android.food.FoodFragment
 import com.suji.android.suji_android.sell.SellFragment
 
 
-class ViewPagerAdapter(private val tabCount: Int, fragmentManager: FragmentManager) : FragmentStateAdapter(fragmentManager) {
-    override fun getItem(position: Int): Fragment {
+class ViewPagerAdapter(
+    private val tabCount: Int,
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
+    override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> SellFragment()
             1 -> AccountFragment()

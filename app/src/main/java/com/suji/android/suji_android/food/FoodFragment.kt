@@ -2,14 +2,10 @@ package com.suji.android.suji_android.food
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
-import android.text.InputType
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
@@ -18,25 +14,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.BootstrapEditText
-import com.beardedhen.androidbootstrap.BootstrapLabel
-import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.ProductListAdapter
-import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.databinding.FoodCreateDialogBinding
 import com.suji.android.suji_android.databinding.FoodFragmentBinding
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
+import kotlinx.android.synthetic.main.sub_menu_layout.view.*
 
 class FoodFragment : Fragment() {
     private lateinit var binding: FoodFragmentBinding
     private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private var foodViewModel: FoodViewModel = FoodViewModel(BasicApp.app)
+    private val foodViewModel: FoodViewModel by lazy {
+        ViewModelProviders.of(this).get(FoodViewModel::class.java)
+    }
     private lateinit var dialogBinding: FoodCreateDialogBinding
     private val subMenuLayoutID: Int = 0x8000
     private val subMenuNameID: Int = 0x7000
@@ -73,7 +68,6 @@ class FoodFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        foodViewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
         foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
             override fun onChanged(@Nullable foods: List<Food>?) {
                 foods?.let {
@@ -222,57 +216,11 @@ class FoodFragment : Fragment() {
     }
 
     private fun addSubMenu() {
-        val outerLayout: LinearLayout = dialogBinding.createSubMenu
-        val innerLayout = LinearLayout(dialogBinding.root.context).apply {
-            id = subMenuLayoutID + subMenuCount
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
+        val subMenuLayout = layoutInflater.inflate(R.layout.sub_menu_layout, null)
+        subMenuLayout.sub_menu_delete.setOnClickListener {
+            dialogBinding.createSubMenu.removeView(subMenuLayout)
         }
-
-        val nameLabel = BootstrapLabel(dialogBinding.root.context).apply {
-            text = "이름"
-        }
-
-        val nameEditText = BootstrapEditText(dialogBinding.root.context).apply {
-            id = subMenuNameID + subMenuCount
-            setTextColor(Color.BLACK)
-            width = 300
-            bottom = 15
-        }
-
-        val priceLabel = BootstrapLabel(dialogBinding.root.context).apply {
-            text = "가격"
-        }
-
-        val priceEditText = BootstrapEditText(dialogBinding.root.context).apply {
-            id = subMenuPriceID + subMenuCount
-            setTextColor(Color.BLACK)
-            inputType = InputType.TYPE_CLASS_NUMBER
-            width = 300
-            bottom = 15
-        }
-
-        val subMenuDelete = BootstrapButton(dialogBinding.root.context).apply {
-            id = subMenuCount
-            text = "X"
-            bootstrapBrand = DefaultBootstrapBrand.DANGER
-            setOnClickListener(View.OnClickListener {
-                if (subMenuCount < 0) {
-                    return@OnClickListener
-                }
-                val layout = dialogBinding.root.findViewById<LinearLayout>(subMenuLayoutID + it.id)
-                outerLayout.removeView(layout)
-                subMenuCount--
-            })
-        }
-
-        innerLayout.addView(nameLabel)
-        innerLayout.addView(nameEditText)
-        innerLayout.addView(priceLabel)
-        innerLayout.addView(priceEditText)
-        innerLayout.addView(subMenuDelete)
-
-        outerLayout.addView(innerLayout)
+        dialogBinding.createSubMenu.addView(subMenuLayout)
         subMenuCount++
     }
 
