@@ -29,7 +29,7 @@ class AccountFragment : Fragment() {
     private lateinit var adapter: ProductListAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private val viewModel: AccountViewModel by lazy {
-        ViewModelProviders.of(this).get(AccountFragment::class.java)
+        ViewModelProviders.of(this).get(AccountViewModel::class.java)
     }
     private lateinit var items: List<Sale>
 
