@@ -2,37 +2,32 @@ package com.suji.android.suji_android
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.suji.android.suji_android.adapter.ViewPagerAdapter
-import com.suji.android.suji_android.databinding.ActivityMainBinding
-
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         initView()
     }
 
     private fun initView() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        main_tab_layout.addTab(main_tab_layout.newTab().setText("장사"))
+        main_tab_layout.addTab(main_tab_layout.newTab().setText("장부"))
+        main_tab_layout.addTab(main_tab_layout.newTab().setText("메뉴"))
 
-        binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("장사"))
-        binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("장부"))
-        binding.mainTabLayout.addTab(binding.mainTabLayout.newTab().setText("메뉴"))
-
-        binding.mainViewPager.adapter = ViewPagerAdapter(binding.mainTabLayout.tabCount, supportFragmentManager, lifecycle)
-        binding.mainViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        main_view_pager.adapter = ViewPagerAdapter(main_tab_layout.tabCount, supportFragmentManager, lifecycle)
+        main_view_pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                binding.mainTabLayout.selectTab(binding.mainTabLayout.getTabAt(position))
+                main_tab_layout.selectTab(main_tab_layout.getTabAt(position))
             }
         })
-        binding.mainTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        main_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
 
             }
@@ -42,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                binding.mainViewPager.currentItem = tab!!.position
+                main_view_pager.currentItem = tab!!.position
             }
         })
     }

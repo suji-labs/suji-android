@@ -49,10 +49,19 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.3'
     // gson
     implementation 'com.google.code.gson:gson:2.8.5'
-    // debug roon database
+    // debug room database
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     // viewpager2
     implementation 'androidx.viewpager2:viewpager2:1.0.0-beta04'
-    // tab layout
+    // tab style
     implementation 'com.google.android.material:material:1.1.0-alpha10'
+    // threetenbp
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
+    // rxjava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+    implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
+    // androidx
+    implementation 'androidx.core:core-ktx:1.1.0'
 }
