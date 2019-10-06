@@ -93,11 +93,10 @@ class SellFragment : Fragment() {
 
             this@SellFragment.food = food
 
-            val layout = LayoutInflater.from(context).inflate(R.layout.sub_menu_item, null, false)
-
             dialogView.sell_sub_food_layout.removeAllViews()
 
             for (i in 0 until food.sub.size) {
+                val layout = LayoutInflater.from(context).inflate(R.layout.sub_menu_item, null, false)
                 layout.sub_menu_name.text = food.sub[i].name
                 dialogView.sell_sub_food_layout.addView(layout)
             }
