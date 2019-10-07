@@ -1,11 +1,9 @@
 package com.suji.android.suji_android.account
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,46 +11,41 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.ProductListAdapter
-import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
-import com.suji.android.suji_android.databinding.AccountFragmentBinding
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
-import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
+import kotlinx.android.synthetic.main.account_fragment.*
+import kotlinx.android.synthetic.main.account_fragment.view.*
 import java.text.DecimalFormat
 
-
 class AccountFragment : Fragment() {
-    private lateinit var binding: AccountFragmentBinding
     private lateinit var adapter: ProductListAdapter
-    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var items: List<Sale>
     private val viewModel: AccountViewModel by lazy {
         ViewModelProviders.of(this).get(AccountViewModel::class.java)
     }
-    private lateinit var items: List<Sale>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         initViewModel()
-        binding = DataBindingUtil.inflate<AccountFragmentBinding>(
-            inflater,
-            R.layout.account_fragment,
-            container,
-            false
-        )
-            .apply {
-                adapter = ProductListAdapter(Constant.ViewType.SOLD_VIEW)
-                layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-                soldFragmentItems.layoutManager = layoutManager
-                soldFragmentItems.adapter = adapter
-            }
-        binding.day = findDay
-        binding.week = findWeek
-        binding.month = findMonth
-        binding.all = findAll
 
-        return binding.root
+        val view = inflater.inflate(R.layout.account_fragment, container, false)
+
+        adapter = ProductListAdapter(Constant.ViewType.SOLD_VIEW)
+        view.sold_fragment_items.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        view.sold_fragment_items.adapter = adapter
+
+//        binding.day = findDay
+//        binding.week = findWeek
+//        binding.month = findMonth
+//        binding.all = findAll
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,9 +67,9 @@ class AccountFragment : Fragment() {
             }
         }
 
-        binding.foodSoldTotalPrice.text = DecimalFormat.getCurrencyInstance().format(sumPrice).toString()
-        binding.foodSoldCardPrice.text = DecimalFormat.getCurrencyInstance().format(cardMoney).toString()
-        binding.foodSoldCashPrice.text = DecimalFormat.getCurrencyInstance().format(cashMoney).toString()
+        food_sold_total_price.text = DecimalFormat.getCurrencyInstance().format(sumPrice).toString()
+        food_sold_card_price.text = DecimalFormat.getCurrencyInstance().format(cardMoney).toString()
+        food_sold_cash_price.text = DecimalFormat.getCurrencyInstance().format(cashMoney).toString()
     }
 
     private fun initViewModel() {
@@ -91,8 +84,6 @@ class AccountFragment : Fragment() {
 
                     computePrice(t)
                 }
-
-                executePendingBindings()
             }
         })
     }
@@ -142,14 +133,8 @@ class AccountFragment : Fragment() {
 
                         computePrice(t)
                     }
-
-                    executePendingBindings()
                 }
             })
         }
-    }
-
-    private fun executePendingBindings() {
-        binding.executePendingBindings()
     }
 }

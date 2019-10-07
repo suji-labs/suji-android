@@ -20,7 +20,7 @@ import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils
 import kotlinx.android.synthetic.main.food_create_dialog.view.*
 import kotlinx.android.synthetic.main.food_fragment.view.*
-import kotlinx.android.synthetic.main.sub_menu_layout.view.*
+import kotlinx.android.synthetic.main.create_submenu_layout.view.*
 
 class FoodFragment : Fragment() {
     private lateinit var adapter: ProductListAdapter
@@ -78,11 +78,11 @@ class FoodFragment : Fragment() {
 
                                 for (i in 0 until dialogView.create_sub_menu.childCount) {
                                     val subMenuView = dialogView.create_sub_menu.getChildAt(i)
-                                    val subMenuName = subMenuView.sub_menu_name_edit_text.text.toString()
-                                    val subMenuPrice = subMenuView.sub_menu_price_edit_text.text.toString()
+                                    val subMenuName = subMenuView.create_submenu_name_edit_text.text.toString()
+                                    val subMenuPrice = subMenuView.create_submenu_price_edit_text.text.toString()
 
-                                    subMenuView.sub_menu_name_edit_text.text.clear()
-                                    subMenuView.sub_menu_price_edit_text.text.clear()
+                                    subMenuView.create_submenu_name_edit_text.text.clear()
+                                    subMenuView.create_submenu_price_edit_text.text.clear()
 
                                     subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
                                 }
@@ -109,8 +109,8 @@ class FoodFragment : Fragment() {
                         .let {
                             it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
                                 override fun onClick(v: View?) {
-                                    val subMenuLayout = layoutInflater.inflate(R.layout.sub_menu_layout, null)
-                                    subMenuLayout.sub_menu_delete.setOnClickListener {
+                                    val subMenuLayout = layoutInflater.inflate(R.layout.create_submenu_layout, null)
+                                    subMenuLayout.submenu_delete.setOnClickListener {
                                         dialogView.create_sub_menu.removeView(subMenuLayout)
                                     }
                                     dialogView.create_sub_menu.addView(subMenuLayout)

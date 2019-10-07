@@ -1,65 +1,41 @@
 package com.suji.android.suji_android.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
-import com.suji.android.suji_android.databinding.FoodItemBinding
-import com.suji.android.suji_android.databinding.SellItemBinding
-import com.suji.android.suji_android.databinding.SoldItemBinding
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils.format
+import kotlinx.android.synthetic.main.food_item.view.*
+import kotlinx.android.synthetic.main.sell_item.view.*
+import kotlinx.android.synthetic.main.sold_item.view.*
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
+import java.text.DecimalFormat
 
 class ProductListAdapter(private val viewType: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<Any>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding: ViewDataBinding?
-        when (this.viewType) {
+        return when (this.viewType) {
             Constant.ViewType.FOOD_VIEW -> {
-                binding = DataBindingUtil.inflate<FoodItemBinding>(
-                    LayoutInflater.from(parent.context),
-                    R.layout.food_item,
-                    parent,
-                    false
-                )
-                if (binding is FoodItemBinding) {
-                    binding.delete = Constant.ListenerHashMap.listenerList["foodDeleteClickListener"]
-                    binding.modify = Constant.ListenerHashMap.listenerList["foodModifyClickListener"]
-                }
-                return FoodViewHolder(binding)
+                val view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.food_item, parent, false)
+                FoodViewHolder(view)
             }
             Constant.ViewType.SALE_VIEW -> {
-                binding = DataBindingUtil.inflate<SellItemBinding>(
-                    LayoutInflater.from(parent.context),
-                    R.layout.sell_item,
-                    parent,
-                    false
-                )
-                if (binding is SellItemBinding) {
-                    binding.sell = Constant.ListenerHashMap.listenerList["foodSellClickListener"]
-                    binding.modify = Constant.ListenerHashMap.listenerList["addSaleClickListener"]
-                    binding.delete = Constant.ListenerHashMap.listenerList["foodSaleCancelClickListener"]
-                }
-                return SellViewHolder(binding)
+                val view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.sell_item, parent, false)
+                SellViewHolder(view)
             }
             else -> {
-                binding = DataBindingUtil.inflate<SoldItemBinding>(
-                    LayoutInflater.from(parent.context),
-                    R.layout.sold_item,
-                    parent,
-                    false
-                )
-                return SoldViewHolder(binding)
+                val view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.sold_item, parent, false)
+                SoldViewHolder(view)
             }
         }
     }
@@ -75,19 +51,22 @@ class ProductListAdapter(private val viewType: Int) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is FoodViewHolder -> {
-                holder.binding.food = items!![position] as Food
-                holder.binding.executePendingBindings()
+                val food = items!![position] as Food
+                holder.view.food_name.text = food.name
+                holder.view.food_price.text = food.price.toString()
             }
             is SellViewHolder -> {
-                holder.binding.sale = items!![position] as Sale
-                holder.binding.sellItemDescription.text = ""
-                (items!![position] as Sale).foods.iterator().let { iter ->
+                val sale = items!![position] as Sale
+                holder.view.sell_item_name.text = "총 금액"
+                holder.view.sell_item_price.text = DecimalFormat.getCurrencyInstance().format(sale.price).toString()
+                holder.view.sell_item_description.text = ""
+                sale.foods.iterator().let { iter ->
                     while (iter.hasNext()) {
                         iter.next().let {
-                            holder.binding.sellItemDescription.text =
+                            holder.view.sell_item_description.text =
                                 String.format(
-                                    holder.binding.root.context.getString(R.string.sell_item),
-                                    holder.binding.sellItemDescription.text.toString(),
+                                    holder.view.context.getString(R.string.sell_item),
+                                    holder.view.sell_item_description.text.toString(),
                                     it.name,
                                     it.count
                                 )
@@ -95,10 +74,10 @@ class ProductListAdapter(private val viewType: Int) :
                             if (it.sub.size != 0) {
                                 for (item in it.sub) {
                                     if (item.count != 0) {
-                                        holder.binding.sellItemDescription.text =
+                                        holder.view.sell_item_description.text =
                                             String.format(
-                                                holder.binding.root.context.getString(R.string.sell_item),
-                                                holder.binding.sellItemDescription.text.toString(),
+                                                holder.view.context.getString(R.string.sell_item),
+                                                holder.view.sell_item_description.text.toString(),
                                                 item.name,
                                                 item.count
                                             )
@@ -106,44 +85,48 @@ class ProductListAdapter(private val viewType: Int) :
                                 }
                             }
 
-                            holder.binding.sellItemDescription.text =
-                                holder.binding.sellItemDescription.text.toString().trim()
+                            holder.view.sell_item_description.text =
+                                holder.view.sell_item_description.text.toString().trim()
                         }
                     }
                 }
                 if ((items!![position] as Sale).foods.size == 0) {
-                    holder.binding.sellItemDescription.text = holder.binding.root.context.getString(R.string.no_sales)
+                    holder.view.sell_item_description.text =
+                        holder.view.context.getString(R.string.no_sales)
                 }
-                holder.binding.executePendingBindings()
             }
             is SoldViewHolder -> {
-                holder.binding.sale = items!![position] as Sale
-                holder.binding.soldItemDescription.text = ""
-                holder.binding.soldItemDate.text = DateTime((holder.binding.sale as Sale).time).toString(format)
+                val sold = items!![position] as Sale
+                holder.view.sold_item_name.text = "총 금액"
+                holder.view.sold_item_price.text = DecimalFormat.getCurrencyInstance().format(sold.price).toString()
+                holder.view.sold_item_description.text = ""
+                holder.view.sold_item_date.text =
+                    DateTime(sold.time).toString(format)
                 (items!![position] as Sale).foods.iterator().let { iter ->
                     while (iter.hasNext()) {
                         iter.next().let {
-                            if ((holder.binding.sale as Sale).pay == Constant.PayType.CARD) {
-                                holder.binding.soldPay.text = "카드"
-                                holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.PRIMARY
+                            if (sold.pay == Constant.PayType.CARD) {
+                                holder.view.sold_pay.text = "카드"
+                                holder.view.sold_pay.bootstrapBrand =
+                                    DefaultBootstrapBrand.PRIMARY
                             } else {
-                                holder.binding.soldPay.text = "현금"
-                                holder.binding.soldPay.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
+                                holder.view.sold_pay.text = "현금"
+                                holder.view.sold_pay.bootstrapBrand =
+                                    DefaultBootstrapBrand.SUCCESS
                             }
-                            holder.binding.soldItemDescription.text =
+                            holder.view.sold_item_description.text =
                                 String.format(
-                                    holder.binding.root.context.getString(R.string.sell_item),
-                                    holder.binding.soldItemDescription.text.toString(),
+                                    holder.view.context.getString(R.string.sell_item),
+                                    holder.view.sold_item_description.text.toString(),
                                     it.name,
                                     it.count
                                 )
 
-                            holder.binding.soldItemDescription.text =
-                                holder.binding.soldItemDescription.text.toString().trim()
+                            holder.view.sold_item_description.text =
+                                holder.view.sold_item_description.text.toString().trim()
                         }
                     }
                 }
-                holder.binding.executePendingBindings()
             }
         }
     }
@@ -162,8 +145,8 @@ class ProductListAdapter(private val viewType: Int) :
     }
 
     companion object {
-        class SoldViewHolder(val binding: SoldItemBinding) : RecyclerView.ViewHolder(binding.root)
-        class FoodViewHolder(val binding: FoodItemBinding) : RecyclerView.ViewHolder(binding.root)
-        class SellViewHolder(val binding: SellItemBinding) : RecyclerView.ViewHolder(binding.root)
+        class SoldViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+        class FoodViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+        class SellViewHolder(val view: View) : RecyclerView.ViewHolder(view)
     }
 }

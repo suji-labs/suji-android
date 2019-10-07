@@ -1,79 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.beardedhen.androidbootstrap.BootstrapLabel
+            android:id="@+id/sell_dialog_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/sell_food"
+            app:bootstrapBrand="success"
+            app:bootstrapHeading="h1"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.beardedhen.androidbootstrap.BootstrapLabel
-                android:id="@+id/sell_dialog_title"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:text="@string/sell_food"
-                android:layout_marginBottom="10dp"
-                app:bootstrapBrand="success"
-                app:bootstrapHeading="h1"
-                app:layout_constraintTop_toTopOf="parent"/>
+    <com.beardedhen.androidbootstrap.BootstrapWell
+            android:id="@+id/spinner_well"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/sell_dialog_title">
 
-        <com.beardedhen.androidbootstrap.BootstrapWell
-                android:id="@+id/spinner_well"
+        <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/sell_item_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/sell_dialog_title">
-            <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sell_item_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-        </com.beardedhen.androidbootstrap.BootstrapWell>
+                android:layout_height="wrap_content" />
+    </com.beardedhen.androidbootstrap.BootstrapWell>
+
+    <LinearLayout
+            android:id="@+id/sell_main_food_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner_well">
 
         <com.beardedhen.androidbootstrap.BootstrapLabel
                 android:id="@+id/food_count_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
+                android:layout_weight="1"
                 android:text="@string/count"
-                app:bootstrapBrand="primary"
-                app:layout_constraintTop_toBottomOf="@id/spinner_well"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:textSize="25sp"
+                app:bootstrapBrand="primary" />
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
                 android:id="@+id/sell_main_food_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:inputType="numberSigned"
-                android:textColor="#000000"
-                app:layout_constraintTop_toBottomOf="@id/spinner_well"
-                app:layout_constraintLeft_toRightOf="@id/food_count_label"
-                app:layout_constraintRight_toRightOf="parent"/>
+                android:textColor="#000000" />
+    </LinearLayout>
 
-        <LinearLayout
-                android:id="@+id/sell_sub_food_layout"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/sell_main_food_count"
-                app:layout_constraintBottom_toTopOf="@id/food_sell_total_price"/>
+    <LinearLayout
+            android:id="@+id/sell_sub_food_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/sell_main_food_layout" />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sell_sub_food_layout">
 
         <TextView
                 android:id="@+id/food_sell_total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="25sp"
                 android:text="@string/total_price"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/food_count_label"/>
+                android:textColor="#000000"
+                android:textSize="25sp" />
+
         <TextView
                 android:id="@+id/food_sale_total_price"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textSize="25sp"
                 android:textColor="#000000"
-                app:layout_constraintTop_toBottomOf="@id/food_count_label"
-                app:layout_constraintLeft_toRightOf="@id/food_sell_total_price"
-                app:layout_constraintRight_toRightOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+                android:textSize="25sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

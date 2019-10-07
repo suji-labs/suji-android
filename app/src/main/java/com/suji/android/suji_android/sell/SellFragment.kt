@@ -2,14 +2,11 @@ package com.suji.android.suji_android.sell
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
@@ -18,8 +15,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beardedhen.androidbootstrap.BootstrapEditText
-import com.beardedhen.androidbootstrap.BootstrapLabel
-import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodSaleListAdapter
 import com.suji.android.suji_android.adapter.ProductListAdapter
@@ -31,7 +26,7 @@ import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
 import kotlinx.android.synthetic.main.food_sell_dialog.view.*
 import kotlinx.android.synthetic.main.sell_fragment.view.*
-import kotlinx.android.synthetic.main.sub_menu_item.view.*
+import kotlinx.android.synthetic.main.submenu_item.view.*
 import java.text.DecimalFormat
 
 class SellFragment : Fragment() {
@@ -96,8 +91,8 @@ class SellFragment : Fragment() {
             dialogView.sell_sub_food_layout.removeAllViews()
 
             for (i in 0 until food.sub.size) {
-                val layout = LayoutInflater.from(context).inflate(R.layout.sub_menu_item, null, false)
-                layout.sub_menu_name.text = food.sub[i].name
+                val layout = LayoutInflater.from(context).inflate(R.layout.submenu_item, dialogView.sell_sub_food_layout, false)
+                layout.submenu_name.text = food.sub[i].name
                 dialogView.sell_sub_food_layout.addView(layout)
             }
         }
