@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.adapter.ProductListAdapter
+import com.suji.android.suji_android.adapter.SoldListAdapter
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.account_fragment.view.*
 import java.text.DecimalFormat
 
 class AccountFragment : Fragment() {
-    private lateinit var adapter: ProductListAdapter
+    private lateinit var adapter: SoldListAdapter
     private lateinit var items: List<Sale>
     private val viewModel: AccountViewModel by lazy {
         ViewModelProviders.of(this).get(AccountViewModel::class.java)
@@ -35,7 +35,7 @@ class AccountFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.account_fragment, container, false)
 
-        adapter = ProductListAdapter(Constant.ViewType.SOLD_VIEW)
+        adapter = SoldListAdapter()
         view.sold_fragment_items.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         view.sold_fragment_items.adapter = adapter

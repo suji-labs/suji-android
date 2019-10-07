@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodSaleListAdapter
-import com.suji.android.suji_android.adapter.ProductListAdapter
+import com.suji.android.suji_android.adapter.SellListAdapter
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.food.FoodViewModel
@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.submenu_item.view.*
 import java.text.DecimalFormat
 
 class SellFragment : Fragment() {
-    private lateinit var adapter: ProductListAdapter
+    private lateinit var adapter: SellListAdapter
     private lateinit var spinnerAdapter: FoodSaleListAdapter
     private var food: Food? = null
     private val subMenuPriceID = 0x6000
@@ -48,7 +48,7 @@ class SellFragment : Fragment() {
         initViewModel()
 
         val view = inflater.inflate(R.layout.sell_fragment, container, false)
-        adapter = ProductListAdapter(Constant.ViewType.SALE_VIEW)
+        adapter = SellListAdapter()
         view.sell_fragment_fab.setOnClickListener(floatingButtonClickListener)
         view.sell_fragment_items.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         view.sell_fragment_items.adapter = adapter

@@ -14,16 +14,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
-import com.suji.android.suji_android.adapter.ProductListAdapter
+import com.suji.android.suji_android.adapter.FoodListAdapter
 import com.suji.android.suji_android.database.model.Food
-import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils
 import kotlinx.android.synthetic.main.food_create_dialog.view.*
 import kotlinx.android.synthetic.main.food_fragment.view.*
 import kotlinx.android.synthetic.main.create_submenu_layout.view.*
 
 class FoodFragment : Fragment() {
-    private lateinit var adapter: ProductListAdapter
+    private lateinit var adapter: FoodListAdapter
     private val foodViewModel: FoodViewModel by lazy {
         ViewModelProviders.of(this).get(FoodViewModel::class.java)
     }
@@ -35,7 +34,7 @@ class FoodFragment : Fragment() {
         initViewModel()
         val view = inflater.inflate(R.layout.food_fragment, container, false)
 
-        adapter = ProductListAdapter(Constant.ViewType.FOOD_VIEW)
+        adapter = FoodListAdapter()
         view.main_food_list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         view.main_food_list.adapter = adapter
         view.create_food.setOnClickListener(createFood)
