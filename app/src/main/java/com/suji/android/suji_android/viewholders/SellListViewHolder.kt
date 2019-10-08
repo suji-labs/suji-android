@@ -4,11 +4,22 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Sale
+import com.suji.android.suji_android.listener.ItemClickListener
 import kotlinx.android.synthetic.main.sell_item.view.*
 import java.text.DecimalFormat
 
-class SellListViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class SellListViewHolder(private val view: View, private val listener: ItemClickListener) : RecyclerView.ViewHolder(view) {
     fun bind(item: Sale) {
+        view.sell_item_sold.setOnClickListener(View.OnClickListener {
+            listener.onItemClick(it, item)
+        })
+        view.sell_item_modify.setOnClickListener(View.OnClickListener {
+            listener.onItemClick(it, item)
+        })
+        view.sell_item_delete.setOnClickListener(View.OnClickListener {
+            listener.onItemClick(it, item)
+        })
+
         view.sell_item_name.text = "총 금액"
         view.sell_item_price.text =
             DecimalFormat.getCurrencyInstance().format(item.price).toString()

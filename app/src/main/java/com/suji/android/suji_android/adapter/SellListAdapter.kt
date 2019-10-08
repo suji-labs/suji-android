@@ -5,14 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Sale
+import com.suji.android.suji_android.listener.ItemClickListener
 import com.suji.android.suji_android.viewholders.SellListViewHolder
 
-class SellListAdapter : RecyclerView.Adapter<SellListViewHolder>() {
+class SellListAdapter(private val listener: ItemClickListener) : RecyclerView.Adapter<SellListViewHolder>() {
     private var items: List<Sale>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.sell_item, parent, false)
-        return SellListViewHolder(view)
+        return SellListViewHolder(view, listener)
     }
 
     override fun getItemCount(): Int {

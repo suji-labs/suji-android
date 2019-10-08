@@ -14,7 +14,6 @@ import com.suji.android.suji_android.adapter.SoldListAdapter
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils
-import com.suji.android.suji_android.listener.ItemClickListener
 import kotlinx.android.synthetic.main.account_fragment.*
 import kotlinx.android.synthetic.main.account_fragment.view.*
 import java.text.DecimalFormat
@@ -40,10 +39,10 @@ class AccountFragment : Fragment() {
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         view.sold_fragment_items.adapter = adapter
 
-//        binding.day = findDay
-//        binding.week = findWeek
-//        binding.month = findMonth
-//        binding.all = findAll
+        view.account_all_btn.setOnClickListener(listener)
+        view.account_day_btn.setOnClickListener(listener)
+        view.account_week_btn.setOnClickListener(listener)
+        view.account_month_btn.setOnClickListener(listener)
 
         return view
     }
@@ -88,53 +87,48 @@ class AccountFragment : Fragment() {
         })
     }
 
-    private val findDay: ItemClickListener = object : ItemClickListener {
-        override fun onClick(item: Any?) {
-            items = viewModel.findSaleOfDate(
-                Utils.getStartTime(),
-                Utils.getEndTime()
-            )
-            adapter.setItems(items)
+    private val listener: View.OnClickListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            when (v!!.id) {
+                R.id.account_day_btn -> {
+                    items = viewModel.findSaleOfDate(
+                        Utils.getStartTime(),
+                        Utils.getEndTime()
+                    )
+                    adapter.setItems(items)
 
-            computePrice(items)
-        }
-    }
-
-    private val findWeek: ItemClickListener = object : ItemClickListener {
-        override fun onClick(item: Any?) {
-            items = viewModel.findSaleOfDate(
-                Utils.getStartWeek(),
-                Utils.getEndWeek()
-            )
-            adapter.setItems(items)
-
-            computePrice(items)
-        }
-    }
-
-    private val findMonth: ItemClickListener = object : ItemClickListener {
-        override fun onClick(item: Any?) {
-            items = viewModel.findSaleOfDate(
-                Utils.getStartDate(0),
-                Utils.getEndDate(0)
-            )
-            adapter.setItems(items)
-
-            computePrice(items)
-        }
-    }
-
-    private val findAll: ItemClickListener = object : ItemClickListener {
-        override fun onClick(item: Any?) {
-            viewModel.getAllSold().observe(this@AccountFragment, object : Observer<List<Sale>> {
-                override fun onChanged(t: List<Sale>?) {
-                    t?.let {
-                        adapter.setItems(t)
-
-                        computePrice(t)
-                    }
+                    computePrice(items)
                 }
-            })
+                R.id.account_week_btn -> {
+                    items = viewModel.findSaleOfDate(
+                        Utils.getStartWeek(),
+                        Utils.getEndWeek()
+                    )
+                    adapter.setItems(items)
+
+                    computePrice(items)
+                }
+                R.id.account_month_btn -> {
+                    items = viewModel.findSaleOfDate(
+                        Utils.getStartDate(0),
+                        Utils.getEndDate(0)
+                    )
+                    adapter.setItems(items)
+
+                    computePrice(items)
+                }
+                R.id.account_all_btn -> {
+                    viewModel.getAllSold().observe(this@AccountFragment, object : Observer<List<Sale>> {
+                        override fun onChanged(t: List<Sale>?) {
+                            t?.let {
+                                adapter.setItems(t)
+
+                                computePrice(t)
+                            }
+                        }
+                    })
+                }
+            }
         }
     }
 }

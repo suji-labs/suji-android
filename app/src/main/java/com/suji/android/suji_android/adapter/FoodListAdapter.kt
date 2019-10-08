@@ -5,14 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Food
+import com.suji.android.suji_android.listener.ItemClickListener
 import com.suji.android.suji_android.viewholders.FoodListViewHolder
 
-class FoodListAdapter : RecyclerView.Adapter<FoodListViewHolder>() {
+class FoodListAdapter(private val listener: ItemClickListener) : RecyclerView.Adapter<FoodListViewHolder>() {
     private var items: List<Food>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.food_item, parent, false)
-        return FoodListViewHolder(view)
+        return FoodListViewHolder(view, listener)
     }
 
     override fun getItemCount(): Int {
