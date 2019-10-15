@@ -9,7 +9,7 @@ import com.suji.android.suji_android.listener.ItemClickListener
 import com.suji.android.suji_android.viewholders.SellListViewHolder
 
 class SellListAdapter(private val listener: ItemClickListener) : RecyclerView.Adapter<SellListViewHolder>() {
-    private var items: List<Sale>? = null
+    private var items = ArrayList<Sale>() ?: emptyList<Sale>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.sell_item, parent, false)
@@ -17,18 +17,14 @@ class SellListAdapter(private val listener: ItemClickListener) : RecyclerView.Ad
     }
 
     override fun getItemCount(): Int {
-        return if (items == null) {
-            0
-        } else {
-            items!!.size
-        }
+        return items.size
     }
 
     override fun onBindViewHolder(holder: SellListViewHolder, position: Int) {
-        holder.bind(items!![position])
+        holder.bind(items[position])
     }
 
-    fun setItems(items: List<Sale>?) {
+    fun setItems(items: List<Sale>) {
         this.items = items
         notifyDataSetChanged()
     }

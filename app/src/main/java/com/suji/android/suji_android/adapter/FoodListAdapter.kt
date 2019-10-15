@@ -9,7 +9,7 @@ import com.suji.android.suji_android.listener.ItemClickListener
 import com.suji.android.suji_android.viewholders.FoodListViewHolder
 
 class FoodListAdapter(private val listener: ItemClickListener) : RecyclerView.Adapter<FoodListViewHolder>() {
-    private var items: List<Food>? = null
+    private var items = ArrayList() ?: emptyList<Food>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.food_item, parent, false)
@@ -17,18 +17,14 @@ class FoodListAdapter(private val listener: ItemClickListener) : RecyclerView.Ad
     }
 
     override fun getItemCount(): Int {
-        return if (items == null) {
-            0
-        } else {
-            items!!.size
-        }
+        return items.size
     }
 
     override fun onBindViewHolder(holder: FoodListViewHolder, position: Int) {
-        holder.bind(items!![position])
+        holder.bind(items[position])
     }
 
-    fun setItems(items: List<Food>?) {
+    fun setItems(items: List<Food>) {
         this.items = items
         notifyDataSetChanged()
     }

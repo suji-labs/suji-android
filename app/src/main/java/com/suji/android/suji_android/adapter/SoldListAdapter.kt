@@ -8,7 +8,7 @@ import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.viewholders.SoldListViewHolder
 
 class SoldListAdapter : RecyclerView.Adapter<SoldListViewHolder>() {
-    private var items: List<Sale>? = null
+    private var items = ArrayList<Sale>() ?: emptyList<Sale>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SoldListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.sold_item, parent, false)
@@ -16,18 +16,14 @@ class SoldListAdapter : RecyclerView.Adapter<SoldListViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return if (items == null) {
-            0
-        } else {
-            items!!.size
-        }
+        return items.size
     }
 
     override fun onBindViewHolder(holder: SoldListViewHolder, position: Int) {
-        holder.bind(items!![position])
+        holder.bind(items[position])
     }
 
-    fun setItems(items: List<Sale>?) {
+    fun setItems(items: List<Sale>) {
         this.items = items
         notifyDataSetChanged()
     }

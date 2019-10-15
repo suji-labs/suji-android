@@ -10,15 +10,15 @@ import java.text.DecimalFormat
 
 class SellListViewHolder(private val view: View, private val listener: ItemClickListener) : RecyclerView.ViewHolder(view) {
     fun bind(item: Sale) {
-        view.sell_item_sold.setOnClickListener(View.OnClickListener {
+        view.sell_item_sold.setOnClickListener {
             listener.onItemClick(it, item)
-        })
-        view.sell_item_modify.setOnClickListener(View.OnClickListener {
+        }
+        view.sell_item_modify.setOnClickListener {
             listener.onItemClick(it, item)
-        })
-        view.sell_item_delete.setOnClickListener(View.OnClickListener {
+        }
+        view.sell_item_delete.setOnClickListener {
             listener.onItemClick(it, item)
-        })
+        }
 
         view.sell_item_name.text = "총 금액"
         view.sell_item_price.text =

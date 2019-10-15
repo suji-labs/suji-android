@@ -31,38 +31,42 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
                 android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/sell_item_price" />
+                app:layout_constraintTop_toBottomOf="@id/sell_item_price"
+                app:layout_constraintBottom_toTopOf="@id/sell_item_button_group" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/sell_item_sold"
-                android:layout_width="wrap_content"
+        <LinearLayout
+                android:id="@+id/sell_item_button_group"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/sell"
-                app:bootstrapBrand="success"
+                android:gravity="end"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/sell_item_modify" />
+                app:layout_constraintRight_toRightOf="parent">
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/sell_item_modify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/modify"
-                app:bootstrapBrand="primary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/sell_item_sold"
-                app:layout_constraintRight_toLeftOf="@id/sell_item_delete" />
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/sell_item_sold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sell"
+                    app:bootstrapBrand="success"
+                    app:layout_constraintRight_toLeftOf="@id/sell_item_modify" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/sell_item_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                app:bootstrapBrand="danger"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/sell_item_modify"
-                app:layout_constraintRight_toRightOf="parent" />
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/sell_item_modify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/modify"
+                    app:bootstrapBrand="primary"
+                    app:layout_constraintLeft_toRightOf="@id/sell_item_sold"
+                    app:layout_constraintRight_toLeftOf="@id/sell_item_delete" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/sell_item_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    app:bootstrapBrand="danger"
+                    app:layout_constraintLeft_toRightOf="@id/sell_item_modify"
+                    app:layout_constraintRight_toRightOf="parent" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.beardedhen.androidbootstrap.BootstrapWell>

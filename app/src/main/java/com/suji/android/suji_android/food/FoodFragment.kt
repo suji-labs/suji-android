@@ -13,13 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodListAdapter
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
-import kotlinx.android.synthetic.main.create_submenu_layout.view.*
+import kotlinx.android.synthetic.main.submenu_layout.view.*
 import kotlinx.android.synthetic.main.food_create_dialog.view.*
 import kotlinx.android.synthetic.main.food_fragment.view.*
 import kotlinx.android.synthetic.main.submenu_item.view.*
@@ -111,7 +110,7 @@ class FoodFragment : Fragment() {
                         .let {
                             it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
                                 override fun onClick(v: View?) {
-                                    val subMenuLayout = layoutInflater.inflate(R.layout.create_submenu_layout, null)
+                                    val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, null)
                                     subMenuLayout.submenu_delete.setOnClickListener {
                                         dialogView.create_sub_menu.removeView(subMenuLayout)
                                     }
