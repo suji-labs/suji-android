@@ -32,7 +32,7 @@ import java.text.DecimalFormat
 class SellFragment : Fragment() {
     private lateinit var adapter: SellListAdapter
     private lateinit var spinnerAdapter: FoodSaleListAdapter
-    private var food: Food? = null
+    private var food = Food() ?: Food()
     private val sellViewModel: SellViewModel by lazy {
         ViewModelProviders.of(this).get(SellViewModel::class.java)
     }
@@ -213,11 +213,9 @@ class SellFragment : Fragment() {
                             it.getButton(AlertDialog.BUTTON_NEUTRAL)
                                 .setOnClickListener(object : View.OnClickListener {
                                     override fun onClick(v: View?) {
-                                        val foodCountString =
-                                            dialogView.sell_main_food_count.text.toString()
-                                        var item: Food? = sale.foods.find { it.name == food!!.name }
+                                        val foodCount = dialogView.sell_main_food_count.text.toString()
 
-                                        if (Utils.blankString(foodCountString)) {
+                                        if (Utils.blankString(foodCount)) {
                                             Toast.makeText(
                                                 context,
                                                 "수량을 확인하세요!",
@@ -226,20 +224,18 @@ class SellFragment : Fragment() {
                                             return
                                         }
 
-                                        if (Utils.nullCheck(item)) {
-                                            item = food
+                                        if (food.name == "") {
+                                            Toast.makeText(context, "물건을 선택하세요!", Toast.LENGTH_SHORT).show()
                                         } else {
-                                            sale.foods.remove(item)
-                                        }
-
-                                        sale.foods.add(
-                                            Food(
-                                                item!!.name,
-                                                item.price,
-                                                item.sub,
-                                                item.count + foodCountString.toInt()
+                                            sale.foods.add(
+                                                Food(
+                                                    food.name,
+                                                    food.price,
+                                                    food.sub,
+                                                    foodCount.toInt()
+                                                )
                                             )
-                                        )
+                                        }
 
                                         sale.price = sumOfPrice(sale)
 
@@ -320,7 +316,7 @@ class SellFragment : Fragment() {
                                             val foodCountString =
                                                 dialogView.sell_main_food_count.text.toString()
                                             val removeItem: Food? =
-                                                item.foods.find { it.name == food!!.name }
+                                                item.foods.find { it.name == food.name }
                                             val foodCount: Int
 
                                             if (Utils.blankString(foodCountString)) {
@@ -345,10 +341,10 @@ class SellFragment : Fragment() {
                                                 }
                                                 item.foods.add(
                                                     Food(
-                                                        food!!.name,
-                                                        food!!.price,
-                                                        food!!.sub,
-                                                        food!!.count + foodCount
+                                                        food.name,
+                                                        food.price,
+                                                        food.sub,
+                                                        food.count + foodCount
                                                     )
                                                 )
                                             } else {

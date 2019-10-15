@@ -16,4 +16,6 @@ data class Food(
     var count: Int = 0,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
-)
+) {
+    constructor() : this("", 0, ArrayList<Food>(), 0)
+}
