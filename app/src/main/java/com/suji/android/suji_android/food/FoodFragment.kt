@@ -85,7 +85,7 @@ class FoodFragment : Fragment() {
                                     subMenuView.create_submenu_name_edit_text.text.clear()
                                     subMenuView.create_submenu_price_edit_text.text.clear()
 
-                                    subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
+                                    subMenuList.add(Food(subMenuName, subMenuPrice.toInt(), id = i))
                                 }
 
                                 if (subMenuList.size == 0) {
@@ -149,7 +149,7 @@ class FoodFragment : Fragment() {
                                     for (i in 0 until item.sub.size) {
                                         val subMenuView = dialogView.create_sub_menu.getChildAt(i)
                                         val subMenuName = subMenuView.submenu_name.text.toString()
-                                        val subMenuPrice = subMenuView.submenu_name_edit_text.text.toString()
+                                        val subMenuPrice = subMenuView.submenu_count_edit_text.text.toString()
                                         subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
                                     }
 

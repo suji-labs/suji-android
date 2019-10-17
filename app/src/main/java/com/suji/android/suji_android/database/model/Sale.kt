@@ -15,8 +15,8 @@ data class Sale(
     var time: Long,
     @ColumnInfo(name = "foods")
     var foods: HashSet<Food> = HashSet<Food>(),
-    @ColumnInfo(name = "sell")
-    var sell: Boolean = false,
+    @ColumnInfo(name = "isSale")
+    var isSale: Boolean = false,
     @ColumnInfo(name = "pay")
     var pay: Int = -1,
     @PrimaryKey(autoGenerate = true)

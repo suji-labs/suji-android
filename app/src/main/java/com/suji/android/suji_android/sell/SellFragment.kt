@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.beardedhen.androidbootstrap.BootstrapEditText
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodSaleListAdapter
 import com.suji.android.suji_android.adapter.SellListAdapter
@@ -71,44 +70,17 @@ class SellFragment : Fragment() {
     }
 
     private fun sumOfPrice(sale: Sale): Int {
-        var subFoodCount = 0
         var subSumPrice = 0
         var mainSumPrice = 0
 
-        sale.foods.iterator().let { iter ->
-            while (iter.hasNext()) {
-                val f = iter.next()
-                mainSumPrice += f.price * f.count
-            }
-        }
+        sale.foods.iterator().let { main ->
+            while (main.hasNext()) {
+                val food = main.next()
+                mainSumPrice += food.price * food.count
 
-        for (item in sale.foods) {
-            if (item.sub.size == 0) {
-                continue
-            }
-
-            for (i in 0 until item.sub.size) {
-                val subMenuLayout = dialogView.sell_sub_food_layout.getChildAt(i)
-
-                if (!Utils.nullCheck(subMenuLayout.submenu_name_edit_text.text.toString()) &&
-                    Utils.blankString(subMenuLayout.submenu_name_edit_text.text.toString())
-                ) {
-                    continue
+                for (sub in food.sub) {
+                    subSumPrice += sub.price * sub.count
                 }
-
-                subFoodCount = subMenuLayout.submenu_name_edit_text.text.toString().toInt()
-
-                subMenuLayout.submenu_name_edit_text.text.clear()
-
-                sale.foods.find { it.name == item.name }?.let {
-                    it.sub.find { it.name == item.sub[i].name }?.let {
-                        it.count += subFoodCount
-                        item.sub[i].count = it.count
-                    }
-                }
-
-                subSumPrice += item.sub[i].price * (item.sub[i].count)
-                subMenuLayout.submenu_name_edit_text.text.clear()
             }
         }
 
@@ -227,12 +199,26 @@ class SellFragment : Fragment() {
                                         if (food.name == "") {
                                             Toast.makeText(context, "물건을 선택하세요!", Toast.LENGTH_SHORT).show()
                                         } else {
+                                            for (i in 0 until food.sub.size) {
+                                                val subMenuLayout = dialogView.sell_sub_food_layout.getChildAt(i)
+                                                val subCount = subMenuLayout.submenu_count_edit_text.text.toString()
+
+                                                if (!Utils.nullCheck(subCount) && Utils.blankString(subCount)) {
+                                                    continue
+                                                }
+
+                                                food.sub[i].count = subCount.toInt()
+
+                                                subMenuLayout.submenu_count_edit_text.text.clear()
+                                            }
+
                                             sale.foods.add(
                                                 Food(
                                                     food.name,
                                                     food.price,
                                                     food.sub,
-                                                    foodCount.toInt()
+                                                    foodCount.toInt(),
+                                                    food.id
                                                 )
                                             )
                                         }
@@ -262,7 +248,7 @@ class SellFragment : Fragment() {
                         .setPositiveButton("현금", object : DialogInterface.OnClickListener {
                             override fun onClick(dialog: DialogInterface?, which: Int) {
                                 if (item is Sale) {
-                                    item.sell = true
+                                    item.isSale = true
                                     item.pay = Constant.PayType.CASH
                                     sellViewModel.update(item)
                                 }
@@ -271,7 +257,7 @@ class SellFragment : Fragment() {
                         .setNegativeButton("카드", object : DialogInterface.OnClickListener {
                             override fun onClick(dialog: DialogInterface?, which: Int) {
                                 if (item is Sale) {
-                                    item.sell = true
+                                    item.isSale = true
                                     item.pay = Constant.PayType.CARD
                                     sellViewModel.update(item)
                                 }
@@ -313,13 +299,12 @@ class SellFragment : Fragment() {
                                 it.getButton(AlertDialog.BUTTON_NEUTRAL)
                                     .setOnClickListener(object : View.OnClickListener {
                                         override fun onClick(v: View?) {
-                                            val foodCountString =
+                                            val foodCount =
                                                 dialogView.sell_main_food_count.text.toString()
                                             val removeItem: Food? =
-                                                item.foods.find { it.name == food.name }
-                                            val foodCount: Int
+                                                item.foods.find { item -> item.id == food.id }
 
-                                            if (Utils.blankString(foodCountString)) {
+                                            if (Utils.blankString(foodCount)) {
                                                 Toast.makeText(
                                                     context,
                                                     "수량을 확인하세요!",
@@ -328,45 +313,33 @@ class SellFragment : Fragment() {
                                                 return
                                             }
 
-                                            foodCount = foodCountString.toInt()
-
-                                            if (Utils.nullCheck(removeItem)) {
-                                                if (foodCount < 0) {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "주문되지 않은 음식은 뺄 수 없습니다!",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                    return
-                                                }
-                                                item.foods.add(
-                                                    Food(
-                                                        food.name,
-                                                        food.price,
-                                                        food.sub,
-                                                        food.count + foodCount
-                                                    )
-                                                )
+                                            if (removeItem == null) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "음식이 주문되지 않았습니다!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                return
                                             } else {
-                                                if (foodCount < 0 && removeItem!!.count + foodCount < 0) {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "수량을 확인해주세요!",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
+                                                if (food.count + foodCount.toInt() < 0) {
+                                                    Toast.makeText(context, "수량을 확인해주세요!", Toast.LENGTH_SHORT).show()
                                                     return
                                                 }
-                                                if (foodCount + removeItem!!.count > 0) {
-                                                    item.foods.add(
-                                                        Food(
-                                                            removeItem.name,
-                                                            removeItem.price,
-                                                            removeItem.sub,
-                                                            removeItem.count + foodCount
-                                                        )
-                                                    )
+                                                for (i in 0 until food.sub.size) {
+                                                    val subMenuLayout = dialogView.sell_sub_food_layout.getChildAt(i)
+                                                    val subCount = subMenuLayout.submenu_count_edit_text.text.toString()
+
+                                                    if (!Utils.nullCheck(subCount) && Utils.blankString(subCount)) {
+                                                        continue
+                                                    }
+
+                                                    food.sub[i].count += subCount.toInt()
+
+                                                    subMenuLayout.submenu_count_edit_text.text.clear()
                                                 }
+                                                val count = removeItem.count
                                                 item.foods.remove(removeItem)
+                                                item.foods.add(Food(food.name, food.price, food.sub, count + foodCount.toInt(), food.id))
                                             }
 
                                             item.price = sumOfPrice(item)

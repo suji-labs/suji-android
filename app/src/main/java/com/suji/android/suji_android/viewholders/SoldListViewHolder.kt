@@ -13,7 +13,7 @@ import java.text.DecimalFormat
 
 class SoldListViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
     fun bind(item: Sale) {
-        if (item.sell) {
+        if (item.isSale) {
             view.sold_item_name.text = "총 금액"
             view.sold_item_price.text = DecimalFormat.getCurrencyInstance().format(item.price).toString()
             view.sold_item_description.text = ""

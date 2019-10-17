@@ -15,7 +15,19 @@ data class Food(
     @ColumnInfo(name = "count")
     var count: Int = 0,
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    val id: Int = 0
 ) {
     constructor() : this("", 0, ArrayList<Food>(), 0)
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Food) {
+            return other.id == this.id
+        }
+
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
 }
