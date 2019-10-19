@@ -3,7 +3,7 @@ package com.suji.android.suji_android.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.joda.time.DateTime
+import com.suji.android.suji_android.helper.Constant
 
 @Entity(tableName = "sale")
 data class Sale(
@@ -18,7 +18,7 @@ data class Sale(
     @ColumnInfo(name = "isSale")
     var isSale: Boolean = false,
     @ColumnInfo(name = "pay")
-    var pay: Int = -1,
+    var pay: Int = Constant.PayType.NOT_PAY,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )

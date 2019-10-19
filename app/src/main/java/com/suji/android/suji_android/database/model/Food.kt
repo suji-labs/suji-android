@@ -21,7 +21,7 @@ data class Food(
 
     override fun equals(other: Any?): Boolean {
         if (other is Food) {
-            return other.id == this.id
+            return other.name == this.name
         }
 
         return false

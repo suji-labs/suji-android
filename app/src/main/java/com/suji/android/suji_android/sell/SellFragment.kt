@@ -327,19 +327,24 @@ class SellFragment : Fragment() {
                                                 }
                                                 for (i in 0 until food.sub.size) {
                                                     val subMenuLayout = dialogView.sell_sub_food_layout.getChildAt(i)
+                                                    val subName = subMenuLayout.submenu_name.text.toString()
                                                     val subCount = subMenuLayout.submenu_count_edit_text.text.toString()
+                                                    val temp = removeItem.sub.find { item -> item.name == subName }
 
                                                     if (!Utils.nullCheck(subCount) && Utils.blankString(subCount)) {
                                                         continue
                                                     }
 
-                                                    food.sub[i].count += subCount.toInt()
+                                                    if (temp != null) {
+                                                        temp.count += subCount.toInt()
+                                                    } else {
+                                                        removeItem.sub.add(food)
+                                                    }
 
                                                     subMenuLayout.submenu_count_edit_text.text.clear()
                                                 }
-                                                val count = removeItem.count
+                                                item.foods.add(Food(removeItem.name, removeItem.price, removeItem.sub, removeItem.count + foodCount.toInt(), removeItem.id))
                                                 item.foods.remove(removeItem)
-                                                item.foods.add(Food(food.name, food.price, food.sub, count + foodCount.toInt(), food.id))
                                             }
 
                                             item.price = sumOfPrice(item)
