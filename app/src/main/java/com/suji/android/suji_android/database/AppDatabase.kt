@@ -8,10 +8,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.dao.FoodDAO
 import com.suji.android.suji_android.database.dao.SaleDAO
+import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
+import com.suji.android.suji_android.executor.AppExecutors
 
 @Database(entities = [Food::class, Sale::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
@@ -29,7 +30,6 @@ abstract class AppDatabase : RoomDatabase() {
                     if (INSTANCE == null) {
                         INSTANCE =
                             buildDatabase(context.applicationContext)
-//                        insertData(INSTANCE!!)
                     }
                 }
             }
@@ -46,8 +46,8 @@ abstract class AppDatabase : RoomDatabase() {
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
-//                        val database = getInstance(appContext)
-//                        insertData(database!!)
+                        val database = getInstance(appContext)
+                        insertData(database!!)
                         Log.i("AppDataBase", "after insertFood data")
                     }
                 })
@@ -58,13 +58,21 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun insertData(database: AppDatabase) {
-            Thread(Runnable {
-                database.runInTransaction {
-                    database.foodDAO().insert(Food("보리밥", 6000))
-                    database.foodDAO().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
-                    database.foodDAO().insert(Food("닭볶음탕", 20000))
+            AppExecutors.diskIO().execute(
+                Runnable {
+                    database.runInTransaction {
+                        database.foodDAO().insert(Food("보리밥", 6000))
+                        database.foodDAO().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
+                        database.foodDAO().insert(Food("닭볶음탕", 20000))
+                        val sub = ArrayList<Food>()
+                        sub.add(Food("치즈", 1000))
+                        sub.add(Food("볶음밥", 2000))
+                        sub.add(Food("우동 사리", 1000))
+                        sub.add(Food("라면 사리", 1000))
+                        database.foodDAO().insert(Food("닭갈비", 8000, sub))
+                    }
                 }
-            }).start()
+            )
         }
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {

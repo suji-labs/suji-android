@@ -35,32 +35,32 @@ dependencies {
     // android bootstrap
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
     // recycler view & card view
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta05'
     implementation 'androidx.cardview:cardview:1.0.0'
     // life cycle
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.1.0'
     // room
-    implementation 'androidx.room:room-runtime:2.2.0-rc01'
-    kapt 'androidx.room:room-compiler:2.2.0-rc01'
+    implementation 'androidx.room:room-runtime:2.2.0'
+    kapt 'androidx.room:room-compiler:2.2.0'
     // joda time
     implementation 'joda-time:joda-time:2.10.3'
     // gson
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     // debug room database
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     // viewpager2
-    implementation 'androidx.viewpager2:viewpager2:1.0.0-beta04'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-beta05'
     // tab style
-    implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
     // threetenbp
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
     // rxjava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
-    implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
+    implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0'
     // androidx
     implementation 'androidx.core:core-ktx:1.1.0'
 }

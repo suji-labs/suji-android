@@ -16,7 +16,6 @@ class DataRepository private constructor(private val database: AppDatabase) {
     private val observableFood: MediatorLiveData<List<Food>> = MediatorLiveData()
     private val observableSale: MediatorLiveData<List<Sale>> = MediatorLiveData()
     private val observableSold: MediatorLiveData<List<Sale>> = MediatorLiveData()
-    private val executors: AppExecutors = AppExecutors()
 
     val food: LiveData<List<Food>> get() = observableFood
     val sale: LiveData<List<Sale>> get() = observableSale
@@ -44,35 +43,35 @@ class DataRepository private constructor(private val database: AppDatabase) {
 
     fun insert(o: Any) {
         when (o) {
-            is Food -> executors.diskIO().execute(Runnable { database.foodDAO().insert(o) })
-            is Sale -> executors.diskIO().execute(Runnable { database.saleDAO().insert(o) })
+            is Food -> AppExecutors.diskIO().execute(Runnable { database.foodDAO().insert(o) })
+            is Sale -> AppExecutors.diskIO().execute(Runnable { database.saleDAO().insert(o) })
         }
     }
 
     fun delete(o: Any) {
         when (o) {
-            is Food -> executors.diskIO().execute(Runnable { database.foodDAO().delete(o) })
-            is Sale -> executors.diskIO().execute(Runnable { database.saleDAO().delete(o) })
+            is Food -> AppExecutors.diskIO().execute(Runnable { database.foodDAO().delete(o) })
+            is Sale -> AppExecutors.diskIO().execute(Runnable { database.saleDAO().delete(o) })
         }
     }
 
     fun update(o: Any) {
         when (o) {
-            is Food -> executors.diskIO().execute(Runnable { database.foodDAO().update(o) })
-            is Sale -> executors.diskIO().execute(Runnable { database.saleDAO().update(o) })
+            is Food -> AppExecutors.diskIO().execute(Runnable { database.foodDAO().update(o) })
+            is Sale -> AppExecutors.diskIO().execute(Runnable { database.saleDAO().update(o) })
         }
     }
 
     fun loadProduct(isSale: Boolean): LiveData<List<Sale>> {
-        return executors.diskIO().submit(Callable { database.saleDAO().loadProduct(isSale) }).get()
+        return AppExecutors.diskIO().submit(Callable { database.saleDAO().loadProduct(isSale) }).get()
     }
 
     fun findSaleOfDate(start: DateTime, end: DateTime): List<Sale> {
-        return executors.diskIO().submit(Callable<List<Sale>> { database.saleDAO().findSaleOfDate(start, end) }).get()
+        return AppExecutors.diskIO().submit(Callable<List<Sale>> { database.saleDAO().findSaleOfDate(start, end) }).get()
     }
 
     fun deleteSoldDate(start: DateTime, end: DateTime) {
-        executors.diskIO().execute(Runnable { database.saleDAO().deleteSoldDate(start, end) })
+        AppExecutors.diskIO().execute(Runnable { database.saleDAO().deleteSoldDate(start, end) })
     }
 
     object Singleton {

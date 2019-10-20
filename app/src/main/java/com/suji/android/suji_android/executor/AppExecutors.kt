@@ -5,18 +5,12 @@ import android.os.Looper
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.Executors.newFixedThreadPool
 
-class AppExecutors private constructor(
-    private val diskIO: ExecutorService,
-    private val networkIO: ExecutorService,
-    private val mainThread: Executor
-) {
-
-    constructor() : this(
-        Executors.newSingleThreadExecutor(),
-        Executors.newFixedThreadPool(3),
-        MainThreadExecutor()
-    )
+object AppExecutors {
+    private val diskIO: ExecutorService = Executors.newSingleThreadExecutor()
+    private val networkIO: ExecutorService = newFixedThreadPool(3)
+    private val mainThread: Executor = MainThreadExecutor()
 
     fun diskIO(): ExecutorService {
         return diskIO

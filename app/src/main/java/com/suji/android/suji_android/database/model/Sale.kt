@@ -22,3 +22,39 @@ data class Sale(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )
+//    : Parcelable {
+//    constructor(parcel: Parcel) : this(
+//        parcel.readString() ?: "",
+//        parcel.readInt(),
+//        parcel.readLong(),
+//        parcel.readTypedObject(HashSet<Food>),
+//        parcel.readByte() != 0.toByte(),
+//        parcel.readInt(),
+//        parcel.readInt()
+//    ) {
+//    }
+//
+//    override fun writeToParcel(dest: Parcel, flags: Int) {
+//        dest.writeString(name)
+//        dest.writeInt(price)
+//        dest.writeLong(time)
+//        dest.writeTypedList(foods.toList())
+//        dest.writeByte(if (isSale) 1 else 0)
+//        dest.writeInt(pay)
+//        dest.writeInt(id)
+//    }
+//
+//    override fun describeContents(): Int {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//    }
+//
+//    companion object CREATOR : Parcelable.Creator<Sale> {
+//        override fun createFromParcel(parcel: Parcel): Sale {
+//            return Sale(parcel)
+//        }
+//
+//        override fun newArray(size: Int): Array<Sale?> {
+//            return arrayOfNulls(size)
+//        }
+//    }
+//}
