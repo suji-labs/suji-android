@@ -3,6 +3,7 @@ package com.suji.android.suji_android.food
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +19,9 @@ import com.suji.android.suji_android.adapter.FoodListAdapter
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
-import kotlinx.android.synthetic.main.submenu_layout.view.*
 import kotlinx.android.synthetic.main.food_create_dialog.view.*
 import kotlinx.android.synthetic.main.food_fragment.view.*
-import kotlinx.android.synthetic.main.submenu_item.view.*
+import kotlinx.android.synthetic.main.submenu_layout.view.*
 
 class FoodFragment : Fragment() {
     private lateinit var adapter: FoodListAdapter
@@ -85,7 +85,7 @@ class FoodFragment : Fragment() {
                                     subMenuView.create_submenu_name_edit_text.text.clear()
                                     subMenuView.create_submenu_price_edit_text.text.clear()
 
-                                    subMenuList.add(Food(subMenuName, subMenuPrice.toInt(), id = i))
+                                    subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
                                 }
 
                                 if (subMenuList.size == 0) {
@@ -94,13 +94,14 @@ class FoodFragment : Fragment() {
                                     foodViewModel.insert(Food(foodName, foodPrice.toInt(), subMenuList))
                                 }
 
-                                (dialogView.parent as ViewGroup).removeView(dialogView)
+                                (dialogView.parent as ViewGroup).removeAllViews()
                                 dialog!!.dismiss()
                             }
                         })
                         .setNegativeButton("취소", object : DialogInterface.OnClickListener {
                             override fun onClick(dialog: DialogInterface?, which: Int) {
-                                (dialogView.parent as ViewGroup).removeView(dialogView)
+                                (dialogView.parent as ViewGroup).removeAllViews()
+                                (dialogView.create_sub_menu as ViewGroup).removeAllViews()
                                 dialog!!.dismiss()
                             }
                         })
@@ -110,7 +111,7 @@ class FoodFragment : Fragment() {
                         .let {
                             it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
                                 override fun onClick(v: View?) {
-                                    val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, null)
+                                    val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, dialogView.create_sub_menu, false)
                                     subMenuLayout.submenu_delete.setOnClickListener {
                                         dialogView.create_sub_menu.removeView(subMenuLayout)
                                     }
@@ -134,6 +135,16 @@ class FoodFragment : Fragment() {
                         dialogView.create_menu_edit_name.setText(item.name)
                         dialogView.create_menu_edit_price.setText(item.price.toString())
 
+                        for (subItem in item.sub) {
+                            val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, dialogView.create_sub_menu, false)
+                            subMenuLayout.submenu_delete.setOnClickListener {
+                                dialogView.create_sub_menu.removeView(subMenuLayout)
+                            }
+                            subMenuLayout.create_submenu_name_edit_text.setText(subItem.name)
+                            subMenuLayout.create_submenu_price_edit_text.setText(subItem.price.toString())
+                            dialogView.create_sub_menu.addView(subMenuLayout)
+                        }
+
                         AlertDialog.Builder(activity, R.style.AppTheme_AppCompat_CustomDialog)
                             .setPositiveButton("수정", object : DialogInterface.OnClickListener {
                                 override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -146,26 +157,36 @@ class FoodFragment : Fragment() {
                                         return
                                     }
 
-                                    for (i in 0 until item.sub.size) {
+                                    for (i in 0 until dialogView.create_sub_menu.childCount) {
                                         val subMenuView = dialogView.create_sub_menu.getChildAt(i)
-                                        val subMenuName = subMenuView.submenu_name.text.toString()
-                                        val subMenuPrice = subMenuView.submenu_count_edit_text.text.toString()
+                                        val subMenuName = subMenuView.create_submenu_name_edit_text.text.toString()
+                                        val subMenuPrice = subMenuView.create_submenu_price_edit_text.text.toString()
+                                        Log.i("subItem", subMenuName)
+
+                                        subMenuView.create_submenu_name_edit_text.text.clear()
+                                        subMenuView.create_submenu_price_edit_text.text.clear()
+
                                         subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
                                     }
 
-                                    if (item.sub.size == 0) {
-                                        foodViewModel.update(Food(foodName, foodPrice.toInt(), id = item.id))
-                                    } else {
-                                        foodViewModel.update(Food(foodName, foodPrice.toInt(), subMenuList, item.id))
+                                    item.name = foodName
+                                    item.price = foodPrice.toInt()
+
+                                    if (item.sub.size != 0) {
+                                        item.sub = subMenuList
                                     }
 
-                                    (dialogView.parent as ViewGroup).removeView(dialogView)
+                                    foodViewModel.update(item)
+
+                                    (dialogView.parent as ViewGroup).removeAllViews()
+                                    (dialogView.create_sub_menu as ViewGroup).removeAllViews()
                                     dialog!!.dismiss()
                                 }
                             })
                             .setNegativeButton("취소", object : DialogInterface.OnClickListener {
                                 override fun onClick(dialog: DialogInterface?, which: Int) {
-                                    (dialogView.parent as ViewGroup).removeView(dialogView)
+                                    (dialogView.parent as ViewGroup).removeAllViews()
+                                    (dialogView.create_sub_menu as ViewGroup).removeAllViews()
                                     dialog!!.dismiss()
                                 }
                             })
@@ -173,6 +194,16 @@ class FoodFragment : Fragment() {
                             .setView(dialogView)
                             .show()
                             .let {
+                                it.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(object : View.OnClickListener {
+                                    override fun onClick(v: View?) {
+                                        val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, dialogView.create_sub_menu, false)
+                                        subMenuLayout.submenu_delete.setOnClickListener {
+                                            dialogView.create_sub_menu.removeView(subMenuLayout)
+                                        }
+                                        dialogView.create_sub_menu.addView(subMenuLayout)
+                                    }
+                                })
+
                                 Utils.dialogReSizing(it)
                             }
                     }

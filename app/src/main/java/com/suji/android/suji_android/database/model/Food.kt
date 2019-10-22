@@ -7,17 +7,29 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "food")
 data class Food(
     @ColumnInfo(name = "name")
-    val name: String,
+    var name: String,
     @ColumnInfo(name = "price")
-    val price: Int,
+    var price: Int,
     @ColumnInfo(name = "sub")
-    val sub: ArrayList<Food> = ArrayList<Food>(),
+    var sub: ArrayList<Food> = ArrayList<Food>(),
     @ColumnInfo(name = "count")
     var count: Int = 0,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) {
     constructor() : this("", 0, ArrayList<Food>(), 0)
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Food) {
+            return other.name == this.name
+        }
+
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
 }
 //    : Parcelable {
 //    constructor(parcel: Parcel) : this(

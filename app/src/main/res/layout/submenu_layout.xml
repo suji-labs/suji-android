@@ -36,6 +36,7 @@
             android:id="@+id/create_submenu_price_edit_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:inputType="number"
             app:layout_constraintLeft_toRightOf="@id/create_submenu_price"
             app:layout_constraintRight_toLeftOf="@id/submenu_delete"
             app:layout_constraintTop_toTopOf="parent" />
