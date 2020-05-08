@@ -22,4 +22,22 @@ class SellViewModel(application: Application) : AndroidViewModel(application) {
     fun update(sale: Sale) {
         BasicApp.instance.getRepository().update(sale)
     }
+
+    fun sumOfPrice(sale: Sale): Int {
+        var subSumPrice = 0
+        var mainSumPrice = 0
+
+        sale.foods.iterator().let { main ->
+            while (main.hasNext()) {
+                val food = main.next()
+                mainSumPrice += food.price * food.count
+
+                for (sub in food.sub) {
+                    subSumPrice += sub.price * sub.count
+                }
+            }
+        }
+
+        return mainSumPrice + subSumPrice
+    }
 }

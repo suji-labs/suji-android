@@ -71,24 +71,6 @@ class SellFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun sumOfPrice(sale: Sale): Int {
-        var subSumPrice = 0
-        var mainSumPrice = 0
-
-        sale.foods.iterator().let { main ->
-            while (main.hasNext()) {
-                val food = main.next()
-                mainSumPrice += food.price * food.count
-
-                for (sub in food.sub) {
-                    subSumPrice += sub.price * sub.count
-                }
-            }
-        }
-
-        return mainSumPrice + subSumPrice
-    }
-
     private fun initView() {
         sellViewModel.getAllSale()
             .observeOn(AndroidSchedulers.mainThread())
@@ -228,7 +210,7 @@ class SellFragment : Fragment() {
                                             )
                                         }
 
-                                        sale.price = sumOfPrice(sale)
+                                        sale.price = sellViewModel.sumOfPrice(sale)
 
                                         dialogView.food_sale_total_price.text =
                                             DecimalFormat.getCurrencyInstance().format(sale.price)
@@ -352,7 +334,7 @@ class SellFragment : Fragment() {
                                                 item.foods.remove(removeItem)
                                             }
 
-                                            item.price = sumOfPrice(item)
+                                            item.price = sellViewModel.sumOfPrice(item)
 
                                             dialogView.food_sale_total_price.text =
                                                 DecimalFormat.getCurrencyInstance()

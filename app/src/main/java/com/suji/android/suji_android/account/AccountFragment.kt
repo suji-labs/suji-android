@@ -21,8 +21,9 @@ import kotlinx.android.synthetic.main.account_fragment.view.*
 import java.text.DecimalFormat
 
 class AccountFragment : Fragment() {
-    private lateinit var adapter: SoldListAdapter
-    private lateinit var items: List<Sale>
+    private val adapter: SoldListAdapter by lazy {
+        SoldListAdapter()
+    }
     private val viewModel: AccountViewModel by lazy {
         ViewModelProvider(this).get(AccountViewModel::class.java)
     }
@@ -37,15 +38,14 @@ class AccountFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.account_fragment, container, false)
 
-        adapter = SoldListAdapter()
         view.sold_fragment_items.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         view.sold_fragment_items.adapter = adapter
 
-//        view.account_all_btn.setOnClickListener(listener)
-//        view.account_day_btn.setOnClickListener(listener)
-//        view.account_week_btn.setOnClickListener(listener)
-//        view.account_month_btn.setOnClickListener(listener)
+        view.account_all_btn.setOnClickListener(listener)
+        view.account_day_btn.setOnClickListener(listener)
+        view.account_week_btn.setOnClickListener(listener)
+        view.account_month_btn.setOnClickListener(listener)
 
         return view
     }
@@ -88,48 +88,60 @@ class AccountFragment : Fragment() {
             ).addTo(disposeBag)
     }
 
-//    private val listener: View.OnClickListener = object : View.OnClickListener {
-//        override fun onClick(v: View?) {
-//            when (v!!.id) {
-//                R.id.account_day_btn -> {
-//                    items = viewModel.findSaleOfDate(
-//                        Utils.getStartTime(),
-//                        Utils.getEndTime()
-//                    )
-//                    adapter.setItems(items)
-//
-//                    computePrice(items)
-//                }
-//                R.id.account_week_btn -> {
-//                    items = viewModel.findSaleOfDate(
-//                        Utils.getStartWeek(),
-//                        Utils.getEndWeek()
-//                    )
-//                    adapter.setItems(items)
-//
-//                    computePrice(items)
-//                }
-//                R.id.account_month_btn -> {
-//                    items = viewModel.findSaleOfDate(
-//                        Utils.getStartDate(0),
-//                        Utils.getEndDate(0)
-//                    )
-//                    adapter.setItems(items)
-//
-//                    computePrice(items)
-//                }
-//                R.id.account_all_btn -> {
-//                    viewModel.getAllSold().observe(this@AccountFragment, object : Observer<List<Sale>> {
-//                        override fun onChanged(t: List<Sale>?) {
-//                            t?.let {
-//                                adapter.setItems(t)
-//
-//                                computePrice(t)
-//                            }
-//                        }
-//                    })
-//                }
-//            }
-//        }
-//    }
+    private val listener: View.OnClickListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            when (v!!.id) {
+                R.id.account_day_btn -> {
+                    viewModel.findSaleOfDate(
+                        Utils.getStartTime(),
+                        Utils.getEndTime()
+                    ).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            {
+                                adapter.setItems(it)
+                                computePrice(it)
+                            },
+                            { e -> e.printStackTrace() }
+                        )
+                }
+                R.id.account_week_btn -> {
+                    viewModel.findSaleOfDate(
+                        Utils.getStartWeek(),
+                        Utils.getEndWeek()
+                    ).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            {
+                                adapter.setItems(it)
+                                computePrice(it)
+                            },
+                            { e -> e.printStackTrace() }
+                        )
+                }
+                R.id.account_month_btn -> {
+                    viewModel.findSaleOfDate(
+                        Utils.getStartDate(0),
+                        Utils.getEndDate(0)
+                    ).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            {
+                                adapter.setItems(it)
+                                computePrice(it)
+                            },
+                            { e -> e.printStackTrace() }
+                        )
+                }
+                R.id.account_all_btn -> {
+                    viewModel.getAllSold()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            {
+                                adapter.setItems(it)
+                                computePrice(it)
+                            },
+                            { e -> e.printStackTrace() }
+                        )
+                }
+            }
+        }
+    }
 }
