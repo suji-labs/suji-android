@@ -8,10 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
-import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
@@ -23,6 +21,9 @@ import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.Constant
 import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.food_sell_dialog.view.*
 import kotlinx.android.synthetic.main.sell_fragment.view.*
 import kotlinx.android.synthetic.main.submenu_item.view.*
@@ -33,21 +34,22 @@ class SellFragment : Fragment() {
     private lateinit var spinnerAdapter: FoodSaleListAdapter
     private var food = Food() ?: Food()
     private val sellViewModel: SellViewModel by lazy {
-        ViewModelProviders.of(this).get(SellViewModel::class.java)
+        ViewModelProvider(this).get(SellViewModel::class.java)
     }
     private val foodViewModel: FoodViewModel by lazy {
-        ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        ViewModelProvider(this).get(FoodViewModel::class.java)
     }
     private val dialogView: View by lazy {
         LayoutInflater.from(context).inflate(R.layout.food_sell_dialog, null, false)
     }
+    private val disposeBag = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        initViewModel()
+        initView()
 
         val view = inflater.inflate(R.layout.sell_fragment, container, false)
         adapter = SellListAdapter(listener)
@@ -87,22 +89,25 @@ class SellFragment : Fragment() {
         return mainSumPrice + subSumPrice
     }
 
-    private fun initViewModel() {
-        sellViewModel.getAllSale().observe(this, object : Observer<List<Sale>> {
-            override fun onChanged(@Nullable sales: List<Sale>?) {
-                sales?.let {
-                    adapter.setItems(sales)
-                }
-            }
-        })
+    private fun initView() {
+        sellViewModel.getAllSale()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { adapter.setItems(it) },
+                { e -> e.printStackTrace() }
+            ).addTo(disposeBag)
 
-        foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
-            override fun onChanged(@Nullable foods: List<Food>?) {
-                foods?.let {
-                    spinnerAdapter.setItems(it)
-                }
-            }
-        })
+        foodViewModel.getAllFood()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { spinnerAdapter.setItems(it) },
+                { e -> e.printStackTrace() }
+            ).addTo(disposeBag)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposeBag.dispose()
     }
 
     private val spinnerItemClick: AdapterView.OnItemSelectedListener =

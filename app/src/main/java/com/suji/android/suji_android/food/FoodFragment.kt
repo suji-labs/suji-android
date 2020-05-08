@@ -8,10 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
@@ -19,6 +17,9 @@ import com.suji.android.suji_android.adapter.FoodListAdapter
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.food_create_dialog.view.*
 import kotlinx.android.synthetic.main.food_fragment.view.*
 import kotlinx.android.synthetic.main.submenu_layout.view.*
@@ -26,14 +27,15 @@ import kotlinx.android.synthetic.main.submenu_layout.view.*
 class FoodFragment : Fragment() {
     private lateinit var adapter: FoodListAdapter
     private val foodViewModel: FoodViewModel by lazy {
-        ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        ViewModelProvider(this).get(FoodViewModel::class.java)
     }
     private val dialogView: View by lazy {
         LayoutInflater.from(context).inflate(R.layout.food_create_dialog, null, false)
     }
+    private val disposeBag = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        initViewModel()
+        initView()
         val view = inflater.inflate(R.layout.food_fragment, container, false)
 
         adapter = FoodListAdapter(listener)
@@ -48,14 +50,18 @@ class FoodFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun initViewModel() {
-        foodViewModel.getAllFood().observe(this, object : Observer<List<Food>> {
-            override fun onChanged(@Nullable foods: List<Food>?) {
-                foods?.let {
-                    adapter.setItems(foods)
-                }
-            }
-        })
+    override fun onDestroy() {
+        super.onDestroy()
+        disposeBag.dispose()
+    }
+
+    private fun initView() {
+        foodViewModel.getAllFood()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { adapter.setItems(it) },
+                { e -> e.printStackTrace() }
+            ).addTo(disposeBag)
     }
 
     private val createFood: View.OnClickListener = object : View.OnClickListener {

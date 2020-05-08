@@ -8,11 +8,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.dao.FoodDAO
 import com.suji.android.suji_android.database.dao.SaleDAO
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.executor.AppExecutors
+import io.reactivex.Single
+import org.joda.time.DateTime
+import org.threeten.bp.Instant
 
 @Database(entities = [Food::class, Sale::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
@@ -22,17 +26,12 @@ abstract class AppDatabase : RoomDatabase() {
 
     object Singleton {
         private const val DATABASE_NAME = "suji-android"
-        private var INSTANCE: AppDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase? {
-            if (INSTANCE == null) {
-                synchronized(AppDatabase::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE =
-                            buildDatabase(context.applicationContext)
-                    }
-                }
-            }
+        private val INSTANCE: AppDatabase by lazy {
+            buildDatabase(BasicApp.instance)
+        }
+
+        fun getInstance(): AppDatabase {
             return INSTANCE
         }
 
@@ -46,8 +45,8 @@ abstract class AppDatabase : RoomDatabase() {
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
-                        val database = getInstance(appContext)
-                        insertData(database!!)
+                        val database = getInstance()
+                        insertData(database)
                         Log.i("AppDataBase", "after insertFood data")
                     }
                 })
@@ -58,21 +57,17 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun insertData(database: AppDatabase) {
-            AppExecutors.diskIO().execute(
-                Runnable {
-                    database.runInTransaction {
-                        database.foodDAO().insert(Food("보리밥", 6000))
-                        database.foodDAO().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
-                        database.foodDAO().insert(Food("닭볶음탕", 20000))
-                        val sub = ArrayList<Food>()
-                        sub.add(Food("치즈", 1000))
-                        sub.add(Food("볶음밥", 2000))
-                        sub.add(Food("우동 사리", 1000))
-                        sub.add(Food("라면 사리", 1000))
-                        database.foodDAO().insert(Food("닭갈비", 8000, sub))
-                    }
-                }
-            )
+            val sub = ArrayList<Food>()
+            sub.add(Food("치즈", 1000))
+            sub.add(Food("볶음밥", 2000))
+            sub.add(Food("우동 사리", 1000))
+            sub.add(Food("라면 사리", 1000))
+
+            BasicApp.instance.getRepository().insert(Food("보리밥", 6000))
+            BasicApp.instance.getRepository().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
+            BasicApp.instance.getRepository().insert(Food("닭볶음탕", 20000))
+            BasicApp.instance.getRepository().insert(Food("닭갈비", 8000, sub))
+            BasicApp.instance.getRepository().insert(Sale("보리밥", 6000, Instant.now().toEpochMilli()))
         }
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
