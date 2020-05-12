@@ -13,9 +13,6 @@ import com.suji.android.suji_android.database.dao.FoodDAO
 import com.suji.android.suji_android.database.dao.SaleDAO
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
-import com.suji.android.suji_android.executor.AppExecutors
-import io.reactivex.Single
-import org.joda.time.DateTime
 import org.threeten.bp.Instant
 
 @Database(entities = [Food::class, Sale::class], version = 1, exportSchema = false)

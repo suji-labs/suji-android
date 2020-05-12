@@ -21,14 +21,15 @@ data class Food(
 
     override fun equals(other: Any?): Boolean {
         if (other is Food) {
-            return other.name == this.name
+            return other.name == this.name && other.id == this.id
         }
 
         return false
     }
 
     override fun hashCode(): Int {
-        return super.hashCode()
+//        return super.hashCode()
+        return id
     }
 }
 //    : Parcelable {
