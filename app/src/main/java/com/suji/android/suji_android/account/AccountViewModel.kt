@@ -4,8 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
+import com.suji.android.suji_android.helper.Constant
 import io.reactivex.Flowable
-import org.joda.time.DateTime
+import org.threeten.bp.LocalDateTime
 
 class AccountViewModel(application: Application) : AndroidViewModel(application) {
     fun getAllSold(): Flowable<List<Sale>> {
@@ -24,11 +25,29 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
         BasicApp.instance.getRepository().update(sale)
     }
 
-    fun findSaleOfDate(start: DateTime, end: DateTime): Flowable<List<Sale>> {
-        return BasicApp.instance.getRepository().findSaleOfDate(start, end)
+    fun findSoldDate(start: Long, end: Long): Flowable<List<Sale>> {
+        return BasicApp.instance.getRepository().findSoldDate(start, end)
     }
 
-    fun deleteSoldDate(start: DateTime, end: DateTime) {
+    fun deleteSoldDate(start: Long, end: Long) {
         BasicApp.instance.getRepository().deleteSoldDate(start, end)
+    }
+
+    fun computePrice(items: List<Sale>, type: Int): Int {
+        var result = 0
+
+        if (type == Constant.PayType.ALL) {
+            items.forEach { sale ->
+                result += sale.price
+            }
+        } else {
+            items.forEach { sale ->
+                if (sale.pay == type) {
+                    result += sale.price
+                }
+            }
+        }
+
+        return result
     }
 }

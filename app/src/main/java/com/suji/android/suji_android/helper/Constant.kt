@@ -5,5 +5,6 @@ object Constant {
         const val NOT_PAY = -1
         const val CARD = 0
         const val CASH = 1
+        const val ALL = 2
     }
 }

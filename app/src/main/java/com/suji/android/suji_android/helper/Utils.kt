@@ -1,29 +1,15 @@
 package com.suji.android.suji_android.helper
 
 import android.app.AlertDialog
-import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
+import org.threeten.bp.DayOfWeek
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.TemporalAdjusters
 
 object Utils {
-    val format: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss")
-    private val days = intArrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-    private val dateTime = DateTime()
-
-    fun nullCheck(item: Any?): Boolean {
-        if (item == null) {
-            return true
-        }
-        return false
-    }
-
-    fun blankString(item: String): Boolean {
-        if (item == "") {
-            return true
-        }
-        return false
-    }
+    val format: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")
+    private val dateTime = LocalDateTime.now()
 
     fun dialogReSizing(dialog: AlertDialog) {
         dialog.window!!.attributes = dialog.window!!.attributes.apply {
@@ -34,63 +20,75 @@ object Utils {
         }
     }
 
-    private fun getDay(minusMonths: Int): Int {
-        return if (dateTime.monthOfYear == 2) {
-            if (dateTime.withYear(dateTime.year).year().isLeap) {
-                29
-            } else {
-                28
-            }
-        } else {
-            days[dateTime.minusMonths(minusMonths).monthOfYear - 1]
-        }
-    }
-
-    fun getStartDate(minusMonths: Int): DateTime {
+    fun getStartDate(minusMonths: Long): Long {
         return dateTime
-            .withMonthOfYear(dateTime.minusMonths(minusMonths).monthOfYear)
+            .minusMonths(minusMonths)
             .withDayOfMonth(1)
-            .withHourOfDay(0)
-            .withMinuteOfHour(0)
-            .withSecondOfMinute(0)
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
     }
 
-    fun getEndDate(minusMonths: Int): DateTime {
+    fun getEndDate(minusMonths: Long): Long {
         return dateTime
-            .withMonthOfYear(dateTime.minusMonths(minusMonths).monthOfYear)
-            .withDayOfMonth(getDay(minusMonths))
-            .withHourOfDay(23)
-            .withMinuteOfHour(59)
-            .withSecondOfMinute(59)
+            .minusMonths(minusMonths)
+            .with(TemporalAdjusters.lastDayOfMonth())
+            .withHour(23)
+            .withMinute(59)
+            .withSecond(59)
+            .withNano(999999999)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
     }
 
-    fun getStartWeek(): DateTime {
+    fun getStartWeek(): Long {
         return dateTime
-            .withDayOfWeek(DateTimeConstants.MONDAY)
-            .withHourOfDay(0)
-            .withMinuteOfHour(0)
-            .withSecondOfMinute(0)
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
     }
 
-    fun getEndWeek(): DateTime {
+    fun getEndWeek(): Long {
         return dateTime
-            .withDayOfWeek(DateTimeConstants.SUNDAY)
-            .withHourOfDay(23)
-            .withMinuteOfHour(59)
-            .withSecondOfMinute(59)
+            .with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+            .withHour(23)
+            .withMinute(59)
+            .withSecond(59)
+            .withNano(999999999)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
     }
 
-    fun getStartTime(): DateTime {
+    fun getStartTime(): Long {
         return dateTime
-            .withHourOfDay(0)
-            .withMinuteOfHour(0)
-            .withSecondOfMinute(0)
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
     }
 
-    fun getEndTime(): DateTime {
+    fun getEndTime(): Long {
         return dateTime
-            .withHourOfDay(23)
-            .withMinuteOfHour(59)
-            .withSecondOfMinute(59)
+            .withHour(23)
+            .withMinute(59)
+            .withSecond(59)
+            .withNano(999999999)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
     }
 }

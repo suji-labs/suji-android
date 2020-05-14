@@ -1,10 +1,16 @@
 package com.suji.android.suji_android.database
 
+import android.os.Build
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.suji.android.suji_android.database.model.Food
-import org.joda.time.DateTime
+import com.suji.android.suji_android.helper.Log
+import com.suji.android.suji_android.helper.Utils
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 
 class Converters {
     @TypeConverter
@@ -31,13 +37,22 @@ class Converters {
         return gson.toJson(list)
     }
 
+//    @TypeConverter
+//    fun toDate(timestamp: Long?): LocalDateTime? {
+//        return if (timestamp == null) {
+//            null
+//        } else {
+//            Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()
+//        }
+//    }
+
     @TypeConverter
-    fun toDate(timestamp: Long?): DateTime? {
-        return if (timestamp == null) null else DateTime(timestamp)
+    fun fromTimestamp(timestamp: Long?): LocalDateTime? {
+        return Instant.ofEpochMilli(timestamp!!).atZone(ZoneId.systemDefault()).toLocalDateTime()
     }
 
     @TypeConverter
-    fun toTimestamp(date: DateTime?): Long? {
-        return date?.millis
+    fun toTimestamp(date: LocalDateTime?): Long? {
+        return date?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
     }
 }

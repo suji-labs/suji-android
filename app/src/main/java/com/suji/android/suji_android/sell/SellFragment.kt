@@ -2,7 +2,9 @@ package com.suji.android.suji_android.sell
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
+import android.system.Os
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,11 +33,13 @@ import kotlinx.android.synthetic.main.food_sell_dialog.view.*
 import kotlinx.android.synthetic.main.sell_fragment.view.*
 import kotlinx.android.synthetic.main.submenu_item.view.*
 import java.text.DecimalFormat
+import java.time.Instant
+import java.time.LocalDateTime
 
 class SellFragment : Fragment() {
     private lateinit var adapter: SellListAdapter
     private lateinit var spinnerAdapter: FoodSaleListAdapter
-    private var food = Food() ?: Food()
+    private var food = Food()
     private val sellViewModel: SellViewModel by lazy {
         ViewModelProvider(this).get(SellViewModel::class.java)
     }
@@ -107,12 +111,7 @@ class SellFragment : Fragment() {
                 }
             }
 
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val food = parent!!.selectedItem as Food
 
                 if (food.sub.size != 0) {
@@ -138,7 +137,12 @@ class SellFragment : Fragment() {
         override fun onClick(v: View?) {
             when (v!!.id) {
                 R.id.sell_fragment_fab -> {
-                    val sale = Sale("총 금액", 0, System.currentTimeMillis())
+
+                    val sale = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                        Sale("총 금액", 0, System.currentTimeMillis())
+                    } else {
+                        Sale("총 금액", 0, Instant.now().toEpochMilli())
+                    }
 
                     if (dialogView.sell_item_spinner.count == 0) {
                         Toast.makeText(context, "등록된 음식이 없습니다!", Toast.LENGTH_SHORT).show()
@@ -166,6 +170,9 @@ class SellFragment : Fragment() {
                             dialog!!.dismiss()
                         }
                         .setNeutralButton("추가", null)
+                        .setOnCancelListener {
+                            (dialogView.parent as ViewGroup).removeView(dialogView)
+                        }
                         .setView(dialogView)
                         .show().let {
                             it.getButton(AlertDialog.BUTTON_NEUTRAL)
@@ -275,6 +282,9 @@ class SellFragment : Fragment() {
                                 (dialogView.parent as ViewGroup).removeView(dialogView)
 
                                 dialog!!.dismiss()
+                            }
+                            .setOnCancelListener {
+                                (dialogView.parent as ViewGroup).removeView(dialogView)
                             }
                             .setNeutralButton("추가", null)
                             .setView(dialogView)

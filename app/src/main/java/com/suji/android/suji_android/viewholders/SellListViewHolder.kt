@@ -1,36 +1,46 @@
 package com.suji.android.suji_android.viewholders
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.listener.ItemClickListener
-import kotlinx.android.synthetic.main.sell_item.view.*
+import kotlinx.android.synthetic.main.sell_item.*
 import java.text.DecimalFormat
 
-class SellListViewHolder(private val view: View, private val listener: ItemClickListener) : RecyclerView.ViewHolder(view) {
+class SellListViewHolder(private val view: View, private val listener: ItemClickListener) : AndroidExtensionsViewHolder(view) {
     fun bind(item: Sale) {
-        view.sell_item_sold.setOnClickListener {
-            listener.onItemClick(it, item)
-        }
-        view.sell_item_modify.setOnClickListener {
-            listener.onItemClick(it, item)
-        }
-        view.sell_item_delete.setOnClickListener {
-            listener.onItemClick(it, item)
-        }
+        with(view) {
+            sell_item_sold.setOnClickListener {
+                listener.onItemClick(it, item)
+            }
+            sell_item_modify.setOnClickListener {
+                listener.onItemClick(it, item)
+            }
+            sell_item_delete.setOnClickListener {
+                listener.onItemClick(it, item)
+            }
 
-        view.sell_item_name.text = "총 금액"
-        view.sell_item_price.text =
-            DecimalFormat.getCurrencyInstance().format(item.price).toString()
-        view.sell_item_description.text = ""
+            sell_item_name.text = item.name
+            sell_item_price.text =
+                DecimalFormat.getCurrencyInstance().format(item.price).toString()
+            sell_item_description.text = ""
+
+            if (item.foods.size == 0) {
+                sell_item_description.text = view.context.getString(R.string.no_sales)
+            } else {
+                setSellDetail(item)
+            }
+        }
+    }
+
+    private fun setSellDetail(item: Sale) {
         item.foods.iterator().let { iter ->
             while (iter.hasNext()) {
                 iter.next().let {
-                    view.sell_item_description.text =
+                    sell_item_description.text =
                         String.format(
                             view.context.getString(R.string.sell_item),
-                            view.sell_item_description.text.toString(),
+                            sell_item_description.text.toString(),
                             it.name,
                             it.count
                         )
@@ -38,10 +48,10 @@ class SellListViewHolder(private val view: View, private val listener: ItemClick
                     if (it.sub.size != 0) {
                         for (item in it.sub) {
                             if (item.count != 0) {
-                                view.sell_item_description.text =
+                                sell_item_description.text =
                                     String.format(
                                         view.context.getString(R.string.sell_item),
-                                        view.sell_item_description.text.toString(),
+                                        sell_item_description.text.toString(),
                                         item.name,
                                         item.count
                                     )
@@ -49,13 +59,10 @@ class SellListViewHolder(private val view: View, private val listener: ItemClick
                         }
                     }
 
-                    view.sell_item_description.text =
-                        view.sell_item_description.text.toString().trim()
+                    sell_item_description.text =
+                        sell_item_description.text.toString().trim()
                 }
             }
-        }
-        if (item.foods.size == 0) {
-            view.sell_item_description.text = view.context.getString(R.string.no_sales)
         }
     }
 }

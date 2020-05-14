@@ -60,11 +60,14 @@ abstract class AppDatabase : RoomDatabase() {
             sub.add(Food("우동 사리", 1000))
             sub.add(Food("라면 사리", 1000))
 
+            val foodList = HashSet<Food>()
+            foodList.add(Food("보리밥", 6000, ArrayList<Food>(), 2))
+
             BasicApp.instance.getRepository().insert(Food("보리밥", 6000))
             BasicApp.instance.getRepository().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
             BasicApp.instance.getRepository().insert(Food("닭볶음탕", 20000))
             BasicApp.instance.getRepository().insert(Food("닭갈비", 8000, sub))
-            BasicApp.instance.getRepository().insert(Sale("보리밥", 6000, Instant.now().toEpochMilli()))
+            BasicApp.instance.getRepository().insert(Sale("1번", 12000, Instant.now().toEpochMilli(), foodList))
         }
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
