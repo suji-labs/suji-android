@@ -1,6 +1,6 @@
 package com.suji.android.suji_android.helper
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId

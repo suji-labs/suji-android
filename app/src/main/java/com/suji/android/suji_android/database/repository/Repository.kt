@@ -101,7 +101,6 @@ object Repository {
         return Flowable.create<List<Sale>> ({ emitter: FlowableEmitter<List<Sale>> ->
             BasicApp.instance.getDatabase().saleDAO().loadProduct(isSale)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result -> emitter.onNext(result) },
                     { e -> emitter.onError(e) }
@@ -113,7 +112,6 @@ object Repository {
         return Flowable.create<List<Sale>> ({ emitter: FlowableEmitter<List<Sale>> ->
             BasicApp.instance.getDatabase().saleDAO().findSoldDate(start, end)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result -> emitter.onNext(result) },
                     { e -> emitter.onError(e) }

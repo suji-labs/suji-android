@@ -60,7 +60,7 @@ abstract class AppDatabase : RoomDatabase() {
             sub.add(Food("우동 사리", 1000))
             sub.add(Food("라면 사리", 1000))
 
-            val foodList = HashSet<Food>()
+            val foodList = ArrayList<Food>()
             foodList.add(Food("보리밥", 6000, ArrayList<Food>(), 2))
 
             BasicApp.instance.getRepository().insert(Food("보리밥", 6000))

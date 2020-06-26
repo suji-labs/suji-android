@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodListAdapter
 import com.suji.android.suji_android.database.model.Food
-import com.suji.android.suji_android.helper.Utils
 import com.suji.android.suji_android.listener.ItemClickListener
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -137,7 +136,7 @@ class FoodFragment : Fragment() {
                                 dialogView.create_sub_menu.addView(subMenuLayout)
                             }
 
-                            Utils.dialogReSizing(it)
+//                            Utils.dialogReSizing(it)
                         }
 
                 }
@@ -153,7 +152,7 @@ class FoodFragment : Fragment() {
                         dialogView.create_menu_edit_name.setText(item.name)
                         dialogView.create_menu_edit_price.setText(item.price.toString())
 
-                        for (subItem in item.sub) {
+                        for (subItem in item.subMenu) {
                             val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, dialogView.create_sub_menu, false)
                             subMenuLayout.submenu_delete.setOnClickListener {
                                 dialogView.create_sub_menu.removeView(subMenuLayout)
@@ -198,8 +197,8 @@ class FoodFragment : Fragment() {
                                             item.name = foodName
                                             item.price = foodPrice.toInt()
 
-                                            if (item.sub.size != 0) {
-                                                item.sub = subMenuList
+                                            if (item.subMenu.size != 0) {
+                                                item.subMenu = subMenuList
                                             }
 
                                             foodViewModel.update(item)
@@ -231,7 +230,7 @@ class FoodFragment : Fragment() {
                                     dialogView.create_sub_menu.addView(subMenuLayout)
                                 }
 
-                                Utils.dialogReSizing(it)
+//                                Utils.dialogReSizing(it)
                             }
                     }
                 }

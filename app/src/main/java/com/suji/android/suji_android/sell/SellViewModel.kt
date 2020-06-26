@@ -27,12 +27,12 @@ class SellViewModel(application: Application) : AndroidViewModel(application) {
         var subSumPrice = 0
         var mainSumPrice = 0
 
-        sale.foods.iterator().let { main ->
+        sale.orderedFoods.iterator().let { main ->
             while (main.hasNext()) {
                 val food = main.next()
                 mainSumPrice += food.price * food.count
 
-                for (sub in food.sub) {
+                for (sub in food.subMenu) {
                     subSumPrice += sub.price * sub.count
                 }
             }

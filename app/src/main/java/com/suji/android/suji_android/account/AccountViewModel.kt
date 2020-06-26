@@ -6,7 +6,6 @@ import com.suji.android.suji_android.basic.BasicApp
 import com.suji.android.suji_android.database.model.Sale
 import com.suji.android.suji_android.helper.Constant
 import io.reactivex.Flowable
-import org.threeten.bp.LocalDateTime
 
 class AccountViewModel(application: Application) : AndroidViewModel(application) {
     fun getAllSold(): Flowable<List<Sale>> {
@@ -38,12 +37,12 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
 
         if (type == Constant.PayType.ALL) {
             items.forEach { sale ->
-                result += sale.price
+                result += sale.totalPrice
             }
         } else {
             items.forEach { sale ->
                 if (sale.pay == type) {
-                    result += sale.price
+                    result += sale.totalPrice
                 }
             }
         }

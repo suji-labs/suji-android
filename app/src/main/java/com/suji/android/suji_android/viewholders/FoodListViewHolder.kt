@@ -10,7 +10,7 @@ class FoodListViewHolder(private val view: View, private val listener: ItemClick
         with (view) {
             food_name.text = item.name
             food_price.text = item.price.toString()
-            food_sub_menu.text = item.sub.size.toString()
+            food_sub_menu.text = item.subMenu.size.toString()
             food_modify.setOnClickListener {
                 listener.onItemClick(it, item)
             }

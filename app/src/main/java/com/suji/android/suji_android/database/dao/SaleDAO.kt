@@ -12,10 +12,10 @@ interface SaleDAO {
     @Query("SELECT * FROM sale WHERE sale.isSale IS :isSale")
     fun loadProduct(isSale: Boolean): Flowable<List<Sale>>
 
-    @Query("SELECT * FROM sale WHERE time BETWEEN :start and :end AND isSale IS 1")
+    @Query("SELECT * FROM sale WHERE salesTime BETWEEN :start and :end AND isSale IS 1")
     fun findSoldDate(start: Long, end: Long): Flowable<List<Sale>>
 
-    @Query("DELETE FROM sale WHERE time IS 1 BETWEEN :start and :end And isSale IS 1")
+    @Query("DELETE FROM sale WHERE salesTime IS 1 BETWEEN :start and :end And isSale IS 1")
     fun deleteSoldDate(start: Long, end: Long)
 
     @Insert

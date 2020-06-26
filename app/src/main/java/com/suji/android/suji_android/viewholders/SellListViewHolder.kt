@@ -22,10 +22,10 @@ class SellListViewHolder(private val view: View, private val listener: ItemClick
 
             sell_item_name.text = item.name
             sell_item_price.text =
-                DecimalFormat.getCurrencyInstance().format(item.price).toString()
+                DecimalFormat.getCurrencyInstance().format(item.totalPrice).toString()
             sell_item_description.text = ""
 
-            if (item.foods.size == 0) {
+            if (item.orderedFoods.size == 0) {
                 sell_item_description.text = view.context.getString(R.string.no_sales)
             } else {
                 setSellDetail(item)
@@ -34,7 +34,7 @@ class SellListViewHolder(private val view: View, private val listener: ItemClick
     }
 
     private fun setSellDetail(item: Sale) {
-        item.foods.iterator().let { iter ->
+        item.orderedFoods.iterator().let { iter ->
             while (iter.hasNext()) {
                 iter.next().let {
                     sell_item_description.text =
@@ -45,8 +45,8 @@ class SellListViewHolder(private val view: View, private val listener: ItemClick
                             it.count
                         )
 
-                    if (it.sub.size != 0) {
-                        for (item in it.sub) {
+                    if (it.subMenu.size != 0) {
+                        for (item in it.subMenu) {
                             if (item.count != 0) {
                                 sell_item_description.text =
                                     String.format(
