@@ -21,8 +21,7 @@ class SellListViewHolder(private val view: View, private val listener: ItemClick
             }
 
             sell_item_name.text = item.name
-            sell_item_price.text =
-                DecimalFormat.getCurrencyInstance().format(item.totalPrice).toString()
+            sell_item_price.text = DecimalFormat.getCurrencyInstance().format(item.totalPrice).toString()
             sell_item_description.text = ""
 
             if (item.orderedFoods.size == 0) {
@@ -37,30 +36,37 @@ class SellListViewHolder(private val view: View, private val listener: ItemClick
         item.orderedFoods.iterator().let { iter ->
             while (iter.hasNext()) {
                 iter.next().let {
-                    sell_item_description.text =
-                        String.format(
-                            view.context.getString(R.string.sell_item),
-                            sell_item_description.text.toString(),
-                            it.name,
-                            it.count
-                        )
+                    sell_item_description.text = String.format(
+                        view.context.getString(R.string.sell_item) + ", ",
+                        sell_item_description.text.toString(),
+                        it.name,
+                        it.count
+                    )
+//                    if (iter.hasNext()) {
+//                        sell_item_description.text = String.format(
+//                            view.context.getString(R.string.sell_item) + ", ",
+//                            sell_item_description.text.toString(),
+//                            it.name,
+//                            it.count
+//                        )
+//                    } else {
+//                        sell_item_description.text = String.format(
+//                            view.context.getString(R.string.sell_item),
+//                            sell_item_description.text.toString(),
+//                            it.name,
+//                            it.count
+//                        )
+//                    }
 
                     if (it.subMenu.size != 0) {
                         for (item in it.subMenu) {
                             if (item.count != 0) {
-                                sell_item_description.text =
-                                    String.format(
-                                        view.context.getString(R.string.sell_item),
-                                        sell_item_description.text.toString(),
-                                        item.name,
-                                        item.count
-                                    )
+                                sell_item_description.text = String.format(view.context.getString(R.string.sell_item) + ", ", sell_item_description.text.toString(), item.name, item.count)
                             }
                         }
                     }
 
-                    sell_item_description.text =
-                        sell_item_description.text.toString().trim()
+                    sell_item_description.text = sell_item_description.text.toString().trim()
                 }
             }
         }

@@ -29,7 +29,7 @@ import java.text.DecimalFormat
 class FoodSalesDialogFragment : DialogFragment() {
     private lateinit var builder: AlertDialog.Builder
     private var food = Food()
-    private lateinit var spinnerAdapter: SalesListAdapter
+    private val spinnerAdapter = SalesListAdapter()
     private val disposeBag = CompositeDisposable()
     private val dialogView: View by lazy {
         LayoutInflater.from(context).inflate(R.layout.food_sell_dialog, null, false)
@@ -57,15 +57,12 @@ class FoodSalesDialogFragment : DialogFragment() {
     ): View? {
         initView()
 
-        val view = inflater.inflate(R.layout.food_sell_dialog, container, false)
-
         dialogView.sell_item_spinner.apply {
-            spinnerAdapter = SalesListAdapter()
             adapter = spinnerAdapter
             onItemSelectedListener = spinnerItemClick
         }
 
-        return view
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -80,17 +77,20 @@ class FoodSalesDialogFragment : DialogFragment() {
                     sale.salesTime = System.currentTimeMillis()
                     sellViewModel.insert(sale)
 
-                    dialogInterface!!.dismiss()
+                    dialogInterface.dismiss()
                 }
 
                 (dialogView.parent as ViewGroup).removeView(dialogView)
             }
             .setNegativeButton("취소") { dialogInterface, i ->
                 (dialogView.parent as ViewGroup).removeView(dialogView)
-                dialogInterface!!.dismiss()
+                dialogInterface.dismiss()
             }
             .setNeutralButton("추가", null)
-            .setOnCancelListener { (dialogView.parent as ViewGroup).removeView(dialogView) }
+            .setOnCancelListener { dialogInterface ->
+                (dialogView.parent as ViewGroup).removeView(dialogView)
+                dialogInterface.dismiss()
+            }
             .setView(dialogView)
 
         val dialog = builder.create()
@@ -107,59 +107,42 @@ class FoodSalesDialogFragment : DialogFragment() {
                     if (food.name.isNullOrBlank()) {
                         Toast.makeText(context, "물건을 선택하세요!", Toast.LENGTH_SHORT).show()
                     } else {
-                        Observable.range(0, food.subMenu.size + 1)
-                            .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .map { subMenuPosition ->
-                                val subMenuLayout =
-                                    requireView().sell_sub_food_layout.getChildAt(subMenuPosition)
-                                var subCount = ""
+                        val item = Food(food.name, food.price, count = foodCount.toInt(), id = food.id)
 
-                                if (subMenuLayout != null) {
-                                    subCount =
-                                        subMenuLayout.submenu_count_edit_text.text.toString()
+                        for (i in 0 until food.subMenu.size) {
+                            val subMenuLayout = dialogView.sell_sub_food_layout.getChildAt(i)
+                            var subCount = ""
 
-                                    subMenuLayout.submenu_count_edit_text.text.clear()
-                                }
+                            if (subMenuLayout != null) {
+                                subCount = subMenuLayout.submenu_count_edit_text.text.toString()
 
-                                if (!subCount.isNullOrBlank()) {
-                                    food.subMenu[subMenuPosition].count = subCount.toInt()
-                                }
+                                subMenuLayout.submenu_count_edit_text.text.clear()
+                            }
 
-                                return@map food
-                            }.subscribe(
-                                { result ->
-                                    sale.orderedFoods.add(
-                                        Food(
-                                            result.name,
-                                            result.price,
-                                            result.subMenu,
-                                            foodCount.toInt(),
-                                            result.id
-                                        )
-                                    )
+                            if (!subCount.isNullOrBlank()) {
+                                item.subMenu.add(Food(food.subMenu[i].name, food.subMenu[i].price, ArrayList<Food>(), subCount.toInt(), food.subMenu[i].id))
+                            }
+                        }
 
-                                    sale.totalPrice = sellViewModel.sumOfPrice(sale)
-                                },
-                                { e -> e.printStackTrace() },
-                                {
-                                    dialogView.food_sale_total_price.text =
-                                        DecimalFormat.getCurrencyInstance().format(sale.totalPrice)
-                                            .toString()
-                                    dialogView.sell_main_food_count.text.clear()
-                                }
-                            ).addTo(disposeBag)
+                        sale.orderedFoods.add(item)
+                        sale.totalPrice = sellViewModel.sumOfPrice(sale)
+                        dialogView.food_sale_total_price.text = DecimalFormat.getCurrencyInstance().format(sale.totalPrice).toString()
+                        dialogView.sell_main_food_count.text.clear()
                     }
                 }
         }
-        Utils.dialogReSizing(dialog)
 
         return dialog
     }
 
+    override fun onResume() {
+        super.onResume()
+        Utils.dialogReSizing(dialog!!)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        disposeBag.clear()
+        (dialogView as ViewGroup).removeView(dialogView)
     }
 
     private val spinnerItemClick: AdapterView.OnItemSelectedListener =
@@ -185,13 +168,13 @@ class FoodSalesDialogFragment : DialogFragment() {
 
                 this@FoodSalesDialogFragment.food = food
 
-                requireView().sell_sub_food_layout.removeAllViews()
+                dialogView.sell_sub_food_layout.removeAllViews()
 
                 for (i in 0 until food.subMenu.size) {
                     val layout = LayoutInflater.from(context)
-                        .inflate(R.layout.submenu_item, requireView().sell_sub_food_layout, false)
+                        .inflate(R.layout.submenu_item, dialogView.sell_sub_food_layout, false)
                     layout.submenu_name.text = food.subMenu[i].name
-                    requireView().sell_sub_food_layout.addView(layout)
+                    dialogView.sell_sub_food_layout.addView(layout)
                 }
             }
         }

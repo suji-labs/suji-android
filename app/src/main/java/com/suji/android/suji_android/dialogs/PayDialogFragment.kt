@@ -26,14 +26,12 @@ class PayDialogFragment : DialogFragment() {
             .setTitle("결제 방식을 선택하세요")
             .setPositiveButton("현금") { dialogInterface, which ->
                 item.isSale = true
-                item.pay =
-                    Constant.PayType.CASH
+                item.pay = Constant.PayType.CASH
                 sellViewModel.update(item)
             }
             .setNegativeButton("카드") { dialogInterface, which ->
                 item.isSale = true
-                item.pay =
-                    Constant.PayType.CARD
+                item.pay = Constant.PayType.CARD
                 sellViewModel.update(item)
             }
             .setNeutralButton("취소") { dialogInterface, which -> dialog!!.dismiss() }

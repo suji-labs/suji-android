@@ -12,7 +12,7 @@ data class Food(
     var name: String,
     @ColumnInfo(name = "price")
     var price: Int,
-    @ColumnInfo(name = "sub")
+    @ColumnInfo(name = "subMenu")
     var subMenu: ArrayList<Food> = ArrayList<Food>(),
     @ColumnInfo(name = "count")
     var count: Int = 0,
@@ -40,7 +40,6 @@ data class Food(
     }
 
     override fun hashCode(): Int {
-//        return super.hashCode()
         return id
     }
 
