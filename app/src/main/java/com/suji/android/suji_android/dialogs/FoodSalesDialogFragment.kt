@@ -142,7 +142,9 @@ class FoodSalesDialogFragment : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (dialogView as ViewGroup).removeView(dialogView)
+        if (dialogView.parent != null) {
+            (dialogView.parent as ViewGroup).removeView(dialogView)
+        }
     }
 
     private val spinnerItemClick: AdapterView.OnItemSelectedListener =
