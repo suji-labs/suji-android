@@ -22,7 +22,7 @@ class PayDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val item = requireArguments().get("sale") as Sale
 
-        builder = AlertDialog.Builder(activity!!, R.style.AppTheme_AppCompat_CustomDialog)
+        builder = AlertDialog.Builder(requireActivity(), R.style.AppTheme_AppCompat_CustomDialog)
             .setTitle("결제 방식을 선택하세요")
             .setPositiveButton("현금") { dialogInterface, which ->
                 item.isSale = true

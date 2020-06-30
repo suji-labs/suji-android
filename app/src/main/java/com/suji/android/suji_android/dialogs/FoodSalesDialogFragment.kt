@@ -69,7 +69,7 @@ class FoodSalesDialogFragment : DialogFragment() {
         val sale = requireArguments().get("sale") as Sale
 
         dialogView.food_sale_total_price.text = "0"
-        builder = AlertDialog.Builder(activity!!, R.style.AppTheme_AppCompat_CustomDialog)
+        builder = AlertDialog.Builder(requireActivity(), R.style.AppTheme_AppCompat_CustomDialog)
             .setPositiveButton("판매") { dialogInterface, i ->
                 if (sale.totalPrice == 0) {
                     Toast.makeText(context, "음식을 추가하세요!", Toast.LENGTH_SHORT).show()
@@ -137,7 +137,7 @@ class FoodSalesDialogFragment : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.dialogReSizing(dialog!!)
+        Utils.dialogReSizing(requireDialog())
     }
 
     override fun onDestroyView() {

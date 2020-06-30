@@ -19,8 +19,9 @@ import com.suji.android.suji_android.listener.ItemClickListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import kotlinx.android.synthetic.main.sell_fragment.view.*
+import kotlinx.android.synthetic.main.sell_fragment.*
 import java.time.Instant
+
 
 class SellFragment : Fragment() {
     private lateinit var adapter: SellListAdapter
@@ -36,18 +37,33 @@ class SellFragment : Fragment() {
     ): View? {
         initView()
 
-        val view = inflater.inflate(R.layout.sell_fragment, container, false)
-        adapter = SellListAdapter(listener)
-        view.sell_fragment_fab.setOnClickListener(floatingButtonClickListener)
-        view.sell_fragment_items.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        view.sell_fragment_items.adapter = adapter
-
-        return view
+        return inflater.inflate(R.layout.sell_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adapter = SellListAdapter(listener)
+        sell_fragment_fab.setOnClickListener(floatingButtonClickListener)
+        sell_fragment_items.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        sell_fragment_items.adapter = adapter
+
+//        sell_fragment_items.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                if (dy < 0) {
+//                    sell_fragment_fab.show()
+//                } else if (dy > 0) {
+//                    sell_fragment_fab.hide()
+//                }
+//            }
+//
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                when (newState) {
+//                    RecyclerView.SCROLL_STATE_IDLE -> sell_fragment_fab.show()
+//                    else -> sell_fragment_fab.hide()
+//                }
+//            }
+//        })
     }
 
     private fun initView() {

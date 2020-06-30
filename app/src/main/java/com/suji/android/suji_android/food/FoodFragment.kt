@@ -60,15 +60,13 @@ class FoodFragment : Fragment() {
             ).addTo(disposeBag)
     }
 
-    private val createFood: View.OnClickListener = object : View.OnClickListener {
-        override fun onClick(v: View?) {
-            dialogView.create_menu_edit_name.text.clear()
-            dialogView.create_menu_edit_price.text.clear()
+    private val createFood: View.OnClickListener = View.OnClickListener { v ->
+        dialogView.create_menu_edit_name.text.clear()
+        dialogView.create_menu_edit_price.text.clear()
 
-            when (v!!.id) {
-                R.id.create_food -> {
-                    CreateFoodDialogFragment.newInstance().show(parentFragmentManager, "dialog")
-                }
+        when (v!!.id) {
+            R.id.create_food -> {
+                CreateFoodDialogFragment.newInstance().show(parentFragmentManager, "dialog")
             }
         }
     }

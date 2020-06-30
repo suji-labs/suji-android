@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.inflate
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
@@ -22,8 +23,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.food_create_dialog.view.*
 import kotlinx.android.synthetic.main.food_sell_dialog.view.*
 import kotlinx.android.synthetic.main.submenu_item.view.*
+import kotlinx.android.synthetic.main.submenu_layout.view.*
 import java.text.DecimalFormat
 
 class SalesModifyDialogFragment : DialogFragment() {
@@ -115,44 +118,32 @@ class SalesModifyDialogFragment : DialogFragment() {
                         modifyItem.count += foodCount.toInt()
                     }
 
-                    Observable.range(0, food.subMenu.size + 1)
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .map { subMenuPosition ->
-                            val subMenuLayout = dialogView.sell_sub_food_layout.getChildAt(subMenuPosition)
-                            var subCount = ""
-                            var subMenu: Food? = Food()
+                    for (i in 0 until food.subMenu.size) {
+                        val subMenuLayout = dialogView.sell_sub_food_layout.getChildAt(i)
+                        var subCount = ""
+                        var subMenu: Food? = Food()
 
-                            if (subMenuLayout != null) {
-                                val subName = subMenuLayout.submenu_name.text.toString()
-                                subCount = subMenuLayout.submenu_count_edit_text.text.toString()
-                                subMenu = modifyItem.subMenu.find { item -> item.name == subName }
-                                subMenuLayout.submenu_count_edit_text.text.clear()
-                            }
-
-                            if (!subCount.isNullOrBlank()) {
-                                if (subMenu != null) {
-                                    subMenu.count += subCount.toInt()
-                                }
-                            }
-
-                            item.totalPrice = sellViewModel.sumOfPrice(item)
-
-                            return@map item
+                        if (subMenuLayout != null) {
+                            val subName = subMenuLayout.submenu_name.text.toString()
+                            subCount = subMenuLayout.submenu_count_edit_text.text.toString()
+                            subMenu = modifyItem.subMenu.find { item -> item.name == subName }
+                            subMenuLayout.submenu_count_edit_text.text.clear()
                         }
-                        .subscribe(
-                            { result ->
-                                result.orderedFoods.remove(modifyItem)
-                                result.orderedFoods.add(Food(modifyItem.name, modifyItem.price, modifyItem.subMenu, modifyItem.count, modifyItem.id))
-                            },
-                            { e -> e.printStackTrace() },
-                            {
-                                item.totalPrice = sellViewModel.sumOfPrice(item)
-                                dialogView.food_sale_total_price.text = DecimalFormat.getCurrencyInstance().format(item.totalPrice).toString()
-                                dialogView.sell_main_food_count.text.clear()
+
+                        if (!subCount.isNullOrBlank()) {
+                            if (subMenu != null) {
+                                subMenu.count += subCount.toInt()
                             }
-                        )
-                        .addTo(disposeBag)
+                        }
+
+                        item.totalPrice = sellViewModel.sumOfPrice(item)
+                    }
+
+                    item.orderedFoods.remove(modifyItem)
+                    item.orderedFoods.add(Food(modifyItem.name, modifyItem.price, modifyItem.subMenu, modifyItem.count, modifyItem.id))
+                    item.totalPrice = sellViewModel.sumOfPrice(item)
+                    dialogView.food_sale_total_price.text = DecimalFormat.getCurrencyInstance().format(item.totalPrice).toString()
+                    dialogView.sell_main_food_count.text.clear()
                 }
         }
 
@@ -161,7 +152,7 @@ class SalesModifyDialogFragment : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.dialogReSizing(dialog!!)
+        Utils.dialogReSizing(requireDialog())
     }
 
     override fun onDestroyView() {
@@ -195,13 +186,12 @@ class SalesModifyDialogFragment : DialogFragment() {
 
                 this@SalesModifyDialogFragment.food = food
 
-                requireView().sell_sub_food_layout.removeAllViews()
+                dialogView.sell_sub_food_layout.removeAllViews()
 
                 for (i in 0 until food.subMenu.size) {
-                    val layout = LayoutInflater.from(context)
-                        .inflate(R.layout.submenu_item, requireView().sell_sub_food_layout, false)
+                    val layout = LayoutInflater.from(context).inflate(R.layout.submenu_item, requireView().sell_sub_food_layout, false)
                     layout.submenu_name.text = food.subMenu[i].name
-                    requireView().sell_sub_food_layout.addView(layout)
+                    dialogView.sell_sub_food_layout.addView(layout)
                 }
             }
         }

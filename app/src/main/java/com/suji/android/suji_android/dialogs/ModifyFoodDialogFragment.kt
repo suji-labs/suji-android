@@ -109,7 +109,7 @@ class ModifyFoodDialogFragment : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.dialogReSizing(dialog!!)
+        Utils.dialogReSizing(requireDialog())
     }
 
     override fun onDestroyView() {
