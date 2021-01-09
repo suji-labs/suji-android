@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+                name="vm"
+                type="com.suji.android.suji_android.dialogs.SujiDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.beardedhen.androidbootstrap.BootstrapLabel
+                android:id="@+id/create_food_title"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@{vm.message}"
+                app:bootstrapBrand="success"
+                app:bootstrapHeading="h1"
+                app:layout_constraintBottom_toTopOf="@id/suji_dialog_button_group"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+                android:id="@+id/suji_dialog_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                    android:id="@+id/create_food"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onConfirm()}"
+                    android:text="@{vm.confirmText}"
+                    android:textColor="#000000" />
+
+            <TextView
+                    android:id="@+id/create_sub_food"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onDismiss()}"
+                    android:text="@{vm.dismissText}"
+                    android:textColor="#000000" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

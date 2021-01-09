@@ -26,13 +26,13 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromString(value: String): ArrayList<Food> {
-        val listType = object : TypeToken<ArrayList<Food>>() {}.type
+    fun fromString(value: String): MutableList<Food> {
+        val listType = object : TypeToken<MutableList<Food>>() {}.type
         return Gson().fromJson(value, listType)
     }
 
     @TypeConverter
-    fun fromArrayList(list: ArrayList<Food>): String {
+    fun fromArrayList(list: MutableList<Food>): String {
         val gson = Gson()
         return gson.toJson(list)
     }

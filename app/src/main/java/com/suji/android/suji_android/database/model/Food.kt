@@ -13,7 +13,7 @@ data class Food(
     @ColumnInfo(name = "price")
     var price: Int,
     @ColumnInfo(name = "subMenu")
-    var subMenu: ArrayList<Food> = ArrayList<Food>(),
+    var subMenu: MutableList<Food> = mutableListOf(),
     @ColumnInfo(name = "count")
     var count: Int = 0,
     @PrimaryKey(autoGenerate = true)
@@ -22,14 +22,14 @@ data class Food(
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readInt(),
-        ArrayList<Food>(),
+        mutableListOf<Food>(),
         parcel.readInt(),
         parcel.readInt()
     ) {
         parcel.readTypedList(subMenu, Food.CREATOR)
     }
 
-    constructor() : this("", 0, ArrayList<Food>(), 0)
+    constructor() : this("", 0, mutableListOf<Food>(), 0)
 
     override fun equals(other: Any?): Boolean {
         if (other is Food) {

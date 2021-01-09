@@ -5,11 +5,11 @@ import android.graphics.Point
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.WindowManager
-import com.suji.android.suji_android.basic.BasicApp
+import com.suji.android.suji_android.base.BaseApp
 
 object DisplayHelper {
     private fun getDisplay(): Display {
-        return (BasicApp.instance.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+        return (BaseApp.instance.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
     }
 
     fun getDisplaySize(): Point {

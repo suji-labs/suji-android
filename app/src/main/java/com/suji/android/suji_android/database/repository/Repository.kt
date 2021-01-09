@@ -1,6 +1,6 @@
 package com.suji.android.suji_android.database.repository
 
-import com.suji.android.suji_android.basic.BasicApp
+import com.suji.android.suji_android.base.BaseApp
 import com.suji.android.suji_android.database.AppDatabase
 import com.suji.android.suji_android.database.model.Food
 import com.suji.android.suji_android.database.model.Sale
@@ -85,9 +85,22 @@ object Repository {
         }
     }
 
-    fun loadAllFood(): Flowable<List<Food>> {
-        return Flowable.create<List<Food>> ({ emitter: FlowableEmitter<List<Food>> ->
-            BasicApp.instance.getDatabase().foodDAO().loadAllFood()
+    fun loadAllFood(): MutableList<Food> {
+        return BaseApp.instance.getDatabase().foodDAO().loadAllFood2()
+//        return Flowable.create<MutableList<Food>> ({ emitter ->
+//            BaseApp.instance.getDatabase().foodDAO().loadAllFood()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(
+//                    { result -> emitter.onNext(result) },
+//                    { e -> emitter.onError(e) }
+//                ).addTo(disposeBag)
+//        }, BackpressureStrategy.BUFFER)
+    }
+
+    fun loadAllFood2(): Flowable<MutableList<Food>> {
+        return Flowable.create<MutableList<Food>>({ emitter ->
+            BaseApp.instance.getDatabase().foodDAO().loadAllFood()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -97,9 +110,9 @@ object Repository {
         }, BackpressureStrategy.BUFFER)
     }
 
-    fun loadProduct(isSale: Boolean): Flowable<List<Sale>> {
-        return Flowable.create<List<Sale>> ({ emitter: FlowableEmitter<List<Sale>> ->
-            BasicApp.instance.getDatabase().saleDAO().loadProduct(isSale)
+    fun loadProduct(isSale: Boolean): Flowable<MutableList<Sale>> {
+        return Flowable.create<MutableList<Sale>> ({ emitter: FlowableEmitter<MutableList<Sale>> ->
+            BaseApp.instance.getDatabase().saleDAO().loadProduct(isSale)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     { result -> emitter.onNext(result) },
@@ -108,9 +121,9 @@ object Repository {
         }, BackpressureStrategy.BUFFER)
     }
 
-    fun findSoldDate(start: Long, end: Long): Flowable<List<Sale>> {
-        return Flowable.create<List<Sale>> ({ emitter: FlowableEmitter<List<Sale>> ->
-            BasicApp.instance.getDatabase().saleDAO().findSoldDate(start, end)
+    fun findSoldDate(start: Long, end: Long): Flowable<MutableList<Sale>> {
+        return Flowable.create<MutableList<Sale>> ({ emitter: FlowableEmitter<MutableList<Sale>> ->
+            BaseApp.instance.getDatabase().saleDAO().findSoldDate(start, end)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     { result -> emitter.onNext(result) },
@@ -124,7 +137,7 @@ object Repository {
             .just(Pair(start, end))
             .subscribeOn(Schedulers.io())
             .subscribe(
-                { BasicApp.instance.getDatabase().saleDAO().deleteSoldDate(it.first, it.second) },
+                { BaseApp.instance.getDatabase().saleDAO().deleteSoldDate(it.first, it.second) },
                 { e -> e.printStackTrace()}
             ).addTo(disposeBag)
     }

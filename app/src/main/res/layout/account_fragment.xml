@@ -1,120 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="@+id/account_week_btn"
-        app:layout_constraintStart_toEndOf="@+id/account_week_btn">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-            android:id="@+id/account_button_group"
+    <data>
+
+        <variable
+                name="vm"
+                type="com.suji.android.suji_android.account.AccountViewModel" />
+
+        <variable
+                name="handler"
+                type="com.suji.android.suji_android.account.AccountFragment.ClickHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="@+id/account_week_btn"
+            app:layout_constraintStart_toEndOf="@+id/account_week_btn">
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/account_day_btn"
+        <LinearLayout
+                android:id="@+id/account_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/account_day_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="@{() -> handler.dayClicked()}"
+                    android:text="@string/day"
+                    app:bootstrapBrand="primary" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/account_week_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="@{() -> handler.weekClicked()}"
+                    android:text="@string/week"
+                    app:bootstrapBrand="success" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/account_month_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="@{() -> handler.monthClicked()}"
+                    android:text="@string/month"
+                    app:bootstrapBrand="info" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/account_all_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="@{() -> handler.allClicked()}"
+                    android:text="@string/all"
+                    app:bootstrapBrand="regular" />
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/account_pay_card_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pay_card"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/account_button_group" />
+
+        <TextView
+                android:id="@+id/food_sold_card_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/day"
-                app:bootstrapBrand="primary" />
+                android:gravity="end"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintLeft_toRightOf="@id/account_pay_card_text"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/account_button_group" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/account_week_btn"
+        <TextView
+                android:id="@+id/account_pay_cash_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pay_cash"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/account_pay_card_text" />
+
+        <TextView
+                android:id="@+id/food_sold_cash_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/week"
-                app:bootstrapBrand="success" />
+                android:gravity="end"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintLeft_toRightOf="@id/account_pay_cash_text"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/food_sold_card_price" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/account_month_btn"
+        <TextView
+                android:id="@+id/account_pay_all_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_price"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/account_pay_cash_text" />
+
+        <TextView
+                android:id="@+id/food_sold_total_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/month"
-                app:bootstrapBrand="info" />
+                android:gravity="end"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintLeft_toRightOf="@id/account_pay_all_text"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/food_sold_cash_price" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/account_all_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/all"
-                app:bootstrapBrand="regular" />
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sold_fragment_items"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/account_pay_all_text" />
 
-    <TextView
-            android:id="@+id/account_pay_card_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pay_card"
-            android:textColor="#000000"
-            android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/account_button_group" />
-
-    <TextView
-            android:id="@+id/food_sold_card_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="#000000"
-            android:textSize="25sp"
-            app:layout_constraintLeft_toRightOf="@id/account_pay_card_text"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/account_button_group" />
-
-    <TextView
-            android:id="@+id/account_pay_cash_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pay_cash"
-            android:textColor="#000000"
-            android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/account_pay_card_text" />
-
-    <TextView
-            android:id="@+id/food_sold_cash_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="#000000"
-            android:textSize="25sp"
-            app:layout_constraintLeft_toRightOf="@id/account_pay_cash_text"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/food_sold_card_price" />
-
-    <TextView
-            android:id="@+id/account_pay_all_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/total_price"
-            android:textColor="#000000"
-            android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/account_pay_cash_text" />
-
-    <TextView
-            android:id="@+id/food_sold_total_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="#000000"
-            android:textSize="25sp"
-            app:layout_constraintLeft_toRightOf="@id/account_pay_all_text"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/food_sold_cash_price" />
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/sold_fragment_items"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/account_pay_all_text" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+                name="vm"
+                type="com.suji.android.suji_android.dialogs.CreateFoodDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.beardedhen.androidbootstrap.BootstrapLabel
+                android:id="@+id/create_food_title"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@{vm.message}"
+                app:bootstrapBrand="success"
+                app:bootstrapHeading="h1"
+                app:layout_constraintBottom_toTopOf="@id/create_food_information_group"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+                android:id="@+id/create_food_information_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_food_title">
+
+            <LinearLayout
+                    android:id="@+id/create_food_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <com.beardedhen.androidbootstrap.BootstrapLabel
+                        android:id="@+id/create_menu_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:text="@string/name"
+                        app:bootstrapBrand="primary"
+                        app:bootstrapHeading="h5"
+                        app:roundedCorners="true" />
+
+                <com.beardedhen.androidbootstrap.BootstrapEditText
+                        android:id="@+id/create_menu_edit_name"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        app:bootstrapBrand="info"
+                        app:bootstrapSize="md" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/create_food_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <com.beardedhen.androidbootstrap.BootstrapLabel
+                        android:id="@+id/create_menu_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:text="@string/price"
+                        app:bootstrapBrand="primary"
+                        app:bootstrapHeading="h5"
+                        app:roundedCorners="true" />
+
+                <com.beardedhen.androidbootstrap.BootstrapEditText
+                        android:id="@+id/create_menu_edit_price"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        app:bootstrapBrand="info"
+                        app:bootstrapSize="md" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView
+                android:id="@+id/subMenu_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_food_information_group">
+
+            <LinearLayout
+                    android:id="@+id/create_sub_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+        </ScrollView>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/subMenu_scroll_view">
+
+            <TextView
+                    android:id="@+id/create_food"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onPositive()}"
+                    android:text="@{vm.positiveText}"
+                    android:textColor="#000000" />
+
+            <TextView
+                    android:id="@+id/create_sub_food"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onNeutral()}"
+                    android:text="@{vm.neutralText}"
+                    android:textColor="#000000" />
+
+            <TextView
+                    android:id="@+id/dialog_exit"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onNegative()}"
+                    android:text="@{vm.negativeText}"
+                    android:textColor="#000000" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

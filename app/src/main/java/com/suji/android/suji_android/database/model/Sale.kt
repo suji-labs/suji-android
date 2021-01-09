@@ -16,7 +16,7 @@ data class Sale(
     @ColumnInfo(name = "salesTime")
     var salesTime: Long,
     @ColumnInfo(name = "orderedFoods")
-    var orderedFoods: ArrayList<Food> = ArrayList<Food>(),
+    var orderedFoods: MutableList<Food> = mutableListOf<Food>(),
     @ColumnInfo(name = "isSale")
     var isSale: Boolean = false,
     @ColumnInfo(name = "pay")
@@ -28,7 +28,7 @@ data class Sale(
         parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readLong(),
-        ArrayList<Food>(),
+        mutableListOf<Food>(),
     parcel.readByte() != 0.toByte(),
         parcel.readInt(),
         parcel.readInt()

@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.suji.android.suji_android.basic.BasicApp
+import com.suji.android.suji_android.base.BaseApp
 import com.suji.android.suji_android.database.dao.FoodDAO
 import com.suji.android.suji_android.database.dao.SaleDAO
 import com.suji.android.suji_android.database.model.Food
@@ -25,7 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
         private const val DATABASE_NAME = "suji-android"
 
         private val INSTANCE: AppDatabase by lazy {
-            buildDatabase(BasicApp.instance)
+            buildDatabase(BaseApp.instance)
         }
 
         fun getInstance(): AppDatabase {
@@ -54,20 +54,20 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun insertData(database: AppDatabase) {
-            val sub = ArrayList<Food>()
+            val sub = mutableListOf<Food>()
             sub.add(Food("치즈", 1000))
             sub.add(Food("볶음밥", 2000))
             sub.add(Food("우동 사리", 1000))
             sub.add(Food("라면 사리", 1000))
 
-            val foodList = ArrayList<Food>()
-            foodList.add(Food("보리밥", 6000, ArrayList<Food>(), 2))
+            val foodList = mutableListOf<Food>()
+            foodList.add(Food("보리밥", 6000, mutableListOf(), 2))
 
-            BasicApp.instance.getRepository().insert(Food("보리밥", 6000))
-            BasicApp.instance.getRepository().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
-            BasicApp.instance.getRepository().insert(Food("닭볶음탕", 20000))
-            BasicApp.instance.getRepository().insert(Food("닭갈비", 8000, sub))
-            BasicApp.instance.getRepository().insert(Sale("1번", 12000, Instant.now().toEpochMilli(), foodList))
+            BaseApp.instance.getRepository().insert(Food("보리밥", 6000))
+            BaseApp.instance.getRepository().insert(Food("뚝배기 묶은지 쪽갈비", 7000))
+            BaseApp.instance.getRepository().insert(Food("닭볶음탕", 20000))
+            BaseApp.instance.getRepository().insert(Food("닭갈비", 8000, sub))
+            BaseApp.instance.getRepository().insert(Sale("1번", 12000, Instant.now().toEpochMilli(), foodList))
         }
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {

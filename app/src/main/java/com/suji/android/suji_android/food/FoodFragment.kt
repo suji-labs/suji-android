@@ -1,90 +1,141 @@
 package com.suji.android.suji_android.food
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.Toast
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.FoodListAdapter
+import com.suji.android.suji_android.base.DataBindingFragmentWithVM
 import com.suji.android.suji_android.database.model.Food
-import com.suji.android.suji_android.dialogs.CreateFoodDialogFragment
-import com.suji.android.suji_android.dialogs.ModifyFoodDialogFragment
-import com.suji.android.suji_android.listener.ItemClickListener
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import kotlinx.android.synthetic.main.food_create_dialog.view.*
-import kotlinx.android.synthetic.main.food_fragment.view.*
+import com.suji.android.suji_android.databinding.FoodFragmentBinding
+import com.suji.android.suji_android.dialogs.CreateFoodDialog
+import com.suji.android.suji_android.dialogs.ModifyFoodDialog
+import kotlinx.android.synthetic.main.create_food_dialog.view.*
+import kotlinx.android.synthetic.main.submenu_layout.view.*
 
-class FoodFragment : Fragment() {
-    private lateinit var adapter: FoodListAdapter
-    private val foodViewModel: FoodViewModel by lazy {
-        ViewModelProvider(this).get(FoodViewModel::class.java)
-    }
-    private val dialogView: View by lazy {
-        LayoutInflater.from(context).inflate(R.layout.food_create_dialog, null, false)
-    }
-    private val disposeBag = CompositeDisposable()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        initView()
-        val view = inflater.inflate(R.layout.food_fragment, container, false)
-
-        adapter = FoodListAdapter(foodDetail)
-        view.main_food_list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        view.main_food_list.adapter = adapter
-        view.create_food.setOnClickListener(createFood)
-
-        return view
-    }
-
+class FoodFragment : DataBindingFragmentWithVM<FoodFragmentBinding, FoodViewModel>(R.layout.food_fragment, FoodViewModel::class.java) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        binding.apply {
+            lifecycleOwner = this@FoodFragment
+            vm = viewModel
+            mainFoodList.adapter = FoodListAdapter(viewModel, ClickHandler())
+        }
+
+        lifecycle.addObserver(viewModel)
+
+        initLiveData()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposeBag.dispose()
-    }
+    private fun initLiveData() {
+        viewModel.foodList.observe(viewLifecycleOwner) { list ->
+            binding.mainFoodList.adapter?.notifyDataSetChanged()
+        }
+        viewModel.showDialog.observe(viewLifecycleOwner) {
+            CreateFoodDialog(
+                R.layout.create_food_dialog,
+                "음식 추가",
+                "추가",
+                {
+                    val subMenuList = mutableListOf<Food>()
+                    val foodName = it.createMenuEditName.text.toString()
+                    val foodPrice = it.createMenuEditPrice.text.toString()
 
-    private fun initView() {
-        foodViewModel.getAllFood()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { adapter.setItems(it) },
-                { e -> e.printStackTrace() }
-            ).addTo(disposeBag)
-    }
+                    it.createMenuEditName.text.clear()
+                    it.createMenuEditPrice.text.clear()
 
-    private val createFood: View.OnClickListener = View.OnClickListener { v ->
-        dialogView.create_menu_edit_name.text.clear()
-        dialogView.create_menu_edit_price.text.clear()
+                    if (foodName.isNullOrBlank() || foodPrice.isNullOrBlank()) {
+                        Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
+                        return@CreateFoodDialog
+                    }
 
-        when (v!!.id) {
-            R.id.create_food -> {
-                CreateFoodDialogFragment.newInstance().show(parentFragmentManager, "dialog")
-            }
+                    for (i in 0 until it.createSubMenu.childCount) {
+                        val subMenuView = it.createSubMenu.getChildAt(i)
+                        val subMenuName = subMenuView.create_submenu_name_edit_text.text.toString()
+                        val subMenuPrice = subMenuView.create_submenu_price_edit_text.text.toString()
+
+                        subMenuView.create_submenu_name_edit_text.text.clear()
+                        subMenuView.create_submenu_price_edit_text.text.clear()
+
+                        subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
+                    }
+
+                    if (subMenuList.size == 0) {
+                        viewModel.insert(Food(foodName, foodPrice.toInt()))
+                    } else {
+                        viewModel.insert(Food(foodName, foodPrice.toInt(), subMenuList))
+                    }
+                },
+                "부가메뉴 추가",
+                {
+                    val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, it.createSubMenu, false)
+                    subMenuLayout.submenu_delete.setOnClickListener {
+                        it.create_sub_menu.removeView(subMenuLayout)
+                    }
+                    it.createSubMenu.addView(subMenuLayout)
+                },
+                "취소",
+                {
+                    it.dismiss()
+                }
+            ).show(parentFragmentManager, TAG)
         }
     }
 
-    private val foodDetail = object : ItemClickListener {
-        override fun onItemClick(view: View, item: Any?) {
-            when (view.id) {
-                R.id.food_modify -> {
-                    if (item is Food) {
-                        ModifyFoodDialogFragment.newInstance(item).show(parentFragmentManager, "dialog")
+    inner class ClickHandler {
+        fun modifyFood(item: Food) {
+            ModifyFoodDialog(
+                R.layout.create_food_dialog,
+                item,
+                "메뉴 수정",
+                "수정",
+                {
+                    val subMenuList = mutableListOf<Food>()
+                    val foodName = it.createMenuEditName.text.toString()
+                    val foodPrice = it.createMenuEditPrice.text.toString()
+
+                    if (foodName.isNullOrBlank() || foodPrice.isNullOrBlank()) {
+                        Toast.makeText(context, "이름과 가격을 정확하게 입력해주세요!", Toast.LENGTH_SHORT).show()
+                        return@ModifyFoodDialog
                     }
-                }
-                R.id.food_delete -> {
-                    (item as Food).let {
-                        foodViewModel.delete(item)
+
+                    for (i in 0 until it.createSubMenu.childCount) {
+                        val subMenuView = it.createSubMenu.getChildAt(i)
+                        val subMenuName = subMenuView.create_submenu_name_edit_text.text.toString()
+                        val subMenuPrice = subMenuView.create_submenu_price_edit_text.text.toString()
+
+                        subMenuView.create_submenu_name_edit_text.text.clear()
+                        subMenuView.create_submenu_price_edit_text.text.clear()
+
+                        subMenuList.add(Food(subMenuName, subMenuPrice.toInt()))
                     }
+
+                    item.name = foodName
+                    item.price = foodPrice.toInt()
+                    item.subMenu = subMenuList
+
+                    viewModel.update(item)
+                },
+                "부가메뉴 추가",
+                {
+                    val subMenuLayout = layoutInflater.inflate(R.layout.submenu_layout, it.createSubMenu, false)
+                    subMenuLayout.submenu_delete.setOnClickListener {
+                        it.create_sub_menu.removeView(subMenuLayout)
+                    }
+                    it.createSubMenu.addView(subMenuLayout)
+                },
+                "취소",
+                {
+                    it.dismiss()
                 }
-            }
+            ).show(parentFragmentManager, TAG)
         }
+
+        fun deleteFood(item: Food) {
+            viewModel.delete(item)
+        }
+    }
+
+    companion object {
+        const val TAG = "FoodFragment"
     }
 }

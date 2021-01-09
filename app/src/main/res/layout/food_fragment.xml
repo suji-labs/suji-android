@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.beardedhen.androidbootstrap.BootstrapWell
-            android:id="@+id/food_create_well"
+    <data>
+        <variable
+                name="vm"
+                type="com.suji.android.suji_android.food.FoodViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/create_food"
-                android:layout_width="wrap_content"
+        <com.beardedhen.androidbootstrap.BootstrapWell
+                android:id="@+id/food_create_well"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_menu" />
-    </com.beardedhen.androidbootstrap.BootstrapWell>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_food_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/food_create_well">
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/create_food"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> vm.showDialog()}"
+                    android:text="@string/create_menu" />
+        </com.beardedhen.androidbootstrap.BootstrapWell>
 
-    </androidx.recyclerview.widget.RecyclerView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_food_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/food_create_well">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

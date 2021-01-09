@@ -1,4 +1,4 @@
-package com.suji.android.suji_android.basic
+package com.suji.android.suji_android.base
 
 import android.app.Application
 import android.content.Context
@@ -6,7 +6,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.suji.android.suji_android.database.AppDatabase
 import com.suji.android.suji_android.database.repository.Repository
 
-class BasicApp : Application() {
+class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
@@ -22,7 +22,7 @@ class BasicApp : Application() {
     }
 
     companion object {
-        lateinit var instance: BasicApp
+        lateinit var instance: BaseApp
             private set
     }
 

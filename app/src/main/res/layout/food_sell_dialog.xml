@@ -1,84 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<layout>
 
-    <com.beardedhen.androidbootstrap.BootstrapLabel
-            android:id="@+id/sell_dialog_title"
+    <data>
+
+        <variable
+                name="vm"
+                type="com.suji.android.suji_android.dialogs.FoodSalesDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/sell_food"
-            app:bootstrapBrand="success"
-            app:bootstrapHeading="h1"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <com.beardedhen.androidbootstrap.BootstrapWell
-            android:id="@+id/spinner_well"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/sell_dialog_title">
-
-        <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/sell_item_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-    </com.beardedhen.androidbootstrap.BootstrapWell>
-
-    <LinearLayout
-            android:id="@+id/sell_main_food_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spinner_well">
+            android:layout_height="match_parent">
 
         <com.beardedhen.androidbootstrap.BootstrapLabel
-                android:id="@+id/food_count_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/count"
-                android:textSize="25sp"
-                app:bootstrapBrand="primary" />
+                android:id="@+id/sell_dialog_title"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/sell_food"
+                app:bootstrapBrand="success"
+                app:bootstrapHeading="h1"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.beardedhen.androidbootstrap.BootstrapEditText
-                android:id="@+id/sell_main_food_count"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:inputType="numberSigned"
-                android:textColor="#000000" />
-    </LinearLayout>
-
-    <LinearLayout
-            android:id="@+id/sell_sub_food_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/sell_main_food_layout" />
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sell_sub_food_layout">
-
-        <TextView
-                android:id="@+id/food_sell_total_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/total_price"
-                android:textColor="#000000"
-                android:textSize="25sp" />
-
-        <TextView
-                android:id="@+id/food_sale_total_price"
+        <com.beardedhen.androidbootstrap.BootstrapWell
+                android:id="@+id/spinner_well"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:textColor="#000000"
-                android:textSize="25sp" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@id/sell_dialog_title">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/sell_item_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+        </com.beardedhen.androidbootstrap.BootstrapWell>
+
+        <LinearLayout
+                android:id="@+id/sell_main_food_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_well">
+
+            <com.beardedhen.androidbootstrap.BootstrapLabel
+                    android:id="@+id/food_count_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/count"
+                    android:textSize="25sp"
+                    app:bootstrapBrand="primary" />
+
+            <com.beardedhen.androidbootstrap.BootstrapEditText
+                    android:id="@+id/sell_main_food_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:inputType="numberSigned"
+                    android:textColor="#000000" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/sell_sub_food_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/sell_main_food_layout" />
+
+        <LinearLayout
+                android:id="@+id/product_price_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sell_sub_food_layout">
+
+            <TextView
+                    android:id="@+id/food_sell_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_price"
+                    android:textColor="#000000"
+                    android:textSize="25sp" />
+
+            <TextView
+                    android:id="@+id/food_sale_total_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textColor="#000000"
+                    android:textSize="25sp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/product_price_group">
+
+            <TextView
+                    android:id="@+id/create_food"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onPositive()}"
+                    android:text="@{vm.positiveText}"
+                    android:textColor="#000000" />
+
+            <TextView
+                    android:id="@+id/create_sub_food"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onNeutral()}"
+                    android:text="@{vm.neutralText}"
+                    android:textColor="#000000" />
+
+            <TextView
+                    android:id="@+id/dialog_exit"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> vm.onNegative()}"
+                    android:text="@{vm.negativeText}"
+                    android:textColor="#000000" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

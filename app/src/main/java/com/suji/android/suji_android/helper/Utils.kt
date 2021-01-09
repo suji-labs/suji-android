@@ -1,7 +1,5 @@
 package com.suji.android.suji_android.helper
 
-import android.app.Dialog
-import androidx.appcompat.app.AlertDialog
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
@@ -11,24 +9,6 @@ import org.threeten.bp.temporal.TemporalAdjusters
 object Utils {
     val format: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")
     private val dateTime = LocalDateTime.now()
-
-    fun dialogReSizing(dialog: AlertDialog) {
-        dialog.window!!.attributes = dialog.window!!.attributes.apply {
-            DisplayHelper.getDisplaySize().let { point ->
-                width = (point.x * 0.9).toInt()
-//                height = (point.y * 0.5).toInt()
-            }
-        }
-    }
-
-    fun dialogReSizing(dialog: Dialog) {
-        dialog.window!!.attributes = dialog.window!!.attributes.apply {
-            DisplayHelper.getDisplaySize().let { point ->
-                width = (point.x * 0.9).toInt()
-//                height = (point.y * 0.5).toInt()
-            }
-        }
-    }
 
     fun getStartDate(minusMonths: Long): Long {
         return dateTime
