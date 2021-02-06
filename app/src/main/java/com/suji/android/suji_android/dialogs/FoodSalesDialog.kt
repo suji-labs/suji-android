@@ -16,8 +16,6 @@ import kotlinx.android.synthetic.main.food_sell_dialog.view.*
 import kotlinx.android.synthetic.main.submenu_item.view.*
 
 class FoodSalesDialog(
-    private val layoutId: Int,
-    private val fragmentVM: FoodViewModel,
     private val message: String,
     private val positiveText: String,
     private val positiveCallback: ((FoodSellDialogBinding) -> Unit)? = null,
@@ -25,16 +23,19 @@ class FoodSalesDialog(
     private val neutralCallback: ((FoodSellDialogBinding, Food) -> Unit)? = null,
     private val negativeText: String,
     private val negativeCallback: ((Dialog) -> Unit)? = null
-) : DataBindingDialogWithVM<FoodSellDialogBinding, FoodSalesDialogViewModel>(layoutId, FoodSalesDialogViewModel::class.java) {
+) : DataBindingDialogWithVM<FoodSellDialogBinding, FoodSalesDialogViewModel>(R.layout.food_sell_dialog, FoodSalesDialogViewModel::class.java) {
     private var food = Food()
     private val viewModel: FoodSalesDialogViewModel by lazy {
         ViewModelProvider(this).get(FoodSalesDialogViewModel::class.java)
+    }
+    private val foodViewModel: FoodViewModel by lazy {
+        ViewModelProvider(this).get(FoodViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fragmentVM.getAllFood()
+        foodViewModel.getAllFood()
 
         binding.apply {
             lifecycleOwner = this@FoodSalesDialog
@@ -49,10 +50,10 @@ class FoodSalesDialog(
     }
 
     fun initLiveData() {
-        fragmentVM.foodList.observe(this) {
+        foodViewModel.foodList.observe(this) {
             binding.sellItemSpinner.apply {
                 if (adapter == null) {
-                    adapter = SalesListAdapter(fragmentVM)
+                    adapter = SalesListAdapter(foodViewModel)
                     onItemSelectedListener = spinnerItemClick
                     setSelection(0)
                 }

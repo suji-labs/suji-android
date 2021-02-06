@@ -2,10 +2,7 @@ package com.suji.android.suji_android.base
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.databinding.DataBindingUtil
@@ -44,6 +41,7 @@ open class DataBindingDialogWithVM<T: ViewDataBinding, VM: ViewModel>(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         dialog.setCanceledOnTouchOutside(true)
         return dialog
     }

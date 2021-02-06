@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import com.suji.android.suji_android.R
 import com.suji.android.suji_android.adapter.SellListAdapter
 import com.suji.android.suji_android.base.DataBindingFragmentWithVM
@@ -14,7 +13,6 @@ import com.suji.android.suji_android.databinding.SellFragmentBinding
 import com.suji.android.suji_android.dialogs.FoodSalesDialog
 import com.suji.android.suji_android.dialogs.SalesModifyDialog
 import com.suji.android.suji_android.dialogs.SujiDialog
-import com.suji.android.suji_android.food.FoodViewModel
 import com.suji.android.suji_android.helper.Constant
 import kotlinx.android.synthetic.main.food_sell_dialog.view.*
 import kotlinx.android.synthetic.main.sell_fragment.*
@@ -23,10 +21,6 @@ import java.text.DecimalFormat
 import java.time.Instant
 
 class SellFragment : DataBindingFragmentWithVM<SellFragmentBinding, SellViewModel>(R.layout.sell_fragment, SellViewModel::class.java) {
-    private val foodViewModel: FoodViewModel by lazy {
-        ViewModelProvider(this).get(FoodViewModel::class.java)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,8 +51,6 @@ class SellFragment : DataBindingFragmentWithVM<SellFragmentBinding, SellViewMode
                     }
 
                     FoodSalesDialog(
-                        R.layout.food_sell_dialog,
-                        foodViewModel,
                         "음식 판매",
                         "판매",
                         {
@@ -134,7 +126,6 @@ class SellFragment : DataBindingFragmentWithVM<SellFragmentBinding, SellViewMode
 
         fun modifySaleItem(item: Sale) {
             SalesModifyDialog(
-                R.layout.food_sell_dialog,
                 "음식 수정",
                 "적용",
                 {

@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.food_sell_dialog.view.*
 import kotlinx.android.synthetic.main.submenu_item.view.*
 
 class SalesModifyDialog(
-    private val layoutId: Int,
     private val message: String,
     private val positiveText: String,
     private val positiveCallback: ((FoodSellDialogBinding) -> Unit)? = null,
@@ -27,12 +26,9 @@ class SalesModifyDialog(
     private val neutralCallback: ((FoodSellDialogBinding, Food) -> Unit)? = null,
     private val negativeText: String,
     private val negativeCallback: ((Dialog) -> Unit)? = null
-) : DataBindingDialogWithVM<FoodSellDialogBinding, FoodSalesDialogViewModel>(layoutId, FoodSalesDialogViewModel::class.java) {
+) : DataBindingDialogWithVM<FoodSellDialogBinding, FoodSalesDialogViewModel>(R.layout.food_sell_dialog, FoodSalesDialogViewModel::class.java) {
     private val viewModel: FoodSalesDialogViewModel by lazy {
         ViewModelProvider(this).get(FoodSalesDialogViewModel::class.java)
-    }
-    private val sellViewModel: SellViewModel by lazy {
-        ViewModelProvider(this).get(SellViewModel::class.java)
     }
     private val foodViewModel: FoodViewModel by lazy {
         ViewModelProvider(this).get(FoodViewModel::class.java)

@@ -32,7 +32,6 @@ class FoodFragment : DataBindingFragmentWithVM<FoodFragmentBinding, FoodViewMode
         }
         viewModel.showDialog.observe(viewLifecycleOwner) {
             CreateFoodDialog(
-                R.layout.create_food_dialog,
                 "음식 추가",
                 "추가",
                 {
@@ -84,7 +83,6 @@ class FoodFragment : DataBindingFragmentWithVM<FoodFragmentBinding, FoodViewMode
     inner class ClickHandler {
         fun modifyFood(item: Food) {
             ModifyFoodDialog(
-                R.layout.create_food_dialog,
                 item,
                 "메뉴 수정",
                 "수정",

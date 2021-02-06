@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.create_food_dialog.view.*
 import kotlinx.android.synthetic.main.submenu_layout.view.*
 
 class ModifyFoodDialog(
-    private val layoutId: Int,
     private val item: Food,
     private val message: String,
     private val positiveText: String,
@@ -24,9 +23,9 @@ class ModifyFoodDialog(
     private val neutralCallback: ((CreateFoodDialogBinding) -> Unit)? = null,
     private val negativeText: String,
     private val negativeCallback: ((Dialog) -> Unit)? = null
-) : DataBindingDialogWithVM<CreateFoodDialogBinding, CreateFoodDialogViewModel>(layoutId, CreateFoodDialogViewModel::class.java) {
-    private val viewModel: CreateFoodDialogViewModel by lazy {
-        ViewModelProvider(this).get(CreateFoodDialogViewModel::class.java)
+) : DataBindingDialogWithVM<CreateFoodDialogBinding, SujiCustomDialogViewModel>(R.layout.create_food_dialog, SujiCustomDialogViewModel::class.java) {
+    private val viewModel: SujiCustomDialogViewModel by lazy {
+        ViewModelProvider(this).get(SujiCustomDialogViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
